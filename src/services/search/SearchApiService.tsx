@@ -11,7 +11,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
         this.ucPrefix = 'search'
     }
     search(search: Search, pagination: Pagination, date: Date): Promise<Response<SearchResponse>> {
-        const searchQueryString = `phrase=dancer&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
+        const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
         const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
         const paginationQueryString = `start=${pagination.start}&step=${pagination.step}`
         const queryString = `${searchQueryString}&${dateQueryString}&${paginationQueryString}`
@@ -25,7 +25,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
                 'Content-Type': 'application/json',
             }
         }).then(res => {
-            resolve({ ok: res.data.ok, data: res.data })
+            resolve({ ok: res.data.ok, data: res.data.data })
         }).catch(err => {
             console.error(err)
             reject('Unable to fetch data')

@@ -14,6 +14,7 @@ export default class SearchRepository implements ISearchRepository {
 
     async search(search: Search, pagination: Pagination, date: Date) {
         const response = await this.api.search(search, pagination, date)
+        console.log(response.data)
         return response.data
     }
     async searchExport(search: Search, date: Date) {

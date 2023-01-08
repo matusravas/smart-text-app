@@ -1,21 +1,16 @@
 import { useSearchViewModel } from "../../viewmodel/SearchViewModel"
+import SearchBar from "./components/SearchBar"
 
 const Search = () => {
     const { data, search, pagination, date, handleSearchChange } = useSearchViewModel()
-    console.log(data)
-    const handleSubmit = (event: { preventDefault: () => void; }) => {
-        event.preventDefault();
-        handleSearchChange({phrase: 'dancer'})
-    };
-
-    
+    data?.results.map((e)=>{console.log(e)})
     return (
-        <p>Hello world</p>
-        // <form onSubmit={handleSubmit}>
-        //     <label htmlFor="name">Name:</label>
-        //     <input type="text" id="name" value={search.phrase??''} />
-        //     <input type="submit" value="Submit" />
-        // </form>
+        <div>
+            <SearchBar searchPhrase={search.phrase} onSearchChange={handleSearchChange}/>
+            <div>
+                {data?.results.map(e=><p key={e['Hlásenie']}>{e.Kr_text}</p>)}
+            </div>
+        </div>
     )
 }
 

@@ -1,5 +1,5 @@
 export type Search = {
-    phrase: string|null,
+    phrase: string,
     field?: string,
     operator : 'AND' | 'OR'
 }
