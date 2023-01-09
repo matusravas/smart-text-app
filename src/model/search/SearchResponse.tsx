@@ -1,7 +1,7 @@
-import { Pagination, Column } from "./types"
+import { Pagination, Column, Data } from "./types"
 
 export type SearchResponse = {
-    columns: Array<Column>,
+    columns: Column[],
     pagination: Pagination
-    results: Array<Record<string, string|number>>
+    results: Data[]
 }

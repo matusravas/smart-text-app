@@ -9,6 +9,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
     constructor() {
         super()
         this.ucPrefix = 'search'
+        console.log(this)
     }
     search(search: Search, pagination: Pagination, date: Date): Promise<Response<SearchResponse>> {
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`

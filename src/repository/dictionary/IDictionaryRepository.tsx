@@ -1,5 +1,4 @@
-import { Dictionary } from "../../../model/dictionary/types"
-
+import { Dictionary } from "../../model/dictionary/types"
 
 export default interface IDictionaryRepository {
     getSynonyms(keyword?: string): Promise<Array<Dictionary>|Dictionary>

@@ -1,6 +1,6 @@
 import { Dictionary } from "../../model/dictionary/types";
 import DictionaryApiService from "../../services/dictionary/DictionaryApiService";
-import IDictionaryRepository from "./model/IDictionaryRepository";
+import IDictionaryRepository from "./IDictionaryRepository";
 
 export default class DictionaryRepository implements IDictionaryRepository {
     private static _instance: DictionaryRepository

@@ -1,24 +1,24 @@
-import { FormEvent } from "react"
-import { Search } from "../../../model/search/types"
-import { useSearchBarViewModel } from "../../../viewmodel/SearchViewModel"
+import { FormEvent, useState } from "react"
+import { Search, Date, SearchRequest } from "../../../model/search/types"
 import { StyledSearchBarWrapper, SearchButton, SearchInput, Icon } from '../styles/SearchBar'
 
 interface SearchBarProps {
-    searchPhrase: string,
-    onSearchChange: (search: Partial<Search>) => void,
+    search: Search,
+    date: Date,
+    onRequestDataChange: (search: Partial<SearchRequest>) => void,
 }
 
-const SearchBar = ({ searchPhrase, onSearchChange: onSearchChange }: SearchBarProps) => {
-    const { query, handleChange } = useSearchBarViewModel(searchPhrase, onSearchChange)
+const SearchBar = ({ search, onRequestDataChange}: SearchBarProps) => {
+    const [query, setQuery] = useState('')
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        onSearchChange({ phrase: query })
+        onRequestDataChange({search: {...search, phrase: query}})
     }
 
     return (
         <StyledSearchBarWrapper onSubmit={handleSubmit}>
-            <SearchInput value={query} onChange={(e) => handleChange(e.target.value)} />
+            <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} />
             <SearchButton />
         </StyledSearchBarWrapper>
     )

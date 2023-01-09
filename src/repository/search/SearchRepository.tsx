@@ -1,6 +1,6 @@
-import { Search, Pagination, Date } from "../../model/search/types";
+import { Search, Pagination, Date, SearchRequest } from "../../model/search/types";
 import SearchApiService from "../../services/search/SearchApiService";
-import ISearchRepository from "./model/ISearchRepository";
+import ISearchRepository from "./ISearchRepository";
 
 export default class SearchRepository implements ISearchRepository {
     private static _instance: SearchRepository
@@ -12,7 +12,7 @@ export default class SearchRepository implements ISearchRepository {
         return this._instance || (this._instance = new this());
     }
 
-    async search(search: Search, pagination: Pagination, date: Date) {
+    async search({search, pagination, date}: SearchRequest) {
         const response = await this.api.search(search, pagination, date)
         console.log(response.data)
         return response.data
@@ -20,5 +20,4 @@ export default class SearchRepository implements ISearchRepository {
     async searchExport(search: Search, date: Date) {
         return await this.api.searchExport(search, date)
     }
-
 }

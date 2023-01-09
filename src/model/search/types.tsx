@@ -1,3 +1,9 @@
+export type SearchRequest = {
+    search: Search
+    date: Date
+    pagination: Pagination
+}
+
 export type Search = {
     phrase: string,
     field?: string,
@@ -26,5 +32,8 @@ export type Pagination = {
 
 export type Column = {
     field: string,
-    type: 'double' | 'long' | 'keyword' | 'text' | 'date'
+    title: string,
+    type: 'string' | 'numeric' | 'date' | 'boolean'
 }
+
+export type Data = Record<string, string|number>
