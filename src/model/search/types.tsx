@@ -6,7 +6,7 @@ export type SearchRequest = {
 
 export type Search = {
     phrase: string,
-    field?: string,
+    field: string,
     operator : 'AND' | 'OR'
 }
 
@@ -28,6 +28,14 @@ export type Pagination = {
     currentPage: number,
     totalHits: number,
     totalPages: number
+}
+
+export type PaginationRaw = {
+    start: number,
+    step: number,
+    current_page: number,
+    total_hits: number,
+    total_pages: number
 }
 
 export type Column = {

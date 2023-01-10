@@ -2,12 +2,14 @@ import styled from "styled-components";
 
 export const TableWrapper = styled.div`
   max-height: 100%;
+  max-width: 90%;
   & .MuiTableRow-head th:hover {
     filter: sepia(20%);
     position: sticky;
   }
   & .MuiTableCell-head {
-    background-color: #8ca2b5;
+    background-color: #303030;
+    color: #fafafa;
     // font-size: 14px;
     text-align: center;
   }

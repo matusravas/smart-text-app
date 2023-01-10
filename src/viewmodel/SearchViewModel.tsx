@@ -1,8 +1,7 @@
 import moment from 'moment'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { SearchResponse } from '../model/search/SearchResponse'
-import { Date, Pagination, PaginationDefault, Search, SearchRequest } from '../model/search/types'
-import SearchRepository from '../repository/search/SearchRepository'
+import { PaginationDefault, SearchRequest } from '../model/search/types'
 
 
 export const useSearchViewModel = () => {
@@ -11,7 +10,8 @@ export const useSearchViewModel = () => {
     // const [date, setDate] = useState<Date>({ from: moment().subtract(10, 'month').unix(), to: moment().unix() })
     // const [pagination, setPagination] = useState<Pagination>({ ...PaginationDefault, start: 0, step: 10 })
     const [requestData, setRequestData] = useState<SearchRequest>({
-        search: { phrase: '', operator: 'AND' },
+        search: { phrase: '', operator: 'OR', field: 'Kr_text' },
+        // Todo remove subtraction of 10 months this was just for development needs
         date: { from: moment().subtract(10, 'month').unix(), to: moment().unix() }, 
         pagination: { ...PaginationDefault, start: 0, step: 10 }
     })

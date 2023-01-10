@@ -6,7 +6,7 @@ const Search = () => {
     const { responseData, requestData, handleRequestDataChange } = useSearchViewModel()
     const {search, date} = requestData
     return (
-        <div>
+        <div style={{'display': 'flex', 'alignItems': 'center', 'justifyContent': 'center', 'flexDirection': 'column'}}>
             <SearchBar search={search} date={date} onRequestDataChange={handleRequestDataChange}/>
             <Table requestData={requestData} />
         </div>

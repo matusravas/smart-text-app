@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SearchResponse } from "../../model/search/SearchResponse";
+import { SearchResponse, SearchResponseRaw } from "../../model/search/SearchResponse";
 import { Search, Date, Pagination } from "../../model/search/types";
 import { Response } from "../../model/types";
 import ApiService from "../ApiService";
@@ -11,7 +11,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
         this.ucPrefix = 'search'
         console.log(this)
     }
-    search(search: Search, pagination: Pagination, date: Date): Promise<Response<SearchResponse>> {
+    search(search: Search, pagination: Pagination, date: Date): Promise<Response<SearchResponseRaw>> {
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
         const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
         const paginationQueryString = `start=${pagination.start}&step=${pagination.step}`
