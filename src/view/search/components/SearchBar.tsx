@@ -5,7 +5,7 @@ import { StyledSearchBarWrapper, SearchButton, SearchInput, Icon } from '../styl
 interface SearchBarProps {
     search: Search,
     date: Date,
-    onRequestDataChange: (search: Partial<SearchRequest>) => void,
+    onRequestDataChange: (requestData: Partial<SearchRequest>) => void,
 }
 
 const SearchBar = ({ search, onRequestDataChange}: SearchBarProps) => {

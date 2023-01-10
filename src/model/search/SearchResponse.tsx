@@ -1,4 +1,5 @@
-import { Pagination, PaginationRaw, Column, Data } from "./types"
+import { TablePagination } from "../table/types"
+import { PaginationRaw, Column, Data } from "./types"
 
 export type SearchResponseRaw = {
     columns: Column[],
@@ -8,6 +9,6 @@ export type SearchResponseRaw = {
 
 export type SearchResponse = {
     columns: Column[],
-    pagination: Pagination
+    pagination: TablePagination
     results: Data[]
 }

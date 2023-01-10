@@ -16,24 +16,19 @@ export type Date = {
     to: number
 }
 
-export const PaginationDefault = {
+export const SearchPaginationDefault = {
     currentPage: 0,
-    totalHits: 0,
-    totalPages: 0  
+    pageSize: 10,
 }
 
 export type Pagination = {
-    start: number,
-    step: number,
     currentPage: number,
-    totalHits: number,
-    totalPages: number
+    pageSize: number,
 }
 
 export type PaginationRaw = {
-    start: number,
-    step: number,
     current_page: number,
+    step: number,
     total_hits: number,
     total_pages: number
 }
