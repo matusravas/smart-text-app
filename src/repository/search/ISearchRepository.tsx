@@ -3,5 +3,5 @@ import { Search, Date, Pagination, SearchRequest } from "../../model/search/type
 
 export default interface ISearchRepository {
     search(requestData: SearchRequest): Promise<SearchResponse>
-    searchExport(search: Search, date: Date): any
+    searchExport(search: Search, date: Date): Promise<ArrayBuffer>
 }

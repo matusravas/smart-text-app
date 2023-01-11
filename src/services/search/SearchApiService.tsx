@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 import { SearchResponse, SearchResponseRaw } from "../../model/search/SearchResponse";
 import { Search, Date, Pagination } from "../../model/search/types";
 import { Response } from "../../model/types";
@@ -33,22 +34,29 @@ class SearchApiService extends ApiService implements ISearchApiService {
         })
         )
     }
-    searchExport(search: Search, date: Date): Promise<Response<any>> {
+    searchExport(search: Search, date: Date): Promise<ArrayBuffer> {
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
         const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
         const queryString = `${searchQueryString}&${dateQueryString}`
-        return new Promise<Response<any>>((resolve, reject) => axios({
+        return new Promise<ArrayBuffer>((resolve, reject) => axios({
             method: 'GET',
-            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}?${queryString}`,
-            responseType: 'json',
+            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/export?${queryString}`,
+            responseType: 'arraybuffer',
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             }
         }).then(res => {
-            console.log(res.data)
-            resolve({ ok: res.data.ok, data: res.data.data })
+            const filename = `${search.phrase?`${search.phrase}_`:''}export_${moment().seconds(0).milliseconds(0).toISOString()}.xlsx`
+            const url = window.URL.createObjectURL(new Blob([res.data], { type: 'text/xlsx;' }));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link)
+            resolve(res.data)
         }).catch(err => {
             console.error(err)
             reject('Unable to fetch data')

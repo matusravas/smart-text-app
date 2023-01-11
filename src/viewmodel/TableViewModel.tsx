@@ -38,7 +38,6 @@ export function useTable({
             .then((res) => {
                 console.log(res)
                 if (isMounted.current) return;
-                setIsLoading(false);
                 setColumns(prepareColumns(res.columns));
                 setPagination(res.pagination);
                 setRows([...res.results]);
@@ -63,6 +62,33 @@ export function useTable({
             return newCol
         })
     }
+
+    const handleExport = () => {
+        console.log(requestData) // ! reuestData are not changed bcs handleExport is used in memoized options and it has no deps
+        repository
+            .searchExport(requestData.search, requestData.date)
+            .then((res)=>{
+                // console.log(res)
+                // const url = window.URL.createObjectURL(new Blob([res], { type: 'text/xlsx;' }));
+                // const link = document.createElement('a');
+                // link.href = url;
+                // link.setAttribute('download', 'nacharbeit.xlsx');
+                // document.body.appendChild(link);
+                // link.click();
+            })
+            .catch((err: Error) => {
+                if (isMounted.current) return;
+                onError && onError(err.message);
+            });
+    }
+
+    const localization = useMemo(()=> {
+        return {
+            toolbar: {
+                exportCSVName: 'Export Excel'
+            }
+        }
+    }, [])
     
     const tableOptions = useMemo(() => {
         let options: Options<any> = {};
@@ -80,8 +106,8 @@ export function useTable({
             sorting: false,
             exportButton: {
                 csv: true,
-                pdf: false
             },
+            exportCsv: handleExport,
             filtering: false,
             loadingType: "linear",
             columnsButton: false,
@@ -98,5 +124,5 @@ export function useTable({
     // },[rows, currentTableState, isMounted.current]);
     }, []);
 
-    return { rows, isLoading, columns, pagination, options: tableOptions, componentDidUnmount: isMounted };
+    return { rows, isLoading, columns, pagination, options: tableOptions, localization, componentDidUnmount: isMounted };
 }

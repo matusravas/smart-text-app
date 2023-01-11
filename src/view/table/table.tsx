@@ -1,6 +1,6 @@
 import { TablePagination } from "@material-ui/core";
 import MaterialTable, { MTableBody, MTableBodyRow } from "material-table";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { TableProps } from "../../model/table/types";
 import { useTable } from "../../viewmodel/TableViewModel";
 import { tableIcons } from "./icons";
@@ -13,6 +13,7 @@ export const Table = (props: TableProps) => {
         columns,
         pagination,
         options,
+        localization
     } = useTable({
         requestData: props.requestData,
         onError: props.handleError,
@@ -20,25 +21,16 @@ export const Table = (props: TableProps) => {
     })
 
     const materialTableRef = React.createRef<any>();
-    let groupPagination: { rowsPerPage: number; page: number }[] = [];
     let renderingGroupRows: boolean = false;
 
-    // useEffect(() => {
-    //     props.handleTableObj && props.handleTableObj(materialTableRef.current)
-    // }, [rows])
-
     const onPageChange = (gotoPage: number) => {
-        console.log('GOTO PAGE', gotoPage)
-        props.onRequestDataChange({pagination: {...pagination, currentPage: gotoPage}})
+        props.onRequestDataChange({ pagination: { currentPage: gotoPage, pageSize: pagination.pageSize } })
     }
 
     const onPageSizeChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const {target: {value: rowsPerPage}} = event
-        console.log('ROWS PER PAGE', rowsPerPage)
-        props.onRequestDataChange({pagination: {...pagination, pageSize: +rowsPerPage}})
+        const { target: { value: rowsPerPage } } = event
+        props.onRequestDataChange({ pagination: { currentPage: pagination.currentPage, pageSize: +rowsPerPage } })
     }
-    // console.log(rows)
-    console.log('MY PAGINATION', pagination)
     return (
         <TableWrapper>
             <MaterialTable
@@ -48,44 +40,31 @@ export const Table = (props: TableProps) => {
                 isLoading={isLoading}
                 columns={columns}
                 data={rows}
+                localization={localization}
                 options={options}
                 components={{
                     Body: (props: any) => {
-                        // renderingGroupRows = false;
                         return (
-                            //<>
-                                <MTableBody {...props} />
-                            //</>
+                            <MTableBody {...props} />
                         );
                     },
                     Row: (props: any) => {
                         if (props.pagination === "true" || !renderingGroupRows) {
                             return (
-                                // <>
-                                    <MTableBodyRow {...props} />
-                                // </>
+                                <MTableBodyRow {...props} />
                             );
                         } else return <></>;
                     },
                     Pagination: (props: any) => {
-                        // console.log("PAGINATION_PROPS", props)
-                        // const maxCorrectPage = Math.floor(props.count / props.rowsPerPage)
-                        // const tooBigPage = maxCorrectPage < props.page
-                        const newProps = {
-                            ...props,
-                            // classes: {
-                            //     root: props.classes.root
-                            // },
-                            page: pagination.currentPage, //tooBigPage ? maxCorrectPage : props.page,
-                            rowsPerPage: pagination.pageSize,
-                            count: pagination.totalHits
-                        }
-                        // console.log("NEW_PAGINATION_PROPS", newProps)
                         return <TablePagination
-                            {...newProps}
+                            {...props}
+                            count={pagination.totalHits}
+                            page={pagination.currentPage}
                             onChangePage={(_, gotoPage) => onPageChange(gotoPage)}
-                            onChangeRowsPerPage={(e) => onPageSizeChange(e)}
-                        />
+                            onChangeRowsPerPage={(e) => {
+                                onPageSizeChange(e)
+                                props.onChangeRowsPerPage(e)
+                            }} />
                     }
                 }}
                 {...props}
