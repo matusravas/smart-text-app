@@ -54,9 +54,9 @@ export function useTable({
         const columnIndex = columns.findIndex(column=>column.field === requestData.search.field)
         return columns.map((col, idx)=> {
             if (!(idx === columnIndex || idx === columnIndex + 1)) return col
-            const color = idx === columnIndex? '#ff4569': '#80ffb4'
+            const color = idx === columnIndex? '#9a0007': '#00600f'
             const newCol = {...col, 
-                headerStyle: {backgroundColor: color, fontWeight: 'bold'},
+                headerStyle: {color: color, fontWeight: 'bold'},
                 cellStyle: {color: color, fontWeight: 'bold'}}
             return newCol
         })
@@ -92,6 +92,7 @@ export function useTable({
                 position: "sticky",
                 top: 0,
             },
+            toolbar: false,
             search: false,
             showTitle: false,
             sorting: false,

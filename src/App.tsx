@@ -1,10 +1,13 @@
 import React from 'react';
 import './App.css';
+import { StyledAppWrapper } from './styles/app/app.styles';
 import Search from './view/search/SearchDashboard';
 
 function App() {
   return (
-    <Search />
+    // <StyledAppWrapper>
+      <Search />
+    // </StyledAppWrapper>
     // <div className="App">
     //   <header className="App-header">
     //     <img src={logo} className="App-logo" alt="logo" />

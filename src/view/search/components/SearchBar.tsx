@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react"
 import { Search, Date, SearchRequest, SearchPaginationDefault } from "../../../model/search/types"
-import { StyledSearchBarWrapper, SearchButton, SearchInput } from '../styles/searchbar.styles'
+import { Divider, SearchBarWrapper, SearchButton, SearchInput } from '../styles/searchbar.styles'
 
 interface SearchBarProps {
     search: Search,
@@ -17,13 +17,16 @@ const SearchBar = ({ search, onRequestDataChange}: SearchBarProps) => {
     }
 
     return (
-        <StyledSearchBarWrapper onSubmit={handleSubmit}>
+        <SearchBarWrapper  autoComplete="off" onSubmit={handleSubmit}>
             {/* <div> */}
 
             <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} />
+            <div style={{'display': 'flex', 'flexDirection': 'row', 'justifyContent': 'center', 'alignContent': 'space-between'}}>
             <SearchButton />
-            {/* </div> */}
-        </StyledSearchBarWrapper>
+            {/* <SearchButton /> */}
+            </div>
+            <Divider/>
+        </SearchBarWrapper>
     )
 }
 
