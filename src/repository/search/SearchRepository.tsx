@@ -14,6 +14,7 @@ export default class SearchRepository implements ISearchRepository {
     }
 
     async search({search, pagination, date}: SearchRequest) {
+        //! Todo catch potenial errors
         const responseRaw = await this.api.search(search, pagination, date)
         console.log(responseRaw.data)
         const paginationRaw = responseRaw.data.pagination
@@ -24,10 +25,11 @@ export default class SearchRepository implements ISearchRepository {
                 totalHits: paginationRaw.total_hits,
                 totalPages: paginationRaw.total_pages
             }}
-        return response
-    }
+            return response
+        }
     async searchExport(search: Search, date: Date) {
-        const arrayBuffer = await this.api.searchExport(search, date)
-        return arrayBuffer
+            //! Todo catch potenial errors
+        const result = await this.api.searchExport(search, date)
+        return result
     }
 }

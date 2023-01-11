@@ -1,13 +1,12 @@
 import { Options } from "material-table";
 import {
-    useCallback,
     useEffect,
     useMemo,
     useRef,
-    useState,
+    useState
 } from "react";
 import { Column, Data } from "../model/search/types";
-import { TablePagination, TablePaginationDefault, UseTableProps } from "../model/table/types"
+import { TablePagination, TablePaginationDefault, UseTableProps } from "../model/table/types";
 import SearchRepository from "../repository/search/SearchRepository";
 
 
@@ -64,17 +63,11 @@ export function useTable({
     }
 
     const handleExport = () => {
-        console.log(requestData) // ! reuestData are not changed bcs handleExport is used in memoized options and it has no deps
+        console.log(requestData)
         repository
             .searchExport(requestData.search, requestData.date)
             .then((res)=>{
-                // console.log(res)
-                // const url = window.URL.createObjectURL(new Blob([res], { type: 'text/xlsx;' }));
-                // const link = document.createElement('a');
-                // link.href = url;
-                // link.setAttribute('download', 'nacharbeit.xlsx');
-                // document.body.appendChild(link);
-                // link.click();
+                //
             })
             .catch((err: Error) => {
                 if (isMounted.current) return;
@@ -98,8 +91,6 @@ export function useTable({
             headerStyle: {
                 position: "sticky",
                 top: 0,
-                // backgroundColor: "#303030",
-                // color: "white"
             },
             search: false,
             showTitle: false,
@@ -113,16 +104,11 @@ export function useTable({
             columnsButton: false,
             emptyRowsWhenPaging: false,
             paging: true,
-            // actionsColumnIndex: -1,
-            // debounceInterval: 500,
             pageSizeOptions: [10, 20, 50, 100],
-            pageSize: pagination.pageSize,
-            // search: true,
-            // addRowPosition: 'first'
+            pageSize: pagination.pageSize
         };
         return options
-    // },[rows, currentTableState, isMounted.current]);
-    }, []);
+    }, [requestData.search, requestData.date]);
 
     return { rows, isLoading, columns, pagination, options: tableOptions, localization, componentDidUnmount: isMounted };
 }

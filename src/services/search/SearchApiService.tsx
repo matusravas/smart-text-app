@@ -1,6 +1,6 @@
 import axios from "axios";
 import moment from "moment";
-import { SearchResponse, SearchResponseRaw } from "../../model/search/SearchResponse";
+import { SearchResponseRaw } from "../../model/search/SearchResponse";
 import { Search, Date, Pagination } from "../../model/search/types";
 import { Response } from "../../model/types";
 import ApiService from "../ApiService";
@@ -34,11 +34,11 @@ class SearchApiService extends ApiService implements ISearchApiService {
         })
         )
     }
-    searchExport(search: Search, date: Date): Promise<ArrayBuffer> {
+    searchExport(search: Search, date: Date): Promise<boolean> {
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
         const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
         const queryString = `${searchQueryString}&${dateQueryString}`
-        return new Promise<ArrayBuffer>((resolve, reject) => axios({
+        return new Promise<boolean>((resolve, reject) => axios({
             method: 'GET',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/export?${queryString}`,
             responseType: 'arraybuffer',
@@ -48,7 +48,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
                 'Content-Type': 'application/json',
             }
         }).then(res => {
-            const filename = `${search.phrase?`${search.phrase}_`:''}export_${moment().seconds(0).milliseconds(0).toISOString()}.xlsx`
+            const filename = `${search.phrase?`${search.phrase}_`:''}export_${moment().format('YYYY-MM-DDTHH-mm')}.xlsx`
             const url = window.URL.createObjectURL(new Blob([res.data], { type: 'text/xlsx;' }));
             const link = document.createElement('a');
             link.href = url;
@@ -56,14 +56,13 @@ class SearchApiService extends ApiService implements ISearchApiService {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link)
-            resolve(res.data)
+            resolve(true)
         }).catch(err => {
             console.error(err)
-            reject('Unable to fetch data')
+            reject('Unable to export data')
         })
         )
     }
-
 }
 
 export default SearchApiService

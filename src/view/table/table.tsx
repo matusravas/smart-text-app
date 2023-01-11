@@ -3,8 +3,8 @@ import MaterialTable, { MTableBody, MTableBodyRow } from "material-table";
 import React from "react";
 import { TableProps } from "../../model/table/types";
 import { useTable } from "../../viewmodel/TableViewModel";
-import { tableIcons } from "./icons";
-import { TableWrapper } from "./table.style";
+import { tableIcons } from "./styles/icons";
+import { TableWrapper } from "./styles/table.styles";
 
 export const Table = (props: TableProps) => {
     const {

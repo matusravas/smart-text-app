@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react"
-import { Search, Date, SearchRequest } from "../../../model/search/types"
-import { StyledSearchBarWrapper, SearchButton, SearchInput, Icon } from '../styles/SearchBar'
+import { Search, Date, SearchRequest, SearchPaginationDefault } from "../../../model/search/types"
+import { StyledSearchBarWrapper, SearchButton, SearchInput } from '../styles/searchbar.styles'
 
 interface SearchBarProps {
     search: Search,
@@ -13,13 +13,16 @@ const SearchBar = ({ search, onRequestDataChange}: SearchBarProps) => {
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        onRequestDataChange({search: {...search, phrase: query}})
+        onRequestDataChange({search: {...search, phrase: query}, pagination: SearchPaginationDefault})
     }
 
     return (
         <StyledSearchBarWrapper onSubmit={handleSubmit}>
+            {/* <div> */}
+
             <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} />
             <SearchButton />
+            {/* </div> */}
         </StyledSearchBarWrapper>
     )
 }
