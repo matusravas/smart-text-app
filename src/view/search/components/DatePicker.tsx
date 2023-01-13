@@ -34,60 +34,101 @@
 
 // export default Calendar
 
-import { useContext, useState } from "react";
-import moment from "moment";
 import DateFnsUtils from "@date-io/date-fns";
-import deLocale from "date-fns/locale/de";
-import enLocale from "date-fns/locale/en-US";
+import { IconButton } from "@material-ui/core";
+import { Done } from "@material-ui/icons";
 import {
   DatePicker as MUIDatePicker,
   DatePickerProps,
   MaterialUiPickersDate,
-  MuiPickersUtilsProvider,
+  MuiPickersUtilsProvider
 } from "@material-ui/pickers";
-import { IconButton } from "@material-ui/core";
-import { CalendarTodayRounded } from "@material-ui/icons";
+import enLocale from "date-fns/locale/en-US";
+import moment from "moment";
+import { useState } from "react";
+import styled from "styled-components";
+import { Date as DateType } from "../../../model/search/types";
 
+const CalendarWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* justify-content: space-around;
+  width: 100%; */
+  gap: 20px;
+  .button {
+    size: 50px;
+  }
+  & .MuiInputBase-input {
+    text-align: center;
+    /* text-align: left;
+    padding-left: 10px; */
+  }
+  & input {
+  }
+  .MuiPickersToolbar-toolbar, .button {
+    background-color: palegreen;
+  }
+`
 
-export function DatePicker(props: DatePickerProps) {
-  console.log(props.value)
-  const [date, setDate] = useState<MaterialUiPickersDate>(() => {
-    if (props.disableFuture && props.value && props.value !== null)
-      return new Date(props.value + "").getTime() > new Date().getTime()
-        ? new Date()
-        : new Date(props.value + "");
-    if (props.disablePast && props.value && props.value !== null)
-      return new Date(props.value + "").getTime() < new Date().getTime()
-        ? new Date()
-        : new Date(props.value + "");
-    else return null;
-  });
-  return ( 
-    <div style={{position: 'relative', maxWidth: '165px'}}>
-      <div style={{display: date === null ? 'block' : 'none' ,position: 'absolute', right: '0px'}} >
-        <IconButton 
+export type CalendarProps = {
+  date: DateType
+  value?: any
+  onDateChanged: (unix: DateType) => void
+}
+
+export const Calendar = (props: CalendarProps) => {
+  const [date, setDate] = useState<DateType>(props.date)
+  const handleDateFromChanged = (from: number) => {
+      setDate(prev=>({...prev, from: from}))
+    }
+  const handleDateToChanged = (to: number) => {
+      setDate(prev=>({...prev, to: to}))
+  }
+  
+
+  return (
+    <CalendarWrapper>
+      <DatePicker {...props} value={date.from * 1000} onChange={handleDateFromChanged} />
+      <DatePicker {...props} value={date.to * 1000} onChange={handleDateToChanged} />
+      <IconButton onClick={(e)=>props.onDateChanged(date)}>
+      {/* <IconButton> */}
+          <Done  />
+        </IconButton>
+    </CalendarWrapper>
+  )
+}
+
+const DatePicker = (props: DatePickerProps) => {
+  // console.log(props.value)
+  // const [date, setDate] = useState(props.value)
+  // console.log(date)
+  return (
+    <div style={{ position: 'relative', maxWidth: '165px' }}>
+      {/* <div style={{ display: 'block', position: 'absolute', right: '0px' }} >
+        <IconButton
           size="small"
         >
-          <CalendarTodayRounded style={{height: '18px'}} />
+          <CalendarTodayRounded style={{ height: '18px' }} />
         </IconButton>
-      </div>
+      </div> */}
       <MuiPickersUtilsProvider
         utils={DateFnsUtils}
         locale={enLocale}
       >
-        <MUIDatePicker
-          {...props}
-          style={{minWidth: '100px'}}
-          onChange={(date: MaterialUiPickersDate) => {
-            setDate(date);
-            props.onChange(date);
-          }}
-          value={props.value}
-          cancelLabel={'cancel'}
-          okLabel={'ok'}
-          clearLabel={'clear'}
-        />
-       
+          <MUIDatePicker
+            {...props}
+            style={{ minWidth: '100px' }}
+            onChange={(date: MaterialUiPickersDate) => {
+              const unixDate = moment(date).unix()
+              // setDate(unixDate);
+              props.onChange(unixDate);
+            }}
+            value={props.value}
+            cancelLabel={'cancel'}
+            okLabel={'ok'}
+            clearLabel={'clear'}
+          />
       </MuiPickersUtilsProvider>
     </div>
   );

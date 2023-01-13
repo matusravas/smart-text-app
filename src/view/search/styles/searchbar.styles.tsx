@@ -19,11 +19,17 @@ export const SearchBarWrapper = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  input {
+  #searchInput, #submitButton {
     border: 2px solid #303030;
     border-radius: 10px;
   }
 `;
+
+export const SearchToolBarWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+`
 
 export const SearchInput = styled.input.attrs({
   id: 'searchInput',

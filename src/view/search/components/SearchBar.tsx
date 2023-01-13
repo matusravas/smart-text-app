@@ -1,8 +1,8 @@
 import moment from "moment"
 import { FormEvent, useEffect, useState } from "react"
-import { Search, Date as D, SearchRequest, SearchPaginationDefault, Operator } from "../../../model/search/types"
-import { Divider, SearchBarWrapper, SearchButton, SearchInput } from '../styles/searchbar.styles'
-import { DatePicker } from "./DatePicker"
+import { Search, Date as D, SearchRequest, SearchPaginationDefault, Operator, Date } from "../../../model/search/types"
+import { Divider, SearchBarWrapper, SearchButton, SearchInput, SearchToolBarWrapper } from '../styles/searchbar.styles'
+import { Calendar } from "./DatePicker"
 import { SelectButton, SelectButtonOption } from "./Dropdown"
 
 interface SearchBarProps {
@@ -43,21 +43,25 @@ const SearchBar = ({ search, onRequestDataChange, date }: SearchBarProps) => {
         else setOperator(value)
     }
 
+    const handleDateChange = (date: Date) => {
+        console.log(date)
+        // onRequestDataChange({search: search, date: {...date}, pagination: SearchPaginationDefault })
+    }
+
     return (
         <SearchBarWrapper autoComplete="off" onSubmit={handleSubmit}>
             {/* <div> */}
 
             <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
-            {/* <Calendar date={date} /> */}
-            {/* <div style={{ 'display': 'flex', 'flexDirection': 'row', 'justifyContent': 'center', 'alignContent': 'space-between' }}>
-                <DatePicker value={date.from} onChange={() => { }} />
-            </div> */}
-            <div style={{ 'display': 'flex', 'flexDirection': 'row', 'justifyContent': 'center', 'alignContent': 'space-between' }}>
+            <SearchToolBarWrapper>
+
+                <Calendar date={date} onDateChanged={handleDateChange}
+                    />
                 <SelectButton
                     disabled={disabled}
                     label="Select operator" options={selectOptions}
                     selected={operator} onSelected={handleSearchOperatorChange} />
-            </div>
+            </SearchToolBarWrapper>
             <div style={{ 'display': 'flex', 'flexDirection': 'row', 'justifyContent': 'center', 'alignContent': 'space-between' }}>
                 <SearchButton />
                 {/* <SearchButton /> */}

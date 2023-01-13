@@ -22,8 +22,8 @@ export const SelectButton = <T,>({ options, selected, onSelected, disabled=false
         option && onSelected(option.value as T)
     }
     return (
-        <div>
-            <label>{props.label}</label>
+        <div style={{'display': 'flex', 'flexWrap': 'nowrap', 'alignItems': 'center', 'position': 'relative'}}>
+            {/* <label style={{'position': 'absolute', 'top': '10px'}}>{props.label}</label> */}
             <select disabled={disabled} onChange={handleSelect} value={selectedValue}>
                 {options.map((option, idx) => {
                     return <option key={idx} value={option.value}>{option.label}</option>
