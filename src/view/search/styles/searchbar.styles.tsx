@@ -11,8 +11,8 @@ export const SearchDashboardWrapper = styled.div`
 export const SearchBarWrapper = styled.form`
   height: 200px;
   width: 90vw;
-  border: 1px solid #fafafa;
-  box-shadow: 0 0 15px 2px #004ba033;
+  /* border: 1px solid #fafafa;
+  box-shadow: 0 0 15px 2px #004ba033; */
   box-sizing: border-box;
   display: flex;
   gap: 10px;
@@ -57,6 +57,7 @@ export const SearchButton = styled.input.attrs({
   text-align: center;
   &:hover {
     cursor: pointer;
+    box-shadow: 0 0 15px 2px #30303033
   };
 `;
 

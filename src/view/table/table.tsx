@@ -31,44 +31,51 @@ export const Table = (props: TableProps) => {
         const { target: { value: rowsPerPage } } = event
         props.onRequestDataChange({ pagination: { currentPage: pagination.currentPage, pageSize: +rowsPerPage } })
     }
-    return (
-        <TableWrapper>
-            <MaterialTable
-                title='ABCDEF'
-                icons={tableIcons}
-                tableRef={materialTableRef}
-                isLoading={isLoading}
-                columns={columns}
-                data={rows}
-                localization={localization}
-                options={options}
-                components={{
-                    Body: (props: any) => {
-                        return (
-                            <MTableBody {...props} />
-                        );
-                    },
-                    Row: (props: any) => {
-                        if (props.pagination === "true" || !renderingGroupRows) {
+
+    const renderTable = () => {
+        if (rows.length === 0) return ( <React.Fragment /> )
+        return (
+            <TableWrapper>
+                <MaterialTable
+                    title='ABCDEF'
+                    icons={tableIcons}
+                    tableRef={materialTableRef}
+                    isLoading={isLoading}
+                    columns={columns}
+                    data={rows}
+                    localization={localization}
+                    options={options}
+                    components={{
+                        Body: (props: any) => {
                             return (
-                                <MTableBodyRow {...props} />
+                                <MTableBody {...props} />
                             );
-                        } else return <></>;
-                    },
-                    Pagination: (props: any) => {
-                        return <TablePagination
-                            {...props}
-                            count={pagination.totalHits}
-                            page={pagination.currentPage}
-                            onChangePage={(_, gotoPage) => onPageChange(gotoPage)}
-                            onChangeRowsPerPage={(e) => {
-                                onPageSizeChange(e)
-                                props.onChangeRowsPerPage(e)
-                            }} />
-                    }
-                }}
-                {...props}
-            />
-        </TableWrapper>
-    );
+                        },
+                        Row: (props: any) => {
+                            if (props.pagination === "true" || !renderingGroupRows) {
+                                return (
+                                    <MTableBodyRow {...props} />
+                                );
+                            } else return <></>;
+                        },
+                        Pagination: (props: any) => {
+                            return <TablePagination
+                                {...props}
+                                count={pagination.totalHits}
+                                page={pagination.currentPage}
+                                onChangePage={(_, gotoPage) => onPageChange(gotoPage)}
+                                onChangeRowsPerPage={(e) => {
+                                    onPageSizeChange(e)
+                                    props.onChangeRowsPerPage(e)
+                                }} />
+                        }
+                    }}
+                    {...props}
+                />
+            </TableWrapper>
+        )
+    }
+
+    return renderTable()
+
 }

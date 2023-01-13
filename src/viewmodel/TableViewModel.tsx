@@ -31,7 +31,6 @@ export function useTable({
 
     useEffect(() => {
         // if(!factory.controller.signal.aborted) setIsLoading(true)
-        setIsLoading(true)
         repository
             .search(requestData)
             .then((res) => {
@@ -92,7 +91,8 @@ export function useTable({
                 position: "sticky",
                 top: 0,
             },
-            toolbar: false,
+            // toolbar: false,
+            draggable: false,
             search: false,
             showTitle: false,
             sorting: false,
@@ -109,7 +109,7 @@ export function useTable({
             pageSize: pagination.pageSize
         };
         return options
-    }, [requestData.search, requestData.date]);
+    }, [requestData.search, requestData.date, pagination.pageSize]);
 
     return { rows, isLoading, columns, pagination, options: tableOptions, localization, componentDidUnmount: isMounted };
 }

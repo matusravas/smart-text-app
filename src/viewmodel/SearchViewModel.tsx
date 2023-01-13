@@ -1,6 +1,5 @@
 import moment from 'moment'
 import { useState } from 'react'
-import { SearchResponse } from '../model/search/SearchResponse'
 import { SearchPaginationDefault, SearchRequest } from '../model/search/types'
 
 

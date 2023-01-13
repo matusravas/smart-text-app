@@ -2,7 +2,7 @@ import axios from "axios";
 import { Dictionary } from "../../model/dictionary/types";
 import { Response } from "../../model/types";
 import ApiService from "../ApiService";
-import IDictionaryApiService from "./model/IDictionaryApiService";
+import IDictionaryApiService from "./IDictionaryApiService";
 
 class DictionaryApiService extends ApiService implements IDictionaryApiService {
     constructor() {

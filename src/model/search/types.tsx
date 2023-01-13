@@ -4,10 +4,12 @@ export type SearchRequest = {
     pagination: Pagination
 }
 
+export type Operator = 'AND' | 'OR'
+
 export type Search = {
     phrase: string,
     field: string,
-    operator : 'AND' | 'OR'
+    operator : Operator
 }
 
 export type Date = {
@@ -28,7 +30,7 @@ export type Pagination = {
 
 export type PaginationRaw = {
     current_page: number,
-    step: number,
+    page_size: number,
     total_hits: number,
     total_pages: number
 }

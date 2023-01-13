@@ -20,7 +20,7 @@ export default class SearchRepository implements ISearchRepository {
         const paginationRaw = responseRaw.data.pagination
         const response: SearchResponse = {...responseRaw.data, 
             pagination: {
-                pageSize: paginationRaw.step, 
+                pageSize: paginationRaw.page_size, 
                 currentPage: paginationRaw.current_page,
                 totalHits: paginationRaw.total_hits,
                 totalPages: paginationRaw.total_pages

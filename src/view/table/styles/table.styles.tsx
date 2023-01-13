@@ -3,15 +3,22 @@ import styled from "styled-components";
 export const TableWrapper = styled.div`
   max-height: 100%;
   max-width: 90%;
-  & .MuiTableRow-head th:hover {
-    filter: sepia(20%);
-    position: sticky;
-  }
+  /* & .MuiTableRow-head th:hover { */
+    /* filter: sepia(20%); */
+    /* position: sticky; */
+  /* } */
   & .MuiTableCell-head {
     background-color: #303030;
     color: #fafafa;
     // font-size: 14px;
     text-align: center;
+  }
+  & .MuiTableRow-head {
+      background-color: #303030;
+      position: sticky;
+      top: 0;
+      border-color: #303030;
+      color: #303030;
   }
   & .MuiTableBody-root tr:nth-of-type(even) {
     background: #f2f2f2;

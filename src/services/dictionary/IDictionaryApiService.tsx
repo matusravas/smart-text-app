@@ -1,5 +1,5 @@
-import { Dictionary } from "../../../model/dictionary/types"
-import { Response } from "../../../model/types"
+import { Dictionary } from "../../model/dictionary/types"
+import { Response } from "../../model/types"
 
 export default interface IDictionaryApiService {
     getAllKeywordsWithSynonyms(): Promise<Response<Array<Dictionary>>>
