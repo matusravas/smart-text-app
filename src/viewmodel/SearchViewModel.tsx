@@ -18,7 +18,7 @@ export const useSearchViewModel = () => {
 
     const setLastTimestamp = (timestamp: number) => {
         const dateTo = moment.unix(timestamp).valueOf()
-        const dateFrom = moment.unix(timestamp).subtract(1, 'month').valueOf()
+        const dateFrom = moment.unix(timestamp).subtract(3, 'month').valueOf()
         setRequestData({...requestData, date: {...requestData.date, from: dateFrom, to: dateTo}})
     }
 

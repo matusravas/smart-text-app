@@ -71,14 +71,28 @@ const CalendarWrapper = styled.div`
   }
 `
 
-export type CalendarProps = {
+interface CalendarProps {
   date: DateType
   value?: any
   onDateChanged: (unix: DateType) => void
 }
 
+
+
 export const Calendar = (props: CalendarProps) => {
   const [date, setDate] = useState<DateType>(props.date)
+  const [interval, setInterval] = useState(
+    {
+      min: date.from //moment().subtract(3, 'months').valueOf()
+      ,max: date.to //moment().valueOf()
+    }
+  )
+  const recomputeIntervals = () => {
+
+  }
+
+  const shouldDisableDate = (date: any) => date > interval.max! || date < interval.min!;
+
   const handleDateFromChanged = (from: number) => {
     setDate(prev => ({ ...prev, from: from }))
   }
@@ -92,8 +106,20 @@ export const Calendar = (props: CalendarProps) => {
 
   return (
     <CalendarWrapper>
-      <DatePicker {...props} value={date.from? date.from: undefined} onChange={handleDateFromChanged} />
-      <DatePicker {...props} value={date.to? date.to : undefined} onChange={handleDateToChanged} />
+      <DatePicker {...props}
+        minDate={interval.min}
+        maxDate={interval.max}
+        shouldDisableDate={shouldDisableDate}
+        value={date.from}
+        onChange={handleDateFromChanged}
+      />
+      <DatePicker {...props}
+        minDate={interval.min}
+        maxDate={interval.max}
+        shouldDisableDate={shouldDisableDate}
+        value={date.to}
+        onChange={handleDateToChanged}
+      />
       <IconButton onClick={(e) => props.onDateChanged(date)}>
         {/* <IconButton> */}
         <Done />
@@ -102,32 +128,33 @@ export const Calendar = (props: CalendarProps) => {
   )
 }
 
-const DatePicker = (props: DatePickerProps) =>  (
-    <div style={{ position: 'relative', maxWidth: '165px' }}>
-      {/* <div style={{ display: 'block', position: 'absolute', right: '0px' }} >
+const DatePicker = (props: DatePickerProps) => {
+  return (<div style={{ position: 'relative', maxWidth: '165px' }}>
+    {/* <div style={{ display: 'block', position: 'absolute', right: '0px' }} >
         <IconButton
           size="small"
         >
           <CalendarTodayRounded style={{ height: '18px' }} />
         </IconButton>
       </div> */}
-      <MuiPickersUtilsProvider
-        utils={DateFnsUtils}
-        locale={enLocale}
-      >
-        <MUIDatePicker
-          {...props}
-          style={{ minWidth: '100px' }}
-          onChange={(date: MaterialUiPickersDate) => {
-            const unixDate = moment(date).unix()
-            // setDate(unixDate);
-            props.onChange(unixDate);
-          }}
-          value={props.value? props.value : undefined}
-          cancelLabel={'cancel'}
-          okLabel={'ok'}
-          clearLabel={'clear'}
-        />
-      </MuiPickersUtilsProvider>
-    </div>
-)
+    <MuiPickersUtilsProvider
+      utils={DateFnsUtils}
+      locale={enLocale}
+    >
+      <MUIDatePicker
+        {...props}
+        style={{ minWidth: '100px' }}
+        onChange={(date: MaterialUiPickersDate) => {
+          const unixDate = moment(date).valueOf()
+          // setDate(unixDate);
+          props.onChange(unixDate);
+        }}
+        value={props.value ? props.value : undefined}
+        cancelLabel={'cancel'}
+        okLabel={'ok'}
+        clearLabel={'clear'}
+      />
+    </MuiPickersUtilsProvider>
+  </div>
+  )
+}

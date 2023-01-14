@@ -10,7 +10,7 @@ export const SearchDashboardWrapper = styled.div`
 
 export const SearchBarWrapper = styled.form`
   height: 200px;
-  width: 90vw;
+  width: 40%;
   /* border: 1px solid #fafafa;
   box-shadow: 0 0 15px 2px #004ba033; */
   box-sizing: border-box;
@@ -27,8 +27,15 @@ export const SearchBarWrapper = styled.form`
 
 export const SearchToolBarWrapper = styled.div`
   display: flex;
+  width: 100%;
   flex-direction: row;
+  align-items: center;
+  background-color: #fafafa;
+  border-radius: 10px;
+  padding: 2px 10px;
   gap: 20px;
+  border-color: #004ba0;
+  box-shadow: 0 0 15px 1px #004ba033;
 `
 
 export const SearchInput = styled.input.attrs({
@@ -36,7 +43,7 @@ export const SearchInput = styled.input.attrs({
   type: 'text',
   placeholder: 'Search...'
 })`
-  width: 40%;
+  width: 100%;
   height: 55px;
   padding-left: 20px;
   font-size: 20px;
@@ -55,7 +62,7 @@ export const SearchButton = styled.input.attrs({
   type: 'submit',
   value: 'Search'
 })`
-  width: 10vw;
+  width: 30%;
   height: 50px;
   background-color: #303030;
   color: #fafafa;

@@ -27,10 +27,7 @@ import SearchDashboard from './search/SearchDashboard';
 
 export const App = () => {
   return (
-    <div>
-      <p>Hello</p>
       <RouterProvider router={router} />
-    </div>
   );
 }
 

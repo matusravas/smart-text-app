@@ -2,7 +2,7 @@ import moment from "moment"
 import { FormEvent, useEffect, useState } from "react"
 import { Search, Date as D, SearchRequest, SearchPaginationDefault, Operator, Date } from "../../../model/search/types"
 import { Divider, SearchBarWrapper, SearchButton, SearchInput, SearchToolBarWrapper } from '../styles/searchbar.styles'
-import { Calendar } from "./DatePicker"
+import { Calendar } from "./Calendar"
 import { SelectButton, SelectButtonOption } from "./Dropdown"
 
 interface SearchBarProps {
@@ -50,16 +50,17 @@ const SearchBar = ({ search, onRequestDataChange, date }: SearchBarProps) => {
     return (
         <SearchBarWrapper autoComplete="off" onSubmit={handleSubmit}>
             <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
-            {date.from && date.to && <SearchToolBarWrapper>
-                <Calendar date={date} onDateChanged={handleDateChange} />
-                <SelectButton
-                    disabled={disabled}
-                    label="Select operator" options={selectOptions}
-                    selected={operator} onSelected={handleSearchOperatorChange} />
-            </SearchToolBarWrapper>}
-            <div style={{ 'display': 'flex', 'flexDirection': 'row', 'justifyContent': 'center', 'alignContent': 'space-between' }}>
-                <SearchButton />
-            </div>
+            {date.from && date.to && 
+                <SearchToolBarWrapper>
+                    <SelectButton
+                        disabled={disabled}
+                        label="Select operator" options={selectOptions}
+                        selected={operator} onSelected={handleSearchOperatorChange} />
+                    <Calendar date={date} onDateChanged={handleDateChange} />
+                    <SearchButton />
+                </SearchToolBarWrapper>
+            }
+            
         </SearchBarWrapper>
     )
 }
