@@ -16,6 +16,7 @@ export const Table = (props: TableProps) => {
         localization
     } = useTable({
         requestData: props.requestData,
+        onLastTimestampObtained: props.onLastTimestampObtained,
         onError: props.handleError,
         onSuccess: props.handleSuccess
     })

@@ -12,7 +12,6 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({ search, onRequestDataChange, date }: SearchBarProps) => {
-    console.log(date)
     const [query, setQuery] = useState('')
     const [disabled, setDisabled] = useState(true)
     const [operator, setOperator] = useState(search.operator)
@@ -50,21 +49,16 @@ const SearchBar = ({ search, onRequestDataChange, date }: SearchBarProps) => {
 
     return (
         <SearchBarWrapper autoComplete="off" onSubmit={handleSubmit}>
-            {/* <div> */}
-
             <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
-            <SearchToolBarWrapper>
-
-                <Calendar date={date} onDateChanged={handleDateChange}
-                    />
+            {date.from && date.to && <SearchToolBarWrapper>
+                <Calendar date={date} onDateChanged={handleDateChange} />
                 <SelectButton
                     disabled={disabled}
                     label="Select operator" options={selectOptions}
                     selected={operator} onSelected={handleSearchOperatorChange} />
-            </SearchToolBarWrapper>
+            </SearchToolBarWrapper>}
             <div style={{ 'display': 'flex', 'flexDirection': 'row', 'justifyContent': 'center', 'alignContent': 'space-between' }}>
                 <SearchButton />
-                {/* <SearchButton /> */}
             </div>
         </SearchBarWrapper>
     )

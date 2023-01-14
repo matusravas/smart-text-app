@@ -5,6 +5,7 @@ type UseCases = 'bekaert'
 
 export type UseTableProps = {
     requestData: SearchRequest;
+    onLastTimestampObtained: (timestamp: number) => void,
     // getRowsRequest: any;
     // updateRowRequest: any;
     // deleteRowRequest: any;
@@ -59,6 +60,7 @@ export type TableProps = {
     // useCase: UseCases
     // config: any;
     requestData: SearchRequest;
+    onLastTimestampObtained: (timestamp: number) => void,
     onRequestDataChange: (requestData: Partial<SearchRequest>) => void,
     handleTableObj?: (tableObj: any) => void;
     handleError?: (errorMessage: string) => void;

@@ -12,6 +12,7 @@ import SearchRepository from "../repository/search/SearchRepository";
 
 export function useTable({
     requestData,
+    onLastTimestampObtained,
     onError,
     onSuccess,
 }: UseTableProps) {
@@ -23,13 +24,24 @@ export function useTable({
     const isMounted = useRef(false);
 
     useEffect(() => {
-        return () => {
-            isMounted.current = true;
-            //   factory.abortAllRequests();
-        };
+        repository
+            .lastTimestamp()
+            .then((timestamp)=>{
+                onLastTimestampObtained(timestamp)
+            })
+            .catch((err: Error) => {
+                if (isMounted.current) return;
+                setIsLoading(false);
+                onError && onError(err.message);
+            });
+        // return () => {
+        //     isMounted.current = true;
+        //       factory.abortAllRequests();
+        // };
     }, []);
 
     useEffect(() => {
+        if (!(requestData.date.from && requestData.date.to)) return
         // if(!factory.controller.signal.aborted) setIsLoading(true)
         repository
             .search(requestData)

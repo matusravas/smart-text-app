@@ -17,7 +17,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
         const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
         const paginationQueryString = `page=${pagination.currentPage}&pageSize=${pagination.pageSize}`
         const queryString = `${searchQueryString}&${dateQueryString}&${paginationQueryString}`
-        return new Promise<Response<any>>((resolve, reject) => axios({
+        return new Promise<Response<SearchResponseRaw>>((resolve, reject) => axios({
             method: 'GET',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/?${queryString}`,
             responseType: 'json',
@@ -60,6 +60,24 @@ class SearchApiService extends ApiService implements ISearchApiService {
         }).catch(err => {
             console.error(err)
             reject('Unable to export data')
+        })
+        )
+    }
+    lastTimestamp(): Promise<Response<number>> {
+        return new Promise<Response<number>>((resolve, reject) => axios({
+            method: 'GET',
+            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/timestamp`,
+            responseType: 'json',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(res => {
+            resolve({ok: true, data: res.data.data.timestamp})
+        }).catch(err => {
+            console.error(err)
+            reject('Unable to obtain last timestamp')
         })
         )
     }

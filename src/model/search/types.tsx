@@ -14,8 +14,8 @@ export type Search = {
 
 export type Date = {
     field?: string,
-    from: number
-    to: number
+    from?: number
+    to?: number
 }
 
 export const SearchPaginationDefault = {
