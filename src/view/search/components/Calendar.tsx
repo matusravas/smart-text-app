@@ -74,17 +74,17 @@ const CalendarWrapper = styled.div`
 interface CalendarProps {
   date: DateType
   value?: any
-  onDateChanged: (unix: DateType) => void
+  onDateChanged: (date: DateType) => void
 }
 
 
 
 export const Calendar = (props: CalendarProps) => {
-  const [date, setDate] = useState<DateType>(props.date)
+  // const [date, setDate] = useState<DateType>(props.date)
   const [interval, setInterval] = useState(
     {
-      min: date.from //moment().subtract(3, 'months').valueOf()
-      ,max: date.to //moment().valueOf()
+      min: props.date.from //moment().subtract(3, 'months').valueOf()
+      ,max: props.date.to //moment().valueOf()
     }
   )
   const recomputeIntervals = () => {
@@ -94,14 +94,20 @@ export const Calendar = (props: CalendarProps) => {
   const shouldDisableDate = (date: any) => date > interval.max! || date < interval.min!;
 
   const handleDateFromChanged = (from: number) => {
-    setDate(prev => ({ ...prev, from: from }))
+    props.onDateChanged({ ...props.date, from: from })
+    // setDate(prev => ({ ...prev, from: from }))
   }
   const handleDateToChanged = (to: number) => {
-    setDate(prev => ({ ...prev, to: to }))
+    props.onDateChanged({ ...props.date, to: to })
+    // setDate(prev => ({ ...prev, to: to }))
   }
 
   useEffect(() => {
-    setDate(props.date)
+    setInterval({
+      min: props.date.from //moment().subtract(3, 'months').valueOf()
+      ,max: props.date.to //moment().valueOf()
+    })
+    // setDate(props.date)
   }, [props.date])
 
   return (
@@ -110,20 +116,21 @@ export const Calendar = (props: CalendarProps) => {
         minDate={interval.min}
         maxDate={interval.max}
         shouldDisableDate={shouldDisableDate}
-        value={date.from}
+        label="From"
+        value={props.date.from}
         onChange={handleDateFromChanged}
       />
       <DatePicker {...props}
         minDate={interval.min}
         maxDate={interval.max}
         shouldDisableDate={shouldDisableDate}
-        value={date.to}
+        label="To"
+        value={props.date.to}
         onChange={handleDateToChanged}
       />
-      <IconButton onClick={(e) => props.onDateChanged(date)}>
-        {/* <IconButton> */}
+      {/* <IconButton onClick={(e) => props.onDateChanged(date)}>
         <Done />
-      </IconButton>
+      </IconButton> */}
     </CalendarWrapper>
   )
 }
@@ -143,6 +150,7 @@ const DatePicker = (props: DatePickerProps) => {
     >
       <MUIDatePicker
         {...props}
+        format="dd.MM. yyyy" 
         style={{ minWidth: '100px' }}
         onChange={(date: MaterialUiPickersDate) => {
           const unixDate = moment(date).valueOf()

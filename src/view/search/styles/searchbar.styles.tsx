@@ -8,6 +8,25 @@ export const SearchDashboardWrapper = styled.div`
   flex-direction: column;
 `
 
+export const SelectWrapper = styled.div`
+  display: flex;
+  flex-wrap: nowrap; 
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  & .select {
+    outline: none;
+    height: 100%;
+  };
+  & .label {
+    font-size: 1rem;
+    color: palegoldenrod;
+    /* position: absolute;
+    top: 10px; */
+  }
+`
+
 export const SearchBarWrapper = styled.form`
   height: 200px;
   width: 40%;
@@ -29,12 +48,13 @@ export const SearchToolBarWrapper = styled.div`
   display: flex;
   width: 100%;
   flex-direction: row;
+  justify-content: space-around;
   align-items: center;
-  background-color: #fafafa;
+  background-color: #fdfdfd;
   border-radius: 10px;
-  padding: 2px 10px;
-  gap: 20px;
-  border-color: #004ba0;
+  padding: 10px 2px 5px 2px;
+  gap: 30px;
+  /* border-color: #004ba0; */
   box-shadow: 0 0 15px 1px #004ba033;
 `
 
