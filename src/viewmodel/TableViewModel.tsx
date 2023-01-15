@@ -12,36 +12,18 @@ import SearchRepository from "../repository/search/SearchRepository";
 
 export function useTable({
     requestData,
-    onLastTimestampObtained,
     onError,
     onSuccess,
 }: UseTableProps) {
     const [rows, setRows] = useState<Data[]>(() => []);
     const [columns, setColumns] = useState<Column[]>(() => []);
-    const [pagination, setPagination] = useState<TablePagination>(() => ({...requestData.pagination, ...TablePaginationDefault}));
+    const [pagination, setPagination] = useState<TablePagination>(() => (TablePaginationDefault));
     const [isLoading, setIsLoading] = useState<boolean>(() => false);
     const repository = SearchRepository.getInstance()
     const isMounted = useRef(false);
 
     useEffect(() => {
-        repository
-            .lastTimestamp()
-            .then((timestamp)=>{
-                onLastTimestampObtained(timestamp)
-            })
-            .catch((err: Error) => {
-                if (isMounted.current) return;
-                setIsLoading(false);
-                onError && onError(err.message);
-            });
-        // return () => {
-        //     isMounted.current = true;
-        //       factory.abortAllRequests();
-        // };
-    }, []);
-
-    useEffect(() => {
-        if (!(requestData.date.from && requestData.date.to)) return
+        if (!requestData) return
         // if(!factory.controller.signal.aborted) setIsLoading(true)
         repository
             .search(requestData)
@@ -61,7 +43,7 @@ export function useTable({
     }, [requestData]);
 
     const prepareColumns = (columns: Column[]) => {
-        if (!requestData.search.phrase) return columns
+        if (!requestData?.search.phrase) return columns
         const columnIndex = columns.findIndex(column=>column.field === requestData.search.field)
         return columns.map((col, idx)=> {
             if (!(idx === columnIndex || idx === columnIndex + 1)) return col
@@ -74,7 +56,7 @@ export function useTable({
     }
 
     const handleExport = () => {
-        console.log(requestData)
+        if (!requestData) return
         repository
             .searchExport(requestData.search, requestData.date)
             .then((res)=>{
@@ -121,7 +103,7 @@ export function useTable({
             pageSize: pagination.pageSize
         };
         return options
-    }, [requestData.search, requestData.date, pagination.pageSize]);
+    }, [requestData?.search, requestData?.date, pagination.pageSize]);
 
     return { rows, isLoading, columns, pagination, options: tableOptions, localization, componentDidUnmount: isMounted };
 }

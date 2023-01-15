@@ -1,25 +1,37 @@
 import moment from 'moment'
-import { useState } from 'react'
-import { Search, SearchPaginationDefault, SearchRequest } from '../model/search/types'
+import { useEffect, useState } from 'react'
+import { SearchPaginationDefault, SearchRequest } from '../model/search/types'
+import SearchRepository from '../repository/search/SearchRepository'
 
-
-// interface Props {
-//     search: Search
-//     date?: Date
-//     pagination: Pagination
-// }
 
 export const useSearchViewModel = () => {
+    const [lastTimestamp, setLastTimestamp] = useState<number>()
     const [requestData, setRequestData] = useState<SearchRequest>({
         search: { phrase: '', operator: 'OR', field: 'Kr_text' },
-        date: {},
-        pagination: { ...SearchPaginationDefault }
+        pagination: SearchPaginationDefault
+        , date: { from: moment().subtract(3, 'months').valueOf(), to: moment().valueOf() }
     })
+    const repository = SearchRepository.getInstance()
 
-    const setLastTimestamp = (timestamp: number) => {
+    useEffect(() => {
+        repository
+            .lastTimestamp()
+            .then((timestamp) => {
+                onLastTimestampObtained(timestamp)
+            })
+            .catch((err: Error) => {
+                console.error(err)
+            });
+    }, [])
+
+    const onLastTimestampObtained = (timestamp: number) => {
         const dateTo = moment.unix(timestamp).valueOf()
         const dateFrom = moment.unix(timestamp).subtract(3, 'month').valueOf()
-        setRequestData({...requestData, date: {...requestData.date, from: dateFrom, to: dateTo}})
+        setRequestData({
+            ...requestData
+            , date: { from: dateFrom, to: dateTo }
+        })
+        setLastTimestamp(dateTo)
     }
 
     const handleRequestDataChange = (newRequestData: Partial<SearchRequest>) => {
@@ -28,7 +40,7 @@ export const useSearchViewModel = () => {
 
     return {
         requestData,
-        setLastTimestamp,
+        lastTimestamp,
         handleRequestDataChange
     }
 }

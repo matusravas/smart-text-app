@@ -7,19 +7,20 @@ import { SelectButton } from "./Dropdown"
 interface SearchBarProps {
     search: Search,
     date: Date,
+    lastTimestamp?: number,
     onRequestDataChange: (requestData: Partial<SearchRequest>) => void,
 }
 
-const SearchBar = ({ search, onRequestDataChange, date }: SearchBarProps) => {
+const SearchBar = ({ search, onRequestDataChange, date, lastTimestamp }: SearchBarProps) => {
     const [query, setQuery] = useState('')
     const [disabled, setDisabled] = useState(true)
     const [operator, setOperator] = useState(search.operator)
-    const [calendar, setCalendar] = useState(date)
+    const [dateRange, setDateRange] = useState(date)
     const selectOptions = [{ label: 'AND', value: 'AND' }, { label: 'OR', value: 'OR' }]
 
     useEffect(()=>{
-        setCalendar(date)
-    }, [date])
+        setDateRange(date)
+    }, [lastTimestamp])
 
     const hasSearchMultiplePhrases = (searchQuery: string) => {
         const queryPhrases = searchQuery.split(' ').filter(q => q.length > 2)
@@ -35,7 +36,7 @@ const SearchBar = ({ search, onRequestDataChange, date }: SearchBarProps) => {
         e.preventDefault()
         onRequestDataChange({ 
             search: { ...search, phrase: query, operator: operator }
-            , date: {...calendar}
+            , date: {...dateRange}
             , pagination: SearchPaginationDefault })
     }
 
@@ -51,24 +52,25 @@ const SearchBar = ({ search, onRequestDataChange, date }: SearchBarProps) => {
 
     const handleDateChange = (date: Date) => {
         console.log(date)
-        setCalendar({...calendar, ...date})
-        // onRequestDataChange({search: search, date: {...date}, pagination: SearchPaginationDefault })
+        setDateRange({...date, ...dateRange})
     }
 
     return (
         <SearchBarWrapper autoComplete="off" onSubmit={handleSubmit}>
             <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
-            {calendar.from && calendar.to && 
+            {dateRange && lastTimestamp &&
                 <SearchToolBarWrapper>
-                    <Calendar date={calendar} onDateChanged={handleDateChange} />
+                    <Calendar 
+                        date={dateRange} 
+                        lastTimestamp={lastTimestamp} 
+                        onDateChanged={handleDateChange} />
                     <SelectButton
                         disabled={disabled}
                         label="Operator" options={selectOptions}
                         value={operator} onSelected={handleSearchOperatorChange} />
                     <SearchButton />
                 </SearchToolBarWrapper>
-            }
-            
+            }    
         </SearchBarWrapper>
     )
 }

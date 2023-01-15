@@ -4,8 +4,7 @@ import { SearchRequest } from "../search/types";
 type UseCases = 'bekaert'
 
 export type UseTableProps = {
-    requestData: SearchRequest;
-    onLastTimestampObtained: (timestamp: number) => void,
+    requestData?: SearchRequest;
     // getRowsRequest: any;
     // updateRowRequest: any;
     // deleteRowRequest: any;
@@ -59,8 +58,7 @@ export interface MaterialTableProps<RowData extends object> {
 export type TableProps = {
     // useCase: UseCases
     // config: any;
-    requestData: SearchRequest;
-    onLastTimestampObtained: (timestamp: number) => void,
+    requestData?: SearchRequest;
     onRequestDataChange: (requestData: Partial<SearchRequest>) => void,
     handleTableObj?: (tableObj: any) => void;
     handleError?: (errorMessage: string) => void;
@@ -69,6 +67,8 @@ export type TableProps = {
 
 
 export const TablePaginationDefault = {
+    currentPage: 0,
+    pageSize: 10,
     totalHits: 0,
     totalPages: 0  
 }

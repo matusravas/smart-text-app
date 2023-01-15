@@ -1,7 +1,7 @@
 export type SearchRequest = {
     search: Search
     date: Date
-    pagination: Pagination
+    pagination: Pagination,
 }
 
 export type Operator = 'AND' | 'OR'
