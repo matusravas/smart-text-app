@@ -74,30 +74,32 @@ const CalendarWrapper = styled.div`
 interface CalendarProps {
   date: DateType
   lastTimestamp: number,
-  value?: any
+  // value?: any
   onDateChanged: (date: DateType) => void
 }
 
 
+export const Calendar = ({date, lastTimestamp, ...props}: CalendarProps) => {
+  console.log(lastTimestamp)
+  console.log(date)
+  const [interval, setInterval] = useState({min: date.from, max: lastTimestamp})
 
-export const Calendar = (props: CalendarProps) => {
-  const [interval, setInterval] = useState({min: props.date.from, max: props.lastTimestamp})
-
+  console.log(interval)
   const shouldDisableDate = (date: any) => date > interval.max! || date < interval.min!;
 
   const handleDateFromChanged = (from: number) => {
-    props.onDateChanged({ ...props.date, from: from })
+    props.onDateChanged({ ...date, from: from })
   }
   const handleDateToChanged = (to: number) => {
-    props.onDateChanged({ ...props.date, to: to })
+    props.onDateChanged({ ...date, to: to })
   }
 
   useEffect(() => {
     setInterval({
-      min: moment(props.date.to).subtract(3, 'months').valueOf()
-      , max: props.lastTimestamp
+      min: moment(date.to).subtract(3, 'months').valueOf()
+      , max: lastTimestamp
     })
-  }, [props.date])
+  }, [date])
 
   return (
     <CalendarWrapper>
@@ -106,7 +108,7 @@ export const Calendar = (props: CalendarProps) => {
         maxDate={interval.max}
         shouldDisableDate={shouldDisableDate}
         label="From"
-        value={props.date.from}
+        value={date.from}
         onChange={handleDateFromChanged}
       />
       <DatePicker {...props}
@@ -114,7 +116,7 @@ export const Calendar = (props: CalendarProps) => {
         maxDate={interval.max}
         shouldDisableDate={shouldDisableDate}
         label="To"
-        value={props.date.to}
+        value={date.to}
         onChange={handleDateToChanged}
       />
     </CalendarWrapper>

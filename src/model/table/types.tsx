@@ -1,10 +1,10 @@
 import { Action, Column, DetailPanel, Filter, Icons, Localization, Options, Query } from "material-table";
-import { SearchRequest } from "../search/types";
+import { SearchData } from "../search/types";
 
 type UseCases = 'bekaert'
 
 export type UseTableProps = {
-    requestData?: SearchRequest;
+    requestData: SearchData;
     // getRowsRequest: any;
     // updateRowRequest: any;
     // deleteRowRequest: any;
@@ -58,8 +58,8 @@ export interface MaterialTableProps<RowData extends object> {
 export type TableProps = {
     // useCase: UseCases
     // config: any;
-    requestData?: SearchRequest;
-    onRequestDataChange: (requestData: Partial<SearchRequest>) => void,
+    requestData: SearchData;
+    onRequestDataChange: (requestData: Partial<SearchData>) => void,
     handleTableObj?: (tableObj: any) => void;
     handleError?: (errorMessage: string) => void;
     handleSuccess?: (successMessage: string) => void;

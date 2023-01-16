@@ -1,10 +1,11 @@
-export type SearchRequest = {
+export type SearchData = {
     search: Search
     date: Date
     pagination: Pagination,
+    lastTimestamp?: number
 }
 
-export type Operator = 'AND' | 'OR'
+export type Operator = 'TEXT' | 'AND' | 'OR'
 
 export type Search = {
     phrase: string,
@@ -14,8 +15,8 @@ export type Search = {
 
 export type Date = {
     field?: string,
-    from?: number
-    to?: number
+    from: number
+    to: number
 }
 
 export const SearchPaginationDefault = {

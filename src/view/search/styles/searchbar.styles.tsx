@@ -94,6 +94,14 @@ export const SearchButton = styled.input.attrs({
   };
 `;
 
+
+// export const OperatorCheckboxWrapper = styled.input`
+//   color: #004ba0;
+//   .root {
+//     color: #004ba0;
+//   }   
+// `
+
 export const Divider = styled.hr`
   border-top: 0px solid;
   color: #303030;

@@ -23,7 +23,7 @@ export function useTable({
     const isMounted = useRef(false);
 
     useEffect(() => {
-        if (!requestData) return
+        if (!requestData.lastTimestamp) return
         // if(!factory.controller.signal.aborted) setIsLoading(true)
         repository
             .search(requestData)
@@ -43,9 +43,14 @@ export function useTable({
     }, [requestData]);
 
     const prepareColumns = (columns: Column[]) => {
-        if (!requestData?.search.phrase) return columns
-        const columnIndex = columns.findIndex(column=>column.field === requestData.search.field)
-        return columns.map((col, idx)=> {
+        let centeredColumns = columns.map(col=>{
+            return {...col, cellStyle: {
+                textAlign: 'center',
+              }}
+        })
+        if (!requestData.search.phrase) return centeredColumns
+        const columnIndex = centeredColumns.findIndex(column=>column.field === requestData.search.field)
+        return centeredColumns.map((col, idx)=> {
             if (!(idx === columnIndex || idx === columnIndex + 1)) return col
             const color = idx === columnIndex? '#9a0007': '#00600f'
             const newCol = {...col, 
@@ -103,7 +108,7 @@ export function useTable({
             pageSize: pagination.pageSize
         };
         return options
-    }, [requestData?.search, requestData?.date, pagination.pageSize]);
+    }, [requestData.search, requestData.date, pagination.pageSize]);
 
     return { rows, isLoading, columns, pagination, options: tableOptions, localization, componentDidUnmount: isMounted };
 }

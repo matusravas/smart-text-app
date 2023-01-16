@@ -1,24 +1,35 @@
+import { makeStyles } from "@material-ui/core"
 import { FormEvent, useEffect, useState } from "react"
-import { Date, Operator, Search, SearchPaginationDefault, SearchRequest } from "../../../model/search/types"
+import { Date, Search, SearchData, SearchPaginationDefault } from "../../../model/search/types"
 import { SearchBarWrapper, SearchButton, SearchInput, SearchToolBarWrapper } from '../styles/searchbar.styles'
 import { Calendar } from "./Calendar"
-import { SelectButton } from "./Dropdown"
+import { SelectButton } from "./SelectButton"
 
 interface SearchBarProps {
     search: Search,
     date: Date,
     lastTimestamp?: number,
-    onRequestDataChange: (requestData: Partial<SearchRequest>) => void,
+    onRequestDataChange: (requestData: Partial<SearchData>) => void,
 }
 
+const useStyles = makeStyles((theme) => ({
+    label: {
+        fontSize: theme.typography.body1.fontSize,
+        fontFamily: theme.typography.body1.fontFamily,
+        fontWeight: theme.typography.body1.fontWeight,
+        color: theme.palette.text.primary
+    },
+}));
+
 const SearchBar = ({ search, onRequestDataChange, date, lastTimestamp }: SearchBarProps) => {
+    const classes = useStyles();
     const [query, setQuery] = useState('')
     const [disabled, setDisabled] = useState(true)
     const [operator, setOperator] = useState(search.operator)
     const [dateRange, setDateRange] = useState(date)
-    const selectOptions = [{ label: 'AND', value: 'AND' }, { label: 'OR', value: 'OR' }]
+    const selectOptions = [{ label: 'Text', value: 'TEXT' }, { label: 'AND', value: 'AND' }, { label: 'OR', value: 'OR' }]
 
-    useEffect(()=>{
+    useEffect(() => {
         setDateRange(date)
     }, [lastTimestamp])
 
@@ -34,43 +45,48 @@ const SearchBar = ({ search, onRequestDataChange, date, lastTimestamp }: SearchB
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        onRequestDataChange({ 
+        if (dateRange.from > dateRange.to) {
+            alert('Error')
+            return
+        }
+        onRequestDataChange({
             search: { ...search, phrase: query, operator: operator }
-            , date: {...dateRange}
-            , pagination: SearchPaginationDefault })
+            , date: { ...dateRange }
+            , pagination: SearchPaginationDefault
+        })
     }
 
 
-    const handleSearchOperatorChange = (value: Operator) => {
-        // if (search.phrase && operator !== value) {
-        //     setOperator(value)
-        //     onRequestDataChange({ search: { ...search, operator: value }, pagination: SearchPaginationDefault })
-        // }
-        // else setOperator(value)
-        setOperator(value)
-    }
+    // const handleSearchOperatorChange = (value: Operator) => {
+    //     // if (search.phrase && operator !== value) {
+    //     //     setOperator(value)
+    //     //     onRequestDataChange({ search: { ...search, operator: value }, pagination: SearchPaginationDefault })
+    //     // }
+    //     // else setOperator(value)
+    //     setOperator(value)
+    // }
 
     const handleDateChange = (date: Date) => {
         console.log(date)
-        setDateRange({...date, ...dateRange})
+        setDateRange({ ...dateRange, ...date })
     }
 
     return (
         <SearchBarWrapper autoComplete="off" onSubmit={handleSubmit}>
             <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
-            {dateRange && lastTimestamp &&
+            {lastTimestamp &&
                 <SearchToolBarWrapper>
-                    <Calendar 
-                        date={dateRange} 
-                        lastTimestamp={lastTimestamp} 
+                    <Calendar
+                        date={dateRange}
+                        lastTimestamp={lastTimestamp}
                         onDateChanged={handleDateChange} />
                     <SelectButton
                         disabled={disabled}
                         label="Operator" options={selectOptions}
-                        value={operator} onSelected={handleSearchOperatorChange} />
+                        value={operator} onSelected={setOperator} />
                     <SearchButton />
                 </SearchToolBarWrapper>
-            }    
+            }
         </SearchBarWrapper>
     )
 }

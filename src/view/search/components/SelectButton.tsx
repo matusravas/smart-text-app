@@ -1,10 +1,12 @@
-import { ChangeEvent, useState } from "react"
-import { Operator } from "../../../model/search/types"
-import { SelectWrapper } from "../styles/searchbar.styles"
-import { Select, MenuItem, SelectProps, FormControl, InputLabel, makeStyles } from '@material-ui/core';
+import { FormControl, InputLabel, makeStyles, MenuItem, Select, SelectProps } from '@material-ui/core';
+import { ChangeEvent, useState } from "react";
 
 
 const useStyles = makeStyles({
+    menu: {
+        display: 'flex',
+        alignItems: 'center',
+    },
     select: {
         textAlign: 'center',
         '&:before': {
@@ -32,25 +34,6 @@ type SelectButtonProps<T> = {
     onSelected: (value: T) => void
 } & SelectProps
 
-// export const SelectButton = <T,>({ options, selected, onSelected, disabled=false, ...props }: SelectButtonProps<T>) => {
-//     const selectedValue = selected && options.findIndex(o=>o.value===selected) !== -1? selected : options[0].value
-//     const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-//         const { target: { value } } = e
-//         const option = options.find(o => o.value === value)
-//         option && onSelected(option.value as T)
-//     }
-//     return (
-//         <SelectWrapper >
-//             <label>{props.label}</label>
-//             <select disabled={disabled} onChange={handleSelect} value={selectedValue}>
-//                 {options.map((option, idx) => {
-//                     return <option key={idx} value={option.value}>{option.label}</option>
-//                 })}
-//             </select>
-//         </SelectWrapper>
-//     )
-// }
-
 
 export const SelectButton = <T,>({ options, value, onSelected, ...props }: SelectButtonProps<T>) => {
     const styles = useStyles()
@@ -61,14 +44,17 @@ export const SelectButton = <T,>({ options, value, onSelected, ...props }: Selec
     }
     return (
         <FormControl>
-            <InputLabel className={styles.label}>{props.label}</InputLabel>
+            <InputLabel >{props.label}</InputLabel>
             <Select
-                className={styles.select}
                 disabled={props.disabled}
                 value={value}
+                MenuProps={{ className: styles.menu }}
                 onChange={(e) => {
                     handleSelect(e)
                 }}>
+                <MenuItem disabled value={''}>
+                    {'Select operator'}
+                </MenuItem>
                 {options.map(option => (
                     <MenuItem key={option.value} value={option.value}>
                         {option.label}

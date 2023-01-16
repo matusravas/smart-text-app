@@ -5,8 +5,8 @@ import SearchBar from "./components/SearchBar";
 import { SearchDashboardWrapper } from "./styles/searchbar.styles";
 
 const SearchDashboard = () => {
-    const { requestData, lastTimestamp, handleRequestDataChange } = useSearchViewModel()
-    const {search, date} = requestData
+    const { requestData, handleRequestDataChange } = useSearchViewModel()
+    const {search, date, lastTimestamp} = requestData
     return (
         <SearchDashboardWrapper>
             <SearchBar 
@@ -14,7 +14,7 @@ const SearchDashboard = () => {
                 lastTimestamp={lastTimestamp} 
                 onRequestDataChange={handleRequestDataChange} />
             <Table 
-                requestData={requestData} 
+                requestData={requestData}
                 onRequestDataChange={handleRequestDataChange} />
         </SearchDashboardWrapper>
     )

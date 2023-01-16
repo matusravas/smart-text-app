@@ -1,13 +1,13 @@
 import moment from 'moment'
 import { useEffect, useState } from 'react'
-import { SearchPaginationDefault, SearchRequest } from '../model/search/types'
+import { SearchPaginationDefault, SearchData } from '../model/search/types'
 import SearchRepository from '../repository/search/SearchRepository'
 
 
 export const useSearchViewModel = () => {
-    const [lastTimestamp, setLastTimestamp] = useState<number>()
-    const [requestData, setRequestData] = useState<SearchRequest>({
-        search: { phrase: '', operator: 'OR', field: 'Kr_text' },
+    // const [lastTimestamp, setLastTimestamp] = useState<number>()
+    const [requestData, setRequestData] = useState<SearchData>({
+        search: { phrase: '', operator: 'TEXT', field: 'Kr_text' },
         pagination: SearchPaginationDefault
         , date: { from: moment().subtract(3, 'months').valueOf(), to: moment().valueOf() }
     })
@@ -29,18 +29,17 @@ export const useSearchViewModel = () => {
         const dateFrom = moment.unix(timestamp).subtract(3, 'month').valueOf()
         setRequestData({
             ...requestData
+            , lastTimestamp: dateTo
             , date: { from: dateFrom, to: dateTo }
         })
-        setLastTimestamp(dateTo)
     }
 
-    const handleRequestDataChange = (newRequestData: Partial<SearchRequest>) => {
+    const handleRequestDataChange = (newRequestData: Partial<SearchData>) => {
         setRequestData(prev => ({ ...prev, ...newRequestData }))
     }
 
     return {
         requestData,
-        lastTimestamp,
         handleRequestDataChange
     }
 }

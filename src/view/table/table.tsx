@@ -37,7 +37,7 @@ export const Table = (props: TableProps) => {
         return (
             <TableWrapper>
                 <MaterialTable
-                    title='ABCDEF'
+                    // title='Table title'
                     icons={tableIcons}
                     tableRef={materialTableRef}
                     isLoading={isLoading}
