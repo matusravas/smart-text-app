@@ -1,6 +1,6 @@
 export type SearchData = {
     search: Search
-    date: Date
+    date?: Date
     pagination: Pagination,
     lastTimestamp?: number
 }
@@ -10,13 +10,13 @@ export type Operator = 'TEXT' | 'AND' | 'OR'
 export type Search = {
     phrase: string,
     field: string,
-    operator : Operator
+    operator: Operator
 }
 
 export type Date = {
     field?: string,
-    from: number
-    to: number
+    from?: number
+    to?: number
 }
 
 export const SearchPaginationDefault = {
@@ -42,4 +42,4 @@ export type Column = {
     type: 'string' | 'numeric' | 'date' | 'boolean'
 }
 
-export type Data = Record<string, string|number>
+export type Data = Record<string, string | number>

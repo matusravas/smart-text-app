@@ -12,9 +12,9 @@ class SearchApiService extends ApiService implements ISearchApiService {
         this.ucPrefix = 'search'
         console.log(this)
     }
-    search(search: Search, pagination: Pagination, date: Date): Promise<Response<SearchResponseRaw>> {
+    search(search: Search, pagination: Pagination, date?: Date): Promise<Response<SearchResponseRaw>> {
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
-        const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
+        const dateQueryString = `date-from=${date?.from}&date-to=${date?.to}${date?.field ? `&date-field=${date.field}` : ''}`
         const paginationQueryString = `page=${pagination.currentPage}&pageSize=${pagination.pageSize}`
         const queryString = `${searchQueryString}&${dateQueryString}&${paginationQueryString}`
         return new Promise<Response<SearchResponseRaw>>((resolve, reject) => axios({
@@ -34,9 +34,9 @@ class SearchApiService extends ApiService implements ISearchApiService {
         })
         )
     }
-    searchExport(search: Search, date: Date): Promise<boolean> {
+    searchExport(search: Search, date?: Date): Promise<boolean> {
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
-        const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
+        const dateQueryString = `date-from=${date?.from}&date-to=${date?.to}${date?.field ? `&date-field=${date.field}` : ''}`
         const queryString = `${searchQueryString}&${dateQueryString}`
         return new Promise<boolean>((resolve, reject) => axios({
             method: 'GET',

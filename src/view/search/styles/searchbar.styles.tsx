@@ -27,16 +27,26 @@ export const SelectWrapper = styled.div`
   }
 `
 
-export const SearchBarWrapper = styled.form`
-  height: 200px;
-  width: 40%;
+export const SearchBarWrapper = styled.div`
+  height: auto;
+  width: 100%;
   /* border: 1px solid #fafafa;
   box-shadow: 0 0 15px 2px #004ba033; */
   box-sizing: border-box;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+
+export const SearchBarForm = styled.form`
+  height: auto;
+  width: 35%;
+  box-sizing: border-box;
+  display: flex;
   gap: 10px;
   flex-direction: column;
-  justify-content: center;
+  justify-content: right;
   align-items: center;
   #searchInput, #submitButton {
     border: 2px solid #303030;
@@ -46,16 +56,25 @@ export const SearchBarWrapper = styled.form`
 
 export const SearchToolBarWrapper = styled.div`
   display: flex;
-  width: 100%;
+  width: 90%;
   flex-direction: row;
-  justify-content: space-around;
+  flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
   background-color: #fdfdfd;
   border-radius: 10px;
-  padding: 10px 2px 5px 2px;
-  gap: 30px;
+  padding: 10px 8px;
   /* border-color: #004ba0; */
   box-shadow: 0 0 15px 1px #004ba033;
+`
+
+export const SearchToolBar = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
 `
 
 export const SearchInput = styled.input.attrs({
@@ -94,6 +113,19 @@ export const SearchButton = styled.input.attrs({
   };
 `;
 
+
+export const SearchBarSynonyms = styled.div`
+  
+  display: flex;
+  height: 65px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  .p {
+    font-weight: bold;
+  }
+`
 
 // export const OperatorCheckboxWrapper = styled.input`
 //   color: #004ba0;

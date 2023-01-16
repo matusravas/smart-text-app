@@ -47,6 +47,16 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.26"
+    "@types/styled-components": "^5.1.26",
+    "react-error-overlay": "6.0.9"
+  },
+  "resolutions": {
+    "@types/react": "16.14.34",
+    "@types/react-dom": "16.9.16",
+    "//": "See https://github.com/facebook/create-react-app/issues/11773",
+    "react-error-overlay": "6.0.9"
+  },
+  "overrides": {
+    "react-error-overlay": "6.0.9"
   }
 }

@@ -1,10 +1,12 @@
 import { Action, Column, DetailPanel, Filter, Icons, Localization, Options, Query } from "material-table";
+import { Dictionary } from "../dictionary/types";
 import { SearchData } from "../search/types";
 
 type UseCases = 'bekaert'
 
 export type UseTableProps = {
     requestData: SearchData;
+    onDictionary: (dictionary: Dictionary | null) => void,
     // getRowsRequest: any;
     // updateRowRequest: any;
     // deleteRowRequest: any;
@@ -60,17 +62,18 @@ export type TableProps = {
     // config: any;
     requestData: SearchData;
     onRequestDataChange: (requestData: Partial<SearchData>) => void,
+    onDictionary: (dictionary: Dictionary | null) => void,
     handleTableObj?: (tableObj: any) => void;
     handleError?: (errorMessage: string) => void;
     handleSuccess?: (successMessage: string) => void;
-  } & MaterialTableProps<any>
+} & MaterialTableProps<any>
 
 
 export const TablePaginationDefault = {
     currentPage: 0,
     pageSize: 10,
     totalHits: 0,
-    totalPages: 0  
+    totalPages: 0
 }
 
 export type TablePagination = {

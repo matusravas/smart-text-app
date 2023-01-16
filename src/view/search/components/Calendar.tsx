@@ -1,41 +1,4 @@
-// import DateFnsUtils from "@date-io/date-fns";
-// import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
-// import moment from "moment";
-// import { Date } from "../../../model/search/types";
-
-// interface CalendarProps {
-//     date: Date
-// }
-
-// const Calendar = ({ date }: CalendarProps) => {
-//     console.log(date)
-//     return (
-//         <div style={{'display': 'flex', 'flexDirection': 'row'}}>
-//             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-//                 <DatePicker
-//                     label="Date from"
-//                     value={date.from}
-//                     onChange={(newValue) => {
-//                         //   setValue(newValue);
-//                     }}
-//                 />
-//                 <DatePicker
-//                     label="Date to"
-//                     value={date.to}
-//                     onChange={(newValue) => {
-//                         //   setValue(newValue);
-//                     }}
-//                 />
-//             </MuiPickersUtilsProvider>
-//         </div>
-
-//     )
-// }
-
-// export default Calendar
-
 import DateFnsUtils from "@date-io/date-fns";
-import { IconButton } from "@material-ui/core";
 import { Done } from "@material-ui/icons";
 import {
   DatePicker as MUIDatePicker,
@@ -47,7 +10,7 @@ import enLocale from "date-fns/locale/en-US";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Date as DateType } from "../../../model/search/types";
+import { Date} from "../../../model/search/types";
 
 const CalendarWrapper = styled.div`
   display: flex;
@@ -72,69 +35,63 @@ const CalendarWrapper = styled.div`
 `
 
 interface CalendarProps {
-  date: DateType
-  lastTimestamp: number,
+  dateRange?: Date
+  lastTimestamp?: number,
   // value?: any
-  onDateChanged: (date: DateType) => void
+  onDateChanged: (date: Date) => void
 }
 
 
-export const Calendar = ({date, lastTimestamp, ...props}: CalendarProps) => {
-  console.log(lastTimestamp)
-  console.log(date)
-  const [interval, setInterval] = useState({min: date.from, max: lastTimestamp})
+export const Calendar = ({dateRange, lastTimestamp, ...props}: CalendarProps) => {
+  // const [interval, setInterval] = useState({min: date.from, max: lastTimestamp})
 
-  console.log(interval)
-  const shouldDisableDate = (date: any) => date > interval.max! || date < interval.min!;
+  // console.log(interval)
+  const shouldDisableDate = (date: any) => lastTimestamp && date > lastTimestamp ? false: true;
 
-  const handleDateFromChanged = (from: number) => {
-    props.onDateChanged({ ...date, from: from })
+  const handleDateFromChanged = (from: any) => {
+    props.onDateChanged({ ...dateRange, from: from})
   }
-  const handleDateToChanged = (to: number) => {
-    props.onDateChanged({ ...date, to: to })
+  const handleDateToChanged = (to: any) => {
+    props.onDateChanged({ ...dateRange, to: to })
   }
-
-  useEffect(() => {
-    setInterval({
-      min: moment(date.to).subtract(3, 'months').valueOf()
-      , max: lastTimestamp
-    })
-  }, [date])
 
   return (
-    <CalendarWrapper>
+    // <CalendarWrapper>
+    <>
       <DatePicker {...props}
-        minDate={interval.min}
-        maxDate={interval.max}
+        // minDate={interval.min}
+        maxDate={lastTimestamp}
         shouldDisableDate={shouldDisableDate}
         label="From"
-        value={date.from}
+        value={dateRange?.from}
         onChange={handleDateFromChanged}
       />
       <DatePicker {...props}
-        minDate={interval.min}
-        maxDate={interval.max}
+        // minDate={interval.min}
+        maxDate={lastTimestamp}
         shouldDisableDate={shouldDisableDate}
         label="To"
-        value={date.to}
+        value={dateRange?.to}
         onChange={handleDateToChanged}
       />
-    </CalendarWrapper>
+      </>
+    // </CalendarWrapper>
   )
 }
 
-const DatePicker = (props: DatePickerProps) => (
+export const DatePicker = (props: DatePickerProps) => (
   <div style={{ position: 'relative', maxWidth: '165px' }}>
     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={enLocale} >
       <MUIDatePicker
         {...props}
-        format="dd.MM. yyyy"
+        // format="dd.MM. yyyy"
+        format="dd/MM/yyyy"
         style={{ minWidth: '100px' }}
         onChange={(date: MaterialUiPickersDate) => {
-          const unixDate = moment(date).valueOf()
-          props.onChange(unixDate);
+          // const unixDate = moment(date).valueOf()
+          // props.onChange(unixDate);
         }}
-        value={props.value ? props.value : undefined}
+        // value={props.value ? props.value : undefined}
         cancelLabel={'cancel'}
         okLabel={'ok'}
         clearLabel={'clear'}

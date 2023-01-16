@@ -27,7 +27,7 @@ export default class SearchRepository implements ISearchRepository {
             }}
             return response
         }
-    async searchExport(search: Search, date: Date) {
+    async searchExport(search: Search, date?: Date) {
             //! Todo catch potenial errors
         const result = await this.api.searchExport(search, date)
         return result

@@ -16,6 +16,7 @@ export const Table = (props: TableProps) => {
         localization
     } = useTable({
         requestData: props.requestData,
+        onDictionary: props.onDictionary,
         onError: props.handleError,
         onSuccess: props.handleSuccess
     })
@@ -33,14 +34,14 @@ export const Table = (props: TableProps) => {
     }
 
     const renderTable = () => {
-        if (rows.length === 0) return ( <React.Fragment /> )
+        if (isLoading) return ( <React.Fragment /> )
         return (
             <TableWrapper>
                 <MaterialTable
                     // title='Table title'
                     icons={tableIcons}
                     tableRef={materialTableRef}
-                    isLoading={isLoading}
+                    // isLoading={isLoading}
                     columns={columns}
                     data={rows}
                     localization={localization}
@@ -63,8 +64,8 @@ export const Table = (props: TableProps) => {
                                 {...props}
                                 count={pagination.totalHits}
                                 page={pagination.currentPage}
-                                onChangePage={(_, gotoPage) => onPageChange(gotoPage)}
-                                onChangeRowsPerPage={(e) => {
+                                onChangePage={(_: any, gotoPage: number) => onPageChange(gotoPage)}
+                                onChangeRowsPerPage={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                     onPageSizeChange(e)
                                     props.onChangeRowsPerPage(e)
                                 }} />

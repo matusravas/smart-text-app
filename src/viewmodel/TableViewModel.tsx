@@ -12,6 +12,7 @@ import SearchRepository from "../repository/search/SearchRepository";
 
 export function useTable({
     requestData,
+    onDictionary,
     onError,
     onSuccess,
 }: UseTableProps) {
@@ -27,13 +28,16 @@ export function useTable({
         // if(!factory.controller.signal.aborted) setIsLoading(true)
         repository
             .search(requestData)
-            .then((res) => {
-                console.log(res)
+            .then((data) => {
+                console.log(data)
                 if (isMounted.current) return;
-                setColumns(prepareColumns(res.columns));
-                setPagination(res.pagination);
-                setRows([...res.results]);
+                setPagination(data.pagination);
+                setRows([...data.results]);
+                (data.results && data.results.length > 0)
+                    && setColumns(prepareColumns(data.columns))
+                    // : setColumns(data.columns)
                 setIsLoading(false)
+                onDictionary(data.dictionary)
             })
             .catch((err: Error) => {
                 if (isMounted.current) return;
@@ -51,8 +55,8 @@ export function useTable({
         if (!requestData.search.phrase) return centeredColumns
         const columnIndex = centeredColumns.findIndex(column=>column.field === requestData.search.field)
         return centeredColumns.map((col, idx)=> {
-            if (!(idx === columnIndex || idx === columnIndex + 1)) return col
-            const color = idx === columnIndex? '#9a0007': '#00600f'
+            if (!(idx === columnIndex || idx === columnIndex + 1 || idx === columnIndex + 2)) return col
+            const color = idx === columnIndex? '#9a0007': idx === columnIndex +1? '#00600f': '#004ba0'
             const newCol = {...col, 
                 headerStyle: {color: color, fontWeight: 'bold'},
                 cellStyle: {color: color, fontWeight: 'bold'}}

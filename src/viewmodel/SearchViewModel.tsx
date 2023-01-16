@@ -1,15 +1,17 @@
 import moment from 'moment'
 import { useEffect, useState } from 'react'
+import { Dictionary } from '../model/dictionary/types'
 import { SearchPaginationDefault, SearchData } from '../model/search/types'
 import SearchRepository from '../repository/search/SearchRepository'
 
 
 export const useSearchViewModel = () => {
     // const [lastTimestamp, setLastTimestamp] = useState<number>()
+    const [dictionary, setDictionary] = useState<Dictionary | null>(null)
     const [requestData, setRequestData] = useState<SearchData>({
         search: { phrase: '', operator: 'TEXT', field: 'Kr_text' },
         pagination: SearchPaginationDefault
-        , date: { from: moment().subtract(3, 'months').valueOf(), to: moment().valueOf() }
+        // , date: {to: moment().valueOf() }
     })
     const repository = SearchRepository.getInstance()
 
@@ -22,15 +24,14 @@ export const useSearchViewModel = () => {
             .catch((err: Error) => {
                 console.error(err)
             });
-    }, [])
+    },[])
 
     const onLastTimestampObtained = (timestamp: number) => {
         const dateTo = moment.unix(timestamp).valueOf()
-        const dateFrom = moment.unix(timestamp).subtract(3, 'month').valueOf()
         setRequestData({
             ...requestData
             , lastTimestamp: dateTo
-            , date: { from: dateFrom, to: dateTo }
+            , date: { to: dateTo }
         })
     }
 
@@ -38,8 +39,14 @@ export const useSearchViewModel = () => {
         setRequestData(prev => ({ ...prev, ...newRequestData }))
     }
 
+    const handleDictionary = (dictionary: Dictionary | null) => {
+        setDictionary(dictionary)
+    }
+
     return {
         requestData,
+        dictionary,
+        handleDictionary,
         handleRequestDataChange
     }
 }
