@@ -25,6 +25,7 @@ export function useTable({
 
     useEffect(() => {
         if (!requestData.lastTimestamp) return
+        setIsLoading(true)
         // if(!factory.controller.signal.aborted) setIsLoading(true)
         repository
             .search(requestData)

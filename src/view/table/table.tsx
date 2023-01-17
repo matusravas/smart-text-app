@@ -34,14 +34,14 @@ export const Table = (props: TableProps) => {
     }
 
     const renderTable = () => {
-        if (isLoading) return ( <React.Fragment /> )
+        if (!columns.length) return ( <React.Fragment /> )
         return (
             <TableWrapper>
                 <MaterialTable
                     // title='Table title'
                     icons={tableIcons}
                     tableRef={materialTableRef}
-                    // isLoading={isLoading}
+                    isLoading={isLoading}
                     columns={columns}
                     data={rows}
                     localization={localization}
