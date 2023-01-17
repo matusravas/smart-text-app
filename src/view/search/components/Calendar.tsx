@@ -1,16 +1,13 @@
 import DateFnsUtils from "@date-io/date-fns";
-import { Done } from "@material-ui/icons";
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 import {
   DatePicker as MUIDatePicker,
-  DatePickerProps,
-  MaterialUiPickersDate,
-  MuiPickersUtilsProvider
+  DatePickerProps, MuiPickersUtilsProvider
 } from "@material-ui/pickers";
 import enLocale from "date-fns/locale/en-US";
 import moment from "moment";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Date} from "../../../model/search/types";
+import { Date as DateD } from "../../../model/search/types";
 
 const CalendarWrapper = styled.div`
   display: flex;
@@ -35,67 +32,68 @@ const CalendarWrapper = styled.div`
 `
 
 interface CalendarProps {
-  dateRange?: Date
-  lastTimestamp?: number,
-  // value?: any
-  onDateChanged: (date: Date) => void
+  dateRange: DateD
+  lastTimestamp: number | null,
+  onChange: (date: DateD) => void
 }
 
 
-export const Calendar = ({dateRange, lastTimestamp, ...props}: CalendarProps) => {
-  // const [interval, setInterval] = useState({min: date.from, max: lastTimestamp})
+export const Calendar = ({ dateRange, lastTimestamp, ...props }: CalendarProps) => {
+  const maxDate = lastTimestamp ? lastTimestamp : moment().valueOf()
 
-  // console.log(interval)
-  const shouldDisableDate = (date: any) => lastTimestamp && date > lastTimestamp ? false: true;
-
-  const handleDateFromChanged = (from: any) => {
-    props.onDateChanged({ ...dateRange, from: from})
+  const shouldDisableDate = (date: any) => {
+    console.log(date)
+    return false
+    // date > maxDate ? false : true;
   }
-  const handleDateToChanged = (to: any) => {
-    props.onDateChanged({ ...dateRange, to: to })
+
+  const handleDateFromChanged = (from: number) => {
+    props.onChange({ ...dateRange, from: from })
+  }
+  const handleDateToChanged = (to: number) => {
+    props.onChange({ ...dateRange, to: to })
   }
 
   return (
-    // <CalendarWrapper>
-    <>
+    <CalendarWrapper>
       <DatePicker {...props}
-        // minDate={interval.min}
-        maxDate={lastTimestamp}
-        shouldDisableDate={shouldDisableDate}
-        label="From"
-        value={dateRange?.from}
+        maxDate={maxDate}
+        // shouldDisableDate={shouldDisableDate}
+        label={dateRange.from? 'From': 'Select from date'}
+        value={dateRange.from}
         onChange={handleDateFromChanged}
       />
       <DatePicker {...props}
-        // minDate={interval.min}
-        maxDate={lastTimestamp}
-        shouldDisableDate={shouldDisableDate}
-        label="To"
-        value={dateRange?.to}
+        maxDate={maxDate}
+        // shouldDisableDate={shouldDisableDate}
+        label='To'
+        disableFuture={true}
+
+        value={dateRange.to ? dateRange.to : lastTimestamp}
         onChange={handleDateToChanged}
       />
-      </>
-    // </CalendarWrapper>
+    </CalendarWrapper>
   )
 }
 
-export const DatePicker = (props: DatePickerProps) => (
-  <div style={{ position: 'relative', maxWidth: '165px' }}>
-    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={enLocale} >
-      <MUIDatePicker
-        {...props}
-        // format="dd.MM. yyyy"
-        format="dd/MM/yyyy"
-        style={{ minWidth: '100px' }}
-        onChange={(date: MaterialUiPickersDate) => {
-          // const unixDate = moment(date).valueOf()
-          // props.onChange(unixDate);
-        }}
-        // value={props.value ? props.value : undefined}
-        cancelLabel={'cancel'}
-        okLabel={'ok'}
-        clearLabel={'clear'}
-      />
-    </MuiPickersUtilsProvider>
-  </div>
-)
+export const DatePicker = (props: DatePickerProps) => {
+  console.log(props)
+  return (
+    <div style={{ position: 'relative', maxWidth: '165px' }}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={enLocale} >
+        <MUIDatePicker
+          {...props}
+          format="dd.MM. yyyy"
+          style={{ minWidth: '100px' }}
+          onChange={(date: any) => {
+            const unixDate = moment(date).valueOf()
+            props.onChange(unixDate);
+          }}
+          cancelLabel={'cancel'}
+          okLabel={'ok'}
+          clearLabel={'clear'}
+        />
+      </MuiPickersUtilsProvider>
+    </div>
+  )
+}

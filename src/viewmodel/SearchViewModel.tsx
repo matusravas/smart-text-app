@@ -1,18 +1,14 @@
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Dictionary } from '../model/dictionary/types'
-import { SearchPaginationDefault, SearchData } from '../model/search/types'
+import { SearchPaginationDefault, SearchData, SearchDataDefault } from '../model/search/types'
 import SearchRepository from '../repository/search/SearchRepository'
 
 
 export const useSearchViewModel = () => {
     // const [lastTimestamp, setLastTimestamp] = useState<number>()
     const [dictionary, setDictionary] = useState<Dictionary | null>(null)
-    const [requestData, setRequestData] = useState<SearchData>({
-        search: { phrase: '', operator: 'TEXT', field: 'Kr_text' },
-        pagination: SearchPaginationDefault
-        // , date: {to: moment().valueOf() }
-    })
+    const [requestData, setRequestData] = useState<SearchData>(SearchDataDefault)
     const repository = SearchRepository.getInstance()
 
     useEffect(() => {
@@ -31,7 +27,7 @@ export const useSearchViewModel = () => {
         setRequestData({
             ...requestData
             , lastTimestamp: dateTo
-            , date: { to: dateTo }
+            , date: {from: null, to: dateTo }
         })
     }
 

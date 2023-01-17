@@ -1,8 +1,8 @@
 export type SearchData = {
     search: Search
-    date?: Date
+    date: Date
     pagination: Pagination,
-    lastTimestamp?: number
+    lastTimestamp: number | null
 }
 
 export type Operator = 'TEXT' | 'AND' | 'OR'
@@ -15,13 +15,21 @@ export type Search = {
 
 export type Date = {
     field?: string,
-    from?: number
-    to?: number
+    from: number | null
+    to: number | null
 }
 
 export const SearchPaginationDefault = {
     currentPage: 0,
     pageSize: 10,
+}
+
+
+export const SearchDataDefault = {
+    search: { phrase: '', operator: 'TEXT' as Operator, field: 'Kr_text' }
+    , pagination: SearchPaginationDefault
+    , date: { from: null, to: null }
+    , lastTimestamp: null
 }
 
 export type Pagination = {

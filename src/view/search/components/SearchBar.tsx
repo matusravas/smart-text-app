@@ -7,9 +7,9 @@ import { SelectButton } from "./SelectButton"
 
 interface SearchBarProps {
     search: Search,
-    date?: Date,
+    date: Date,
     dictionary: Dictionary | null
-    lastTimestamp?: number,
+    lastTimestamp: number | null,
     onRequestDataChange: (requestData: Partial<SearchData>) => void,
 }
 
@@ -18,11 +18,14 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
     const [disabled, setDisabled] = useState(true)
     const [operator, setOperator] = useState(search.operator)
     const [dateRange, setDateRange] = useState(date)
-    const selectOptions = [{ label: 'Text', value: 'TEXT' }, { label: 'AND', value: 'AND' }, { label: 'OR', value: 'OR' }]
+    const selectOptions = [
+        { label: 'Text', value: 'TEXT' } 
+        ,{ label: 'AND', value: 'AND' } 
+        ,{ label: 'OR', value: 'OR' }]
 
-    useEffect(() => {
-        setDateRange(date)
-    }, [lastTimestamp])
+    // useEffect(() => {
+    //     setDateRange(date)
+    // }, [lastTimestamp])
 
     const hasSearchMultiplePhrases = (searchQuery: string) => {
         const queryPhrases = searchQuery.split(' ').filter(q => q.length > 2)
@@ -64,7 +67,11 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
                 <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
                 <SearchToolBarWrapper id="searchToolBarWrapper">
                     <SearchToolBar id="searchToolBar">
-                        
+                        <Calendar
+                            dateRange={dateRange}
+                            lastTimestamp={lastTimestamp}
+                            onChange={handleDateChange}
+                        />
                         <SelectButton
                             disabled={disabled}
                             label="Operator" options={selectOptions}
