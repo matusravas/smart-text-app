@@ -3,7 +3,7 @@ import Translate from '@material-ui/icons/Translate';
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 import Dashboard from "../../view/app/Dashboard";
 import Dictionary from '../../view/dictionary/Dictionary';
-import { ErrorDashboard } from '../../view/errors/Error';
+import { ErrorDashboard } from '../../view/errors/ErrorDashboard';
 import SearchDashboard from "../../view/search/SearchDashboard";
 
 
