@@ -1,63 +1,60 @@
-import {
-    createBrowserRouter,
-    RouteObject
-} from "react-router-dom";
-import { Error } from "../../view/app/components/Error";
-import Translate from '@material-ui/icons/Translate'
-import Search from '@material-ui/icons/Search'
-import App from "../../view/App";
+import Search from '@material-ui/icons/Search';
+import Translate from '@material-ui/icons/Translate';
+import { createBrowserRouter, RouteObject } from "react-router-dom";
+import Dashboard from "../../view/app/Dashboard";
+import Dictionary from '../../view/dictionary/Dictionary';
+import { ErrorDashboard } from '../../view/errors/Error';
 import SearchDashboard from "../../view/search/SearchDashboard";
 
+
 export type DrawerItem = {
+    key: string,
     label: string,
     icon: any,
-    route: RouteObject
+    path: string
 }
 
-export const drawerItems: DrawerItem[] = [
+export const drawerConfig: DrawerItem[] = [
     {
+        key: 'search',
         label: 'Search',
         icon: <Search />,
-        route: {
-            path: "/",
-            element: <SearchDashboard />,
-            errorElement: Error
-        }
+        path: '/',
     },
     {
+        key: 'dictionary',
         label: 'Dictionary',
         icon: <Translate />,
-        route: {
-            path: "/dictionary",
-            element: <p>dictionary</p>,
-            errorElement: Error
-        }
+        path: "/dictionary"
     }
 ]
 
-
-const routes: RouteObject[] = [
+export const routesConfig: RouteObject[] = [
     {
-        path: "*",
-        element: <App />,
-        errorElement: Error,
+        path: '/',
+        element: <Dashboard />,
         children: [
-
-        ]
-    },
-    {
-        path: "/search",
-        element: <SearchDashboard />,
-        errorElement: Error,
-        children: [
-
-        ]
-    },
-    {
-        path: "/dictionary",
-        element: <p>dictionary</p>,
-        errorElement: Error
-    },
+            {
+                index: true,
+                element: <SearchDashboard />,
+            },
+            {
+                path: "/dictionary",
+                element: <Dictionary />,
+                children: [
+                    {
+                        index: true,
+                        element: <p>Hello world</p>,
+                    },
+                    {
+                        path: '/dictionary/abcd',
+                        element: <p>Hello world nested</p>,
+                    },
+                ],
+            }
+        ],
+        errorElement: <ErrorDashboard />
+    }
 ]
 
-export const router = createBrowserRouter(routes);
+export const browserRouter = createBrowserRouter(routesConfig)

@@ -1,38 +1,12 @@
-// import * as React from 'react';
-// import AppBar from '@material-ui/core/AppBar';
-// import Box from '@material-ui/core/Box';
-// import Toolbar from '@material-ui/core/Toolbar';
-// import Typography from '@material-ui/core/Typography';
-// import Button from '@material-ui/core/Button';
-// import IconButton from '@material-ui/core/IconButton';
-// // import {} from '@material-ui/icons/Menu';
-
-// export default function TopBar() {
-//   return (
-//     <Box style={{ flexGrow: 1 }}>
-//       <AppBar position="static">
-//         <Toolbar>
-
-//           <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
-//             News
-//           </Typography>
-//           <Button color="inherit">Login</Button>
-//         </Toolbar>
-//       </AppBar>
-//     </Box>
-//   );
-// }
-
-import { useState } from 'react';
 import { AppBar as MUIAppBar } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import Toolbar from '@material-ui/core/Toolbar';
 import MenuIcon from '@material-ui/icons/Menu';
-import Drawer from './Drawer';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { DrawerItem } from '../../../hooks/commons/router';
+import Drawer from './Drawer';
 
 
 type AppBarProps = {
@@ -46,6 +20,7 @@ export default function AppBar({ drawerItems, ...props }: AppBarProps) {
   }
   return (
     <Box style={{ flexGrow: 1 }}>
+      {/* <MUIAppBar position="static" style={{'height': '80px', 'background': '#fcfcfc', 'color': '#303030'}}> */}
       <MUIAppBar position="static" color='transparent'>
         <Toolbar>
           <IconButton
@@ -57,9 +32,9 @@ export default function AppBar({ drawerItems, ...props }: AppBarProps) {
             <MenuIcon />
             <Drawer items={drawerItems} open={drawerOpen} handleOpen={handleDrawerOpen} />
           </IconButton>
-          <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
-            Smart-Text
-          </Typography>
+          <Link to='/'>
+            <img style={{height: '25px'}} src='/img/pds-logo.svg' alt='PDS'/>
+          </Link>
         </Toolbar>
       </MUIAppBar>
     </Box>

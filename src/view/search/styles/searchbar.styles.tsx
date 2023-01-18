@@ -126,17 +126,3 @@ export const SearchBarSynonyms = styled.div`
     font-weight: bold;
   }
 `
-
-// export const OperatorCheckboxWrapper = styled.input`
-//   color: #004ba0;
-//   .root {
-//     color: #004ba0;
-//   }   
-// `
-
-export const Divider = styled.hr`
-  border-top: 0px solid;
-  color: #303030;
-  box-shadow: 0 0 15px 2px rgba(33,33,33,.2);
-  width: 100%;
-`
