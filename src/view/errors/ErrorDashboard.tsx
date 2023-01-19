@@ -3,7 +3,7 @@ import {Error, ErrorCode} from "./Error";
 
 
 
-export const ErrorDashboard = () => {
+function ErrorDashboard() {
     const error: any = useRouteError();
     console.log(error)
     
@@ -11,3 +11,5 @@ export const ErrorDashboard = () => {
 
     return <div>Something went wrong</div>;
 }
+
+export default ErrorDashboard

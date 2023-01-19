@@ -4,7 +4,7 @@ import SearchBar from "./components/SearchBar";
 
 import { SearchDashboardWrapper } from "./styles/searchbar.styles";
 
-const SearchDashboard = () => {
+function SearchDashboard() {
     const { requestData, dictionary, handleDictionary, handleRequestDataChange } = useSearchViewModel()
     const {search, date, lastTimestamp} = requestData
     return (

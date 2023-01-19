@@ -63,6 +63,7 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
 
     return (
         <SearchBarWrapper id="searchBar">
+            {/* <img style={{height: '50px', 'margin': '8px'}} src='/img/pds-logo.svg' alt='PDS'/> */}
             <SearchBarForm id="searchForm" autoComplete="off" onSubmit={handleSubmit}>
                 <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
                 <SearchToolBarWrapper id="searchToolBarWrapper">

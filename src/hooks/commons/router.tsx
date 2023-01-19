@@ -2,8 +2,8 @@ import Search from '@material-ui/icons/Search';
 import Translate from '@material-ui/icons/Translate';
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 import Dashboard from "../../view/app/Dashboard";
-import Dictionary from '../../view/dictionary/Dictionary';
-import { ErrorDashboard } from '../../view/errors/ErrorDashboard';
+import DictionaryDashboard from '../../view/dictionary/DictionaryDashboard';
+import ErrorDashboard  from '../../view/errors/ErrorDashboard';
 import SearchDashboard from "../../view/search/SearchDashboard";
 
 
@@ -40,7 +40,7 @@ export const routesConfig: RouteObject[] = [
             },
             {
                 path: "/dictionary",
-                element: <Dictionary />,
+                element: <DictionaryDashboard />,
                 children: [
                     {
                         index: true,

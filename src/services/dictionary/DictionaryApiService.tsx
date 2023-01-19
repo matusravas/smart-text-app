@@ -20,7 +20,7 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
                 'Content-Type': 'application/json',
             }
             }).then(res => {
-                resolve({ ok: res.data.ok, data: res.data })
+                resolve({ ok: res.data.ok, data: res.data.data })
             }).catch(err => {
                 console.error(err)
                 reject('Unable to fetch data')
@@ -38,7 +38,7 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
                 'Content-Type': 'application/json',
             }
             }).then(res => {
-                resolve({ ok: res.data.ok, data: res.data })
+                resolve({ ok: res.data.ok, data: res.data.data })
             }).catch(err => {
                 console.error(err)
                 reject('Unable to fetch data')

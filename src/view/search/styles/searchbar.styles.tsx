@@ -49,7 +49,8 @@ export const SearchBarForm = styled.form`
   justify-content: right;
   align-items: center;
   #searchInput, #submitButton {
-    border: 2px solid #303030;
+    outline: none;
+    border: 2px solid #fafafa;
     border-radius: 10px;
   }
 `;
@@ -65,7 +66,7 @@ export const SearchToolBarWrapper = styled.div`
   border-radius: 10px;
   padding: 10px 8px;
   /* border-color: #004ba0; */
-  box-shadow: 0 0 15px 1px #004ba033;
+  /* box-shadow: 0px 2px 10px #004ba033; */
 `
 
 export const SearchToolBar = styled.div`
@@ -86,10 +87,11 @@ export const SearchInput = styled.input.attrs({
   height: 55px;
   padding-left: 20px;
   font-size: 20px;
-  outline: none;
-  &:focus {
-   border-color: #004ba0;
-   box-shadow: 0 0 15px 2px #004ba033//rgba(33,33,33,.2);
+  background-color: #fdfdfd;
+  box-shadow: 2px 2px 10px #004ba033;
+  :focus {
+    border: 2px solid #004ba033 !important;
+    box-shadow: 0 0 15px 1px #004ba066
   }
   ::placeholder {
     color: #30303020
@@ -109,7 +111,8 @@ export const SearchButton = styled.input.attrs({
   text-align: center;
   &:hover {
     cursor: pointer;
-    box-shadow: 0 0 15px 2px #30303033
+    border: none !important;
+    box-shadow: 2px 2px 10px #30303033
   };
 `;
 

@@ -6,7 +6,7 @@ import AppBar from './components/TopBar';
 
 const MainWrapper = styled.main`
     padding: 16px;
-    height: 100%;
+    /* height: 100%; */
     /* background-image: url(img/my-background.svg);
     background-position: 0px 100%;
     background-repeat: no-repeat; */
