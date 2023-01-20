@@ -1,45 +1,44 @@
-import { useState, useEffect, createRef } from "react"
-import { Outlet } from "react-router-dom"
+import { createRef, useEffect } from "react"
 import { Dictionary } from "../../model/dictionary/types"
 import { useDictionaryViewModel } from "../../viewmodel/DictionaryViewModel"
 import { Card } from "./components/Card"
 import { Dialog } from "./components/Dialog"
-import { DictionaryWrapper } from "./components/styles/dictionary.dashbaord.styles"
+import SearchBar from "./components/SearchBar"
+import { DictionaryWrapper } from "./components/styles/dictionary.dashboard.styles"
 
 function DictionaryDashboard() {
-    const { dictionaries, dictionary, handleDictionaryChange } = useDictionaryViewModel()
-    // const [dialogOpen, setDialogOpen] = useState(false)
+    const { dictionaries, dictionary, searchQuery,
+             handleDictionaryChange, handleDictionarySelect, 
+             handleSearchQueryChange } = useDictionaryViewModel()
     const ref = createRef<HTMLDivElement>();
 
     useEffect(() => {
         if (!dictionary) return
         function handleClickOutsideDialog(event: MouseEvent) {
-            console.log(ref)
-            console.log(event.target)
-            if (ref.current && ref.current !== event.target as Node) {
+            // console.log(ref)
+            // console.log(event.target)
+            if (ref.current && ref.current === event.target as Node) {
                 // setDialogOpen(false)
-                handleDictionaryChange()
+                handleDictionarySelect()
             }
         }
+        document.body.style.overflow = 'hidden'
         document.addEventListener('mousedown', handleClickOutsideDialog)
         return () => {
+            document.body.style.overflow = 'auto'
             document.removeEventListener('mousedown', handleClickOutsideDialog)
         }
     }, [dictionary])
 
-
-
-    function handleClick(item: Dictionary) {
-        handleDictionaryChange(item)
-        // setDialogOpen(true)
-    }
-
     return (
         <DictionaryWrapper size={dictionaries.length}>
-            {dictionaries.map((q, idx) => (
-                <Card key={idx} value={q} onClick={() => handleClick(q)} />
+            <SearchBar searchQuery={searchQuery} handleSearchQueryChange={handleSearchQueryChange} />
+            {dictionaries.map((item, idx) => (
+                <Card key={idx} value={item} onClick={() => handleDictionarySelect(item)} />
             ))}
-            {dictionary && <Dialog dictionary={dictionary} ref={ref} />}
+            {dictionary &&
+                <Dialog dictionary={dictionary} ref={ref} handleDictionaryChange={handleDictionaryChange} />
+            }
         </DictionaryWrapper>
     )
 }

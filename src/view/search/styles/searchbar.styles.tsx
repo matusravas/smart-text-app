@@ -89,12 +89,12 @@ export const SearchInput = styled.input.attrs({
   font-size: 20px;
   background-color: #fdfdfd;
   box-shadow: 2px 2px 10px #004ba033;
-  :focus {
+  :hover, :focus {
     border: 2px solid #004ba033 !important;
     box-shadow: 0 0 15px 1px #004ba066
   }
   ::placeholder {
-    color: #30303020
+    color: rgba(0,0,0,0.54)
   }
 `;
 

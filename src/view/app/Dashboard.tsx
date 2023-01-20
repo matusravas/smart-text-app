@@ -2,6 +2,7 @@
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import { drawerConfig } from '../../hooks/commons/router';
+import SearchBar from '../dictionary/components/SearchBar';
 import AppBar from './components/TopBar';
 
 const MainWrapper = styled.main`
@@ -13,10 +14,12 @@ const MainWrapper = styled.main`
 `
 
 export const Dashboard = () => {
+    // Todo add global (same) search bar for both Search & Dictionary dashbaords 
     return (
         <>
             <AppBar drawerItems={drawerConfig} />
             <MainWrapper>
+                {/* <SearchBar searchQuery={''} handleSearchQueryChange={()=>{}}/> */}
                 <Outlet />                
             </MainWrapper>
         </>
