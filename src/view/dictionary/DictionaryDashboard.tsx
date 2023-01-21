@@ -1,25 +1,23 @@
 import { createRef, useEffect } from "react"
-import { Dictionary } from "../../model/dictionary/types"
 import { useDictionaryViewModel } from "../../viewmodel/DictionaryViewModel"
 import { Card } from "./components/Card"
 import { Dialog } from "./components/Dialog"
 import SearchBar from "./components/SearchBar"
-import { DictionaryWrapper } from "./components/styles/dictionary.dashboard.styles"
+import { DictionaryWrapper, FAB } from "./components/styles/dictionary.dashboard.styles"
 
 function DictionaryDashboard() {
     const { dictionaries, dictionary, searchQuery,
-             handleDictionaryChange, handleDictionarySelect, 
-             handleSearchQueryChange } = useDictionaryViewModel()
+        dialogOpen, toggleDialog, handleSave,
+        handleClick, handleSearchQueryChange } = useDictionaryViewModel()
     const ref = createRef<HTMLDivElement>();
-
     useEffect(() => {
-        if (!dictionary) return
+        if (!dialogOpen) return
         function handleClickOutsideDialog(event: MouseEvent) {
             // console.log(ref)
             // console.log(event.target)
             if (ref.current && ref.current === event.target as Node) {
                 // setDialogOpen(false)
-                handleDictionarySelect()
+                toggleDialog()
             }
         }
         document.body.style.overflow = 'hidden'
@@ -28,17 +26,25 @@ function DictionaryDashboard() {
             document.body.style.overflow = 'auto'
             document.removeEventListener('mousedown', handleClickOutsideDialog)
         }
-    }, [dictionary])
+    }, [dialogOpen])
 
     return (
         <DictionaryWrapper size={dictionaries.length}>
             <SearchBar searchQuery={searchQuery} handleSearchQueryChange={handleSearchQueryChange} />
             {dictionaries.map((item, idx) => (
-                <Card key={idx} value={item} onClick={() => handleDictionarySelect(item)} />
+                <Card key={idx} value={item} onClick={() => handleClick(item)} />
             ))}
-            {dictionary &&
-                <Dialog dictionary={dictionary} ref={ref} handleDictionaryChange={handleDictionaryChange} />
+            
+            {dialogOpen && <Dialog 
+                ref={ref} 
+                // isOpen={dialogOpen} 
+                dictionary={dictionary} 
+                handleSave={handleSave}
+                // handleDictionaryChange={handleDictionaryChange}
+                 />
             }
+            
+            <FAB onClick={()=>handleClick()}/>
         </DictionaryWrapper>
     )
 }

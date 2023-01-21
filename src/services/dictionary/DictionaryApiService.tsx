@@ -30,7 +30,7 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
     getAllSynonymsForKeyword(keyword: string): Promise<Response<Dictionary>> {
         return new Promise<Response<any>>((resolve, reject) => axios({
             method: 'GET',
-            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/?${keyword}`,
+            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/${keyword}`,
             responseType: 'json',
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -42,6 +42,25 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
             }).catch(err => {
                 console.error(err)
                 reject('Unable to fetch data')
+            })
+        )
+    }
+    upsert(dictionary: Dictionary): Promise<Response<any>> {
+        return new Promise<Response<any>>((resolve, reject) => axios({
+            method: 'POST',
+            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/upsert`,
+            responseType: 'json',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            data: dictionary
+            }).then(res => {
+                resolve({ ok: res.data.ok, data: res.data })
+            }).catch(err => {
+                console.error(err)
+                reject('Unable upsert data')
             })
         )
     }

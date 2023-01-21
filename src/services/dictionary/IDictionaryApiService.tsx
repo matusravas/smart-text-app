@@ -5,5 +5,6 @@ export default interface IDictionaryApiService {
     getAllKeywordsWithSynonyms(): Promise<Response<Array<Dictionary>>>
     getAllSynonymsForKeyword(keyword: string): Promise<Response<Dictionary>>
     upsertSynonymsForKeyword(keyword: string, synonyms: Array<string>): Promise<Response<any>>
+    upsert(dictionary: Dictionary): Promise<Response<any>>
     removeKeyword(keyword: string): Promise<Response<any>>
 }

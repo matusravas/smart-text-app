@@ -12,7 +12,7 @@ export function Card({ value, onClick }: CardProps) {
         <CardWrapper onClick={onClick}>
             <h2>{value.keyword}</h2>
             <h5>{value.definition}</h5>
-            <p>{['aaajsajb', 'nsdnsjd', 'jdnsjndjs', 'jdnjsdnsnd', 'nsjdnsdnj'].join(' • ')}</p>
+            <p>{value.synonyms.join(' • ')}</p>
         </CardWrapper>
     )
 }

@@ -6,18 +6,21 @@ import DictionaryRepository from '../repository/dictionary/DictionaryRepository'
 export const useDictionaryViewModel = () => {
     const repository = DictionaryRepository.getInstance()
     const [searchQuery, setSearchQuery] = useState<string>('')
+    const [dialogOpen, setDialogOpen] = useState(false)
     const [dictionary, setDictionary] = useState<Dictionary>()
     const [dictionaries, setDictionaries] = useState<Dictionary[]>([])
     const [dictionariesFiltered, setDictionariesFiltered] = useState<Dictionary[]>(dictionaries)
-
+    
     useEffect(() => {
         repository.getSynonyms()
             .then(res => {
-                const val = res as DictionaryResult[]
-                let dicts = [] as DictionaryResult[]
-                for (let i = 0; i < 50; i++) {
-                    dicts.push(val[0])
-                }
+                console.log(res)
+                const dicts = res as DictionaryResult[]
+                // const val = res as DictionaryResult[]
+                // let dicts = [] as DictionaryResult[]
+                // for (let i = 0; i < 50; i++) {
+                //     dicts.push(val[0])
+                // }
                 setDictionaries(dicts)
                 setDictionariesFiltered(dicts)
             })
@@ -45,20 +48,38 @@ export const useDictionaryViewModel = () => {
 
     }
 
-    function handleDictionarySelect(dict?: Dictionary) {
+    function handleClick(dict?: Dictionary) {
         setDictionary(dict)
+        setDialogOpen(true)
     }
     
-    function handleDictionaryChange(target: any) {
-        setDictionary({...dictionary as Dictionary, [target.id]: target.value})
+    function handleSave(dict: Dictionary) {
+        console.log(dict)
+        repository.upsert(dict)
+            .then(res=>{
+                console.log(res)
+            })
+            .catch(err=>{
+                console.error(err)
+            })
+    }
+    // function handleDictionaryChange(target: any) {
+    //     setDictionary({...dictionary as Dictionary, [target.id]: target.value})
+    // }
+    
+    function toggleDialog() {
+        setDialogOpen(!dialogOpen)
     }
 
     return {
         dictionaries: dictionariesFiltered,
         dictionary,
         searchQuery,
+        dialogOpen,
+        toggleDialog,
         handleSearchQueryChange,
-        handleDictionarySelect,
-        handleDictionaryChange
+        handleClick,
+        handleSave
+        // handleDictionaryChange
     }
 }

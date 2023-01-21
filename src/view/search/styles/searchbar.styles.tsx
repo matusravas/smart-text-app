@@ -41,7 +41,7 @@ export const SearchBarWrapper = styled.div`
 
 export const SearchBarForm = styled.form`
   height: auto;
-  width: 35%;
+  width: 40%;
   box-sizing: border-box;
   display: flex;
   gap: 10px;
@@ -50,7 +50,7 @@ export const SearchBarForm = styled.form`
   align-items: center;
   #searchInput, #submitButton {
     outline: none;
-    border: 2px solid #fafafa;
+    /* border: 2px solid #fafafa; */
     border-radius: 10px;
   }
 `;
@@ -88,10 +88,13 @@ export const SearchInput = styled.input.attrs({
   padding-left: 20px;
   font-size: 20px;
   background-color: #fdfdfd;
-  box-shadow: 2px 2px 10px #004ba033;
+  box-shadow: 2px 2px 10px #30303033;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid #fafafa; 
   :hover, :focus {
     border: 2px solid #004ba033 !important;
-    box-shadow: 0 0 15px 1px #004ba066
+    box-shadow: 0 0 15px 1px #004ba033;
+    transform: scale(1.01);
   }
   ::placeholder {
     color: rgba(0,0,0,0.54)
@@ -103,18 +106,36 @@ export const SearchButton = styled.input.attrs({
   type: 'submit',
   value: 'Search'
 })`
+  @keyframes pulse {
+    0% {
+     transform: scale(1, 1);
+    }
+
+    50% {
+     transform: scale(1.05, 1.05);
+    }
+
+    100% {
+    transform: scale(1, 1);
+    }
+  };
   width: 30%;
   height: 50px;
   background-color: #303030;
   color: #fafafa;
   font-size: 1em;
   text-align: center;
-  &:hover {
+  border: none !important;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 2px 2px 10px #30303033;
+  :hover {
     cursor: pointer;
     border: none !important;
-    box-shadow: 2px 2px 10px #30303033
+    animation: pulse 0.5s linear 2;
   };
 `;
+
+
 
 
 export const SearchBarSynonyms = styled.div`
@@ -128,4 +149,19 @@ export const SearchBarSynonyms = styled.div`
   .p {
     font-weight: bold;
   }
+`
+
+export const SynonymParagraph = styled.p`
+    font-size: 1em;
+    font-weight: 250;
+    display: inline-block;
+    width: auto;
+    color: black;
+    padding: 6px;
+    background: #fafafa;
+    box-sizing: border-box;
+    border-radius: 10px;
+    margin: 2px;
+    font-weight: 500;
+    
 `

@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from "react"
 import { Dictionary } from "../../../model/dictionary/types"
 import { Date, Operator, Search, SearchData, SearchPaginationDefault } from "../../../model/search/types"
-import { SearchBarSynonyms, SearchBarForm, SearchButton, SearchInput, SearchToolBar, SearchToolBarWrapper, SearchBarWrapper } from '../styles/searchbar.styles'
+import { SearchBarSynonyms, SearchBarForm, SearchButton, SearchInput, SearchToolBar, SearchToolBarWrapper, SearchBarWrapper, SynonymParagraph } from '../styles/searchbar.styles'
 import { Calendar, DatePicker } from "./Calendar"
 import { SelectButton } from "./SelectButton"
 
@@ -19,9 +19,9 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
     const [operator, setOperator] = useState(search.operator)
     const [dateRange, setDateRange] = useState(date)
     const selectOptions = [
-        { label: 'Text', value: 'TEXT' } 
-        ,{ label: 'AND', value: 'AND' } 
-        ,{ label: 'OR', value: 'OR' }]
+        { label: 'Text', value: 'TEXT' }
+        , { label: 'AND', value: 'AND' }
+        , { label: 'OR', value: 'OR' }]
 
     // useEffect(() => {
     //     setDateRange(date)
@@ -84,7 +84,12 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
             </SearchBarForm>
 
             <SearchBarSynonyms id="synonyms">
-                {dictionary && <p>Searched also for: <b>{dictionary.synonyms.join(' • ')}</b></p>}
+                {dictionary && <><p>Searched also for:</p><>{dictionary.synonyms.map((synonym, idx) => (
+                    <>
+                        <SynonymParagraph>{synonym}</SynonymParagraph>
+                        {idx !== dictionary.synonyms.length - 1 && <p>•</p>}
+                    </>
+                ))}</></>}
             </SearchBarSynonyms>
 
         </SearchBarWrapper>

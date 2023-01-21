@@ -18,6 +18,9 @@ export default class DictionaryRepository implements IDictionaryRepository {
             : this.api.getAllKeywordsWithSynonyms())
         return response.data
     }
+    async upsert(dictionary: Dictionary): Promise<any> {
+        return await this.api.upsert(dictionary)
+    }
     async upsertSynonymsForKeyword(keyword: string, synonyms: any): Promise<any> {
         return await this.api.upsertSynonymsForKeyword(keyword, synonyms)
     }
