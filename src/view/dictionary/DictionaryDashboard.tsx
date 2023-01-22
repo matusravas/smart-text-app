@@ -32,7 +32,7 @@ function DictionaryDashboard() {
         <DictionaryWrapper size={dictionaries.length}>
             <SearchBar searchQuery={searchQuery} handleSearchQueryChange={handleSearchQueryChange} />
             {dictionaries.map((item, idx) => (
-                <Card key={idx} value={item} onClick={() => handleClick(item)} />
+                <Card key={idx} value={item} searchQuery={searchQuery} onClick={() => handleClick(item)} />
             ))}
             
             {dialogOpen && <Dialog 

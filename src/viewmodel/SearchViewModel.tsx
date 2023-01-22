@@ -35,14 +35,14 @@ export const useSearchViewModel = () => {
         setRequestData(prev => ({ ...prev, ...newRequestData }))
     }
 
-    const handleDictionary = (dictionary: Dictionary | null) => {
+    const onDictionaryObtained = (dictionary: Dictionary | null) => {
         setDictionary(dictionary)
     }
 
     return {
         requestData,
         dictionary,
-        handleDictionary,
+        onDictionaryObtained,
         handleRequestDataChange
     }
 }

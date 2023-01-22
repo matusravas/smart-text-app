@@ -40,7 +40,7 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         onRequestDataChange({
-            search: { ...search, phrase: query, operator: operator }
+            search: { ...search, phrase: query.trim(), operator: operator }
             , date: { ...dateRange }
             , pagination: SearchPaginationDefault
         })

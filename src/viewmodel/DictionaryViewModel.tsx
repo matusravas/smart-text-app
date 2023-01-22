@@ -14,7 +14,6 @@ export const useDictionaryViewModel = () => {
     useEffect(() => {
         repository.getSynonyms()
             .then(res => {
-                console.log(res)
                 const dicts = res as DictionaryResult[]
                 // const val = res as DictionaryResult[]
                 // let dicts = [] as DictionaryResult[]
@@ -30,8 +29,10 @@ export const useDictionaryViewModel = () => {
     }, [])
 
     function handleSearchQueryChange(query: string) {
+        query = query.trim()
         const queryLower = query.toLowerCase()
-        if (query === '') {
+        if (searchQuery.toLowerCase() === queryLower) return
+        if (queryLower === '') {
             setSearchQuery(query)
             setDictionariesFiltered([...dictionaries])
             return
