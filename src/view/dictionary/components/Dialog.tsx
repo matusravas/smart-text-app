@@ -3,10 +3,9 @@ import { Dictionary } from "../../../model/dictionary/types"
 import { DialogType } from "../../../viewmodel/types/dictionary.types"
 import { ConfirmDialog } from "../../app/components/ConfirmDialog"
 import { ActionButtonsWrapper, ActionButton } from "../../app/components/styles/action.button.styles"
-import {
-    DialogContent, DialogContentWrapper, ControlledInput, DialogForm, DialogHeader,
-    DialogLabel, DialogSubHeader, DialogWrapper
-} from "./styles/dialog.styles"
+import { FormControlledInput, FormHeader, FormLabel, FormSubHeader } from "../../app/components/styles/form.styles"
+import { DialogWrapper, DialogContentWrapper, 
+    DialogContent, DialogForm } from "./styles/dialog.styles"
 import Synonyms from "./Synonyms"
 
 interface DialogProps {
@@ -88,7 +87,7 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
         }
         if (dictionary.synonyms.length === 0) {
             console.log('error synonyms')
-            setFormErrors({synonyms: 'At least one synonym must be set...' })
+            setFormErrors({ synonyms: 'At least one synonym must be set...' })
             return
         }
         setFormErrors({})
@@ -108,29 +107,29 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
             <DialogContentWrapper>
                 <DialogContent>
                     <DialogForm autoComplete={"off"} editable={true}>
-                        <ControlledInput
+                        <FormControlledInput
                             error={formErrors?.keyword ? true : false}
                             errorText={formErrors?.keyword}
-                            disabled={props.type === 'update'? true : false}
                         >
-                            <DialogLabel>
+                            <FormLabel>
                                 Keyword:
-                            </DialogLabel>
-                            <DialogHeader
+                            </FormLabel>
+                            <FormHeader
                                 id="keyword"
                                 className="header"
                                 type="text"
+                                disabled={props.type === 'update'? true : false}
                                 placeholder="Enter keyword"
                                 value={dictionary.keyword}
                                 onChange={(e) => handleDictionaryChange(e.target)}
                             />
-                        </ControlledInput>
-                        <ControlledInput>
+                        </FormControlledInput>
+                        <FormControlledInput>
 
-                            <DialogLabel>
+                            <FormLabel>
                                 Description:
-                            </DialogLabel>
-                            <DialogSubHeader
+                            </FormLabel>
+                            <FormSubHeader
                                 id="definition"
                                 className="sub-header"
                                 type="text"
@@ -138,19 +137,18 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
                                 value={dictionary.definition}
                                 onChange={(e) => handleDictionaryChange(e.target)}
                             />
-                        </ControlledInput>
+                        </FormControlledInput>
 
                         {/* <Divider /> */}
-                        <ControlledInput
+                        <FormControlledInput
                             error={formErrors?.synonyms ? true : false}
                             errorText={formErrors?.synonyms}
                         >
-
-                            <DialogLabel>
+                            <FormLabel>
                                 Synonyms:
-                            </DialogLabel>
+                            </FormLabel>
                             <Synonyms synonyms={dictionary.synonyms} onChange={handleSynonymsChange} />
-                        </ControlledInput>
+                        </FormControlledInput>
                     </DialogForm>
 
                 </DialogContent>

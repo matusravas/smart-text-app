@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { FormInput } from "../../../app/components/styles/form.styles"
 
 export const SynonymsWrapper = styled.div`
     padding: 8px !important;
@@ -11,7 +12,7 @@ export const SynonymsWrapper = styled.div`
     gap: 10px;
 `
 
-export const SynonymInput = styled.input`
+export const SynonymInput = styled(FormInput)`
     font-size: 1em;
     font-weight: 250;
     display: inline-block;
