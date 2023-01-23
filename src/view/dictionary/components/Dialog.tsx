@@ -1,8 +1,9 @@
 import { ChangeEvent, forwardRef, useEffect, useState } from "react"
 import { Dictionary } from "../../../model/dictionary/types"
+import { ConfirmDialog } from "./ConfirmDialog"
 import {
     ActionButton, ActionButtonsWrapper,
-    DialogContent, DialogForm, DialogHeader,
+    DialogContent, DialogContentWrapper, DialogForm, DialogHeader,
     DialogLabel, DialogSubHeader, DialogWrapper
 } from "./styles/dialog.styles"
 import Synonyms from "./Synonyms"
@@ -10,15 +11,18 @@ import Synonyms from "./Synonyms"
 type DialogProps = {
     // isOpen: boolean,
     dictionary?: Dictionary,
+    toggleOpen: () => void,
     handleSave: (dictionary: Dictionary) => void
     // handleDictionaryChange: (target: any) => void
 }
 
-function DialogWithRef({ handleSave, ...props }: DialogProps, ref: any) {
+// function DialogWithRef({ handleSave, toggleOpen, ...props }: DialogProps, ref: any) {
+export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
     const dictionaryOriginal = props.dictionary !== undefined ?
         { ...props.dictionary } : { keyword: '', definition: '', synonyms: [] }
     const [dictionary, setDictionary] = useState(dictionaryOriginal)
     const [isChanged, setIsChanged] = useState(false)
+    const [mustConfirm, setMustConfirm] = useState(false)
 
     useEffect(() => {
         checkIfValuesChanged()
@@ -72,61 +76,79 @@ function DialogWithRef({ handleSave, ...props }: DialogProps, ref: any) {
 
     }
 
-    return (
-        <DialogWrapper ref={ref}>
-            {/* <DialogContentWrapper> */}
+    function closeDialog() {
+        if (!isChanged) {
+            toggleOpen()
+            return
+        }
+        setMustConfirm(true)
+    }
 
-            {/* <DialogCancelButton>
+    return (
+        <DialogWrapper>
+            <DialogContentWrapper>
+
+                {/* <DialogCancelButton>
                     <IconButton>
                         <Cancel />
                     </IconButton>
                 </DialogCancelButton> */}
-            <DialogContent>
-                <DialogForm autoComplete={"off"} editable={true}>
-                    <DialogLabel>
-                        Keyword:
-                    </DialogLabel>
+                <DialogContent>
+                    <DialogForm autoComplete={"off"} editable={true}>
+                        <DialogLabel>
+                            Keyword:
+                        </DialogLabel>
 
-                    <DialogHeader
-                        id="keyword"
-                        className="header"
-                        type="text"
-                        // autoFocus={editable}
-                        placeholder="Enter keyword"
-                        value={dictionary.keyword}
-                        // onBlur={() => { }}
-                        onChange={(e) => handleDictionaryChange(e.target)}
-                    />
+                        <DialogHeader
+                            id="keyword"
+                            className="header"
+                            type="text"
+                            // autoFocus={editable}
+                            placeholder="Enter keyword"
+                            value={dictionary.keyword}
+                            // onBlur={() => { }}
+                            onChange={(e) => handleDictionaryChange(e.target)}
+                        />
 
-                    <DialogLabel>
-                        Description:
-                    </DialogLabel>
-                    <DialogSubHeader
-                        id="definition"
-                        className="sub-header"
-                        type="text"
-                        placeholder="Enter simple definition (otional)..."
-                        value={dictionary.definition}
-                        onChange={(e) => handleDictionaryChange(e.target)}
-                    />
-                    {/* <Divider /> */}
-                    <DialogLabel>
-                        Synonyms:
-                    </DialogLabel>
-                    <Synonyms synonyms={dictionary.synonyms} onChange={handleSynonymsChange} />
-                </DialogForm>
+                        <DialogLabel>
+                            Description:
+                        </DialogLabel>
+                        <DialogSubHeader
+                            id="definition"
+                            className="sub-header"
+                            type="text"
+                            placeholder="Enter simple definition (otional)..."
+                            value={dictionary.definition}
+                            onChange={(e) => handleDictionaryChange(e.target)}
+                        />
+                        {/* <Divider /> */}
+                        <DialogLabel>
+                            Synonyms:
+                        </DialogLabel>
+                        <Synonyms synonyms={dictionary.synonyms} onChange={handleSynonymsChange} />
+                    </DialogForm>
+
+                </DialogContent>
+
                 <ActionButtonsWrapper>
-                    {isChanged &&
-                        <ActionButton
-                            backgroundColor={'#43a047'}
-                            onClick={() => handleSave(dictionary)}>
-                            Save
-                        </ActionButton>}
+                    <ActionButton
+                        disabled={!isChanged}
+                        backgroundColor={'#43a047'}
+                        onClick={() => handleSave(dictionary)}>
+                        Save
+                    </ActionButton>
+
+                    <ActionButton
+                        onClick={closeDialog}>
+                        Cancel
+                    </ActionButton>
                 </ActionButtonsWrapper>
-            </DialogContent>
-            {/* </DialogContentWrapper> */}
+            </DialogContentWrapper>
+
+            {mustConfirm && <ConfirmDialog onConfirm={toggleOpen} onCancel={() => setMustConfirm(false)} />}
+            
         </DialogWrapper>
     )
 }
 
-export const Dialog = forwardRef(DialogWithRef)
+// export const Dialog = forwardRef(DialogWithRef)

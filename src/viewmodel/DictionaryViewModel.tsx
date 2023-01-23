@@ -39,7 +39,8 @@ export const useDictionaryViewModel = () => {
         }
 
         const filteredDictionaries = dictionaries.filter(dict => {
-            if (dict.keyword.toLowerCase().includes(queryLower)) return dict
+            if (dict.keyword.toLowerCase().includes(queryLower) ||
+                    dict.definition.toLowerCase().includes(queryLower)) return dict
             for (let synonym of dict.synonyms) {
                 if (synonym.toLowerCase().includes(queryLower)) return dict
             }
@@ -55,9 +56,11 @@ export const useDictionaryViewModel = () => {
     }
     
     function handleSave(dict: Dictionary) {
-        console.log(dict)
+        // console.log(dict)
         repository.upsert(dict)
             .then(res=>{
+                setDictionaries([dict, ...dictionaries, dict])
+                setDictionariesFiltered([dict, ...dictionariesFiltered])
                 console.log(res)
             })
             .catch(err=>{

@@ -9,24 +9,24 @@ function DictionaryDashboard() {
     const { dictionaries, dictionary, searchQuery,
         dialogOpen, toggleDialog, handleSave,
         handleClick, handleSearchQueryChange } = useDictionaryViewModel()
-    const ref = createRef<HTMLDivElement>();
-    useEffect(() => {
-        if (!dialogOpen) return
-        function handleClickOutsideDialog(event: MouseEvent) {
-            // console.log(ref)
-            // console.log(event.target)
-            if (ref.current && ref.current === event.target as Node) {
-                // setDialogOpen(false)
-                toggleDialog()
-            }
-        }
-        document.body.style.overflow = 'hidden'
-        document.addEventListener('mousedown', handleClickOutsideDialog)
-        return () => {
-            document.body.style.overflow = 'auto'
-            document.removeEventListener('mousedown', handleClickOutsideDialog)
-        }
-    }, [dialogOpen])
+    // const ref = createRef<HTMLDivElement>();
+    // useEffect(() => {
+    //     if (!dialogOpen) return
+    //     function handleClickOutsideDialog(event: MouseEvent) {
+    //         // console.log(ref)
+    //         // console.log(event.target)
+    //         if (ref.current && ref.current === event.target as Node) {
+    //             // setDialogOpen(false)
+    //             toggleDialog()
+    //         }
+    //     }
+    //     document.body.style.overflow = 'hidden'
+    //     document.addEventListener('mousedown', handleClickOutsideDialog)
+    //     return () => {
+    //         document.body.style.overflow = 'auto'
+    //         document.removeEventListener('mousedown', handleClickOutsideDialog)
+    //     }
+    // }, [dialogOpen])
 
     return (
         <DictionaryWrapper size={dictionaries.length}>
@@ -36,8 +36,9 @@ function DictionaryDashboard() {
             ))}
             
             {dialogOpen && <Dialog 
-                ref={ref} 
+                // ref={ref} 
                 // isOpen={dialogOpen} 
+                toggleOpen={toggleDialog}
                 dictionary={dictionary} 
                 handleSave={handleSave}
                 // handleDictionaryChange={handleDictionaryChange}

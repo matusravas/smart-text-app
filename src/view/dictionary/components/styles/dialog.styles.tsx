@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 export const DialogWrapper = styled.div`
     position: fixed;
@@ -30,32 +30,56 @@ export const DialogWrapper = styled.div`
   }
 `
 
-// export const DialogContentWrapper = styled.div`
-//     position: relative;
-//     box-shadow: 0px 0px 5px #333;
-//     border-radius: 10px;
-//     width: 50%;
-//     height: 60%;
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//     background-color: #fafafa;
-//     overflow: hidden;
-//     padding: 64px;
-//     transition: all 2s ease-in-out;
-// `
-
-export const DialogContent = styled.div`
+export const DialogContentWrapper = styled.div`
+    position: absolute;
     box-shadow: 0px 0px 5px #333;
     border-radius: 10px;
     width: 50%;
     height: 60%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
+    justify-content: space-between;
     background-color: #fafafa;
     overflow: auto;
-    padding: 64px;
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+    /* box-shadow: inset 0 0 5px #fafafa;  */
+    border-radius: 5px;
+    padding: 6px;
+    }
+    
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+    background: #f2f2f2; 
+    border-radius: 10px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+    background: #f0f0f0; 
+    }
+    padding: 64px 64px 0px 64px;
+`
+
+export const DialogContent = styled.div`
+    /* box-shadow: 0px 0px 5px #333;
+    border-radius: 10px; */
+    /* width: 50%;
+    height: 60%; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* overflow: auto;
+    ::-webkit-scrollbar {
+        display: none;
+    } */
+    /* background-color: #fafafa; */
+    /* padding: 64px; */
 `
 
 // export const DialogCancelButton = styled.div`
@@ -65,11 +89,12 @@ export const DialogContent = styled.div`
 // `
 
 export const ActionButtonsWrapper = styled.div`
-    position: absolute;
-    display: inline-grid;
-    justify-items: center;
-    grid-template-columns: 1fr;
-    bottom: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+    padding: 8px;
     width: 100%;
     box-sizing: border-box;
 `
@@ -87,18 +112,18 @@ export const ActionButton = styled.button<ActionButtonProps>`
     border-style: none;
     border-radius: 6px;
     box-sizing: border-box;
-    /* border: 1px solid ${props => props.backgroundColor ? props.backgroundColor: '#004ba033'}; */
+    /* border: 1px solid ${props => props.backgroundColor ? props.backgroundColor : '#004ba033'}; */
     font-weight: bolder;
-    background: ${props => props.backgroundColor ? props.backgroundColor: '#3c9040'};
+    background: ${props => props.disabled? '#f0f0f0' : props.backgroundColor ? props.backgroundColor : '#f1f1f1'};
     /* transition: all 0.2s ease-in-out; */
     :hover {
-        cursor: pointer;
-        filter: brightness(110%);
-        /* transform: scale(1.1); */
-
-        /* font-size: medium; */
-        /* box-shadow: 0 0 10px 2px #004ba033 */
-    }
+        ${(props) => 
+            !props.disabled && css`
+                cursor: pointer;
+                filter: brightness(90%);
+                `
+            }   
+        }
 `
 
 type DialogFormProps = {
@@ -106,7 +131,6 @@ type DialogFormProps = {
 }
 
 export const DialogForm = styled.form<DialogFormProps>`
-    position: relative;
     display: flex;
     width: 100%;
     flex-direction: column;
