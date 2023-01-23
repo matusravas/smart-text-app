@@ -1,4 +1,3 @@
-import { createRef, useEffect } from "react"
 import { useDictionaryViewModel } from "../../viewmodel/DictionaryViewModel"
 import { Card } from "./components/Card"
 import { Dialog } from "./components/Dialog"
@@ -7,7 +6,7 @@ import { DictionaryWrapper, FAB } from "./components/styles/dictionary.dashboard
 
 function DictionaryDashboard() {
     const { dictionaries, dictionary, searchQuery,
-        dialogOpen, toggleDialog, handleSave,
+        dialogOpen, dialogType, toggleDialog, handleSave,
         handleClick, handleSearchQueryChange } = useDictionaryViewModel()
     // const ref = createRef<HTMLDivElement>();
     // useEffect(() => {
@@ -32,12 +31,13 @@ function DictionaryDashboard() {
         <DictionaryWrapper size={dictionaries.length}>
             <SearchBar searchQuery={searchQuery} handleSearchQueryChange={handleSearchQueryChange} />
             {dictionaries.map((item, idx) => (
-                <Card key={idx} value={item} searchQuery={searchQuery} onClick={() => handleClick(item)} />
+                <Card key={idx} value={item} searchQuery={searchQuery} onClick={() => handleClick('update', item)} />
             ))}
             
-            {dialogOpen && <Dialog 
+            {dialogOpen && dialogType && <Dialog 
                 // ref={ref} 
-                // isOpen={dialogOpen} 
+                // isOpen={dialogOpen}
+                type={dialogType}
                 toggleOpen={toggleDialog}
                 dictionary={dictionary} 
                 handleSave={handleSave}
@@ -45,7 +45,7 @@ function DictionaryDashboard() {
                  />
             }
             
-            <FAB onClick={()=>handleClick()}/>
+            <FAB onClick={()=>handleClick('create')}/>
         </DictionaryWrapper>
     )
 }

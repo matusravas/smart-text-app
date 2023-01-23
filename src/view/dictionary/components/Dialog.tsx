@@ -1,5 +1,6 @@
 import { ChangeEvent, forwardRef, useEffect, useState } from "react"
 import { Dictionary } from "../../../model/dictionary/types"
+import { DialogType } from "../../../viewmodel/types/dictionary.types"
 import { ConfirmDialog } from "../../app/components/ConfirmDialog"
 import { ActionButtonsWrapper, ActionButton } from "../../app/components/styles/action.button.styles"
 import {
@@ -10,6 +11,7 @@ import Synonyms from "./Synonyms"
 
 interface DialogProps {
     // isOpen: boolean,
+    type: DialogType,
     dictionary?: Dictionary,
     toggleOpen: () => void,
     handleSave: (dictionary: Dictionary) => void
@@ -109,6 +111,7 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
                         <ControlledInput
                             error={formErrors?.keyword ? true : false}
                             errorText={formErrors?.keyword}
+                            disabled={props.type === 'update'? true : false}
                         >
                             <DialogLabel>
                                 Keyword:

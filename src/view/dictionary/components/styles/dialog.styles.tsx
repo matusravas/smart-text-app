@@ -87,7 +87,8 @@ export const DialogForm = styled.form<DialogFormProps>`
 `
 
 interface DialogControlledInputProps {
-    editable?: boolean
+    editable?: boolean,
+    disabled?: boolean,
     label?: string,
     error?: boolean,
     errorText?: string
@@ -99,7 +100,7 @@ export const ControlledInput = styled.div<DialogControlledInputProps>`
     flex-direction: column;
     input {
         text-align: center;
-        background: transparent;
+        background: ${props => !props.disabled ? 'transparent' : '#f0f0f0'};
         border: none;
         outline: none;
         padding: 16px;
@@ -110,10 +111,13 @@ export const ControlledInput = styled.div<DialogControlledInputProps>`
         ::placeholder {
             color: #00000090
         };
-        :hover, :focus {
-            box-shadow: 2px 2px 5px #004ba070;
-            /* animation: pulse 0.5s linear 1; */
-        }
+        ${props => !props.disabled! && css`
+            :hover, :focus {
+                box-shadow: 2px 2px 5px #004ba070;
+                /* animation: pulse 0.5s linear 1; */
+            }
+        `}
+        
     }
     p {
         align-self: flex-start;

@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Dictionary, Dictionary as DictionaryResult } from '../model/dictionary/types'
 import DictionaryRepository from '../repository/dictionary/DictionaryRepository'
+import { DialogType } from './types/dictionary.types'
 
 
 export const useDictionaryViewModel = () => {
     const repository = DictionaryRepository.getInstance()
     const [saved, setSaved] = useState(false)
+    const [type, setType] = useState<DialogType>()
     const [searchQuery, setSearchQuery] = useState<string>('')
     const [dialogOpen, setDialogOpen] = useState(false)
     const [dictionary, setDictionary] = useState<Dictionary>()
@@ -46,10 +48,11 @@ export const useDictionaryViewModel = () => {
 
     }
 
-    function handleClick(dict?: Dictionary) {
+    function handleClick(type: DialogType, dict?: Dictionary) {
         setDictionary(dict)
         setDialogOpen(true)
         setSaved(false)
+        setType(type)
     }
     
     function handleSave(dict: Dictionary) {
@@ -74,6 +77,7 @@ export const useDictionaryViewModel = () => {
         dictionary,
         searchQuery,
         dialogOpen,
+        dialogType: type,
         toggleDialog,
         handleSearchQueryChange,
         handleClick,
