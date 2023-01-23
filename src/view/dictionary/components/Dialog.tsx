@@ -8,7 +8,7 @@ import {
 } from "./styles/dialog.styles"
 import Synonyms from "./Synonyms"
 
-type DialogProps = {
+interface DialogProps {
     // isOpen: boolean,
     dictionary?: Dictionary,
     toggleOpen: () => void,
@@ -16,13 +16,20 @@ type DialogProps = {
     // handleDictionaryChange: (target: any) => void
 }
 
+type FormErrors = {
+    keyword?: string,
+    synonyms?: string
+}
+
+
+
 // function DialogWithRef({ handleSave, toggleOpen, ...props }: DialogProps, ref: any) {
 export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
     const dictionaryOriginal = props.dictionary !== undefined ?
         { ...props.dictionary } : { keyword: '', definition: '', synonyms: [] }
     const [dictionary, setDictionary] = useState(dictionaryOriginal)
     const [isChanged, setIsChanged] = useState(false)
-    const [formErrors, setFormErrors] = useState({ keyword: '', synonyms: '' })
+    const [formErrors, setFormErrors] = useState<FormErrors>({})
     const [mustConfirm, setMustConfirm] = useState(false)
 
     useEffect(() => {
@@ -74,15 +81,16 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
 
     function validateForm() {
         if (!dictionary.keyword) {
-            setFormErrors({ ...formErrors, keyword: 'Keyword must be set...' })
+            setFormErrors({ keyword: 'Keyword must be set...' })
             return
         }
         if (dictionary.synonyms.length === 0) {
             console.log('error synonyms')
-            setFormErrors({ ...formErrors, synonyms: 'At least one synonym must be set...' })
+            setFormErrors({synonyms: 'At least one synonym must be set...' })
             return
         }
-        setFormErrors({ keyword: '', synonyms: '' })
+        setFormErrors({})
+        handleSave(dictionary)
     }
 
     function closeDialog() {
@@ -99,8 +107,8 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
                 <DialogContent>
                     <DialogForm autoComplete={"off"} editable={true}>
                         <ControlledInput
-                            error={formErrors.keyword ? true : false}
-                            errorText={formErrors.keyword}
+                            error={formErrors?.keyword ? true : false}
+                            errorText={formErrors?.keyword}
                         >
                             <DialogLabel>
                                 Keyword:
@@ -131,8 +139,8 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
 
                         {/* <Divider /> */}
                         <ControlledInput
-                            error={formErrors.synonyms ? true : false}
-                            errorText={formErrors.synonyms}
+                            error={formErrors?.synonyms ? true : false}
+                            errorText={formErrors?.synonyms}
                         >
 
                             <DialogLabel>

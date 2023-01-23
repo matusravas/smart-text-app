@@ -51,6 +51,11 @@ export function useTable({
         let centeredColumns = columns.map(col=>{
             return {...col, cellStyle: {
                 textAlign: 'center',
+                width: '20%',
+                padding: 12,
+                textOverflow: 'ellipsis',
+                'overflow': 'hidden',
+                'whiteSpace': 'nowrap',
               }}
         })
         if (!requestData.search.phrase) return centeredColumns
@@ -94,8 +99,9 @@ export function useTable({
             headerStyle: {
                 position: "sticky",
                 top: 0,
+                padding: 24
             },
-            // toolbar: false,
+            toolbar: false,
             draggable: false,
             search: false,
             showTitle: false,

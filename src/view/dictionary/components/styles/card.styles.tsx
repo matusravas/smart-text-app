@@ -24,3 +24,9 @@ export const CardWrapper = styled.div`
         box-shadow: 0 0 10px 1px #004ba033;
     }
 `
+
+export const Divider = styled.hr`
+    width: 90%;
+    margin: 0px;
+    border: 1px solid #f0f0f0;
+`

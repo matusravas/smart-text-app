@@ -44,6 +44,7 @@ export const Table = (props: TableProps) => {
                     isLoading={isLoading}
                     columns={columns}
                     data={rows}
+                    style={{borderRadius: 10}}
                     localization={localization}
                     options={options}
                     components={{

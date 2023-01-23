@@ -3,6 +3,7 @@ import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
 import MenuIcon from '@material-ui/icons/Menu';
+import Home from '@material-ui/icons/Home';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { DrawerItem } from '../../../hooks/commons/router';
@@ -29,11 +30,11 @@ export default function AppBar({ drawerItems, ...props }: AppBarProps) {
             aria-label="menu"
             onClick={() => setDrawerOpen(!drawerOpen)}
           >
+          <Drawer items={drawerItems} open={drawerOpen} handleOpen={handleDrawerOpen} />
             <MenuIcon />
-            <Drawer items={drawerItems} open={drawerOpen} handleOpen={handleDrawerOpen} />
           </IconButton>
           <Link to='/'>
-            <img style={{height: '35px'}} src='/img/bekaert-logo.svg' alt='PDS'/>
+            <img style={{height: '20px'}} src='/img/pds-logo.svg' alt='PDS'/>
           </Link>
         </Toolbar>
       </MUIAppBar>

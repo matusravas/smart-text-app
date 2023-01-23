@@ -12,7 +12,7 @@ export const DialogWrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    animation: all 0.5s ease-in-out;
+    animation: all 0.2s ease-in-out;
     animation-name: slideIn;  
     @keyframes slideIn{
       from {

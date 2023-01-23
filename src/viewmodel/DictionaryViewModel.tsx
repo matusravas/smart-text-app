@@ -5,6 +5,7 @@ import DictionaryRepository from '../repository/dictionary/DictionaryRepository'
 
 export const useDictionaryViewModel = () => {
     const repository = DictionaryRepository.getInstance()
+    const [saved, setSaved] = useState(false)
     const [searchQuery, setSearchQuery] = useState<string>('')
     const [dialogOpen, setDialogOpen] = useState(false)
     const [dictionary, setDictionary] = useState<Dictionary>()
@@ -15,18 +16,13 @@ export const useDictionaryViewModel = () => {
         repository.getSynonyms()
             .then(res => {
                 const dicts = res as DictionaryResult[]
-                // const val = res as DictionaryResult[]
-                // let dicts = [] as DictionaryResult[]
-                // for (let i = 0; i < 50; i++) {
-                //     dicts.push(val[0])
-                // }
                 setDictionaries(dicts)
                 setDictionariesFiltered(dicts)
             })
             .catch(err => {
                 console.error(err)
             })
-    }, [])
+    }, [saved])
 
     function handleSearchQueryChange(query: string) {
         query = query.length > 1? query : query.trim()
@@ -53,23 +49,21 @@ export const useDictionaryViewModel = () => {
     function handleClick(dict?: Dictionary) {
         setDictionary(dict)
         setDialogOpen(true)
+        setSaved(false)
     }
     
     function handleSave(dict: Dictionary) {
-        // console.log(dict)
         repository.upsert(dict)
             .then(res=>{
-                setDictionaries([dict, ...dictionaries, dict])
-                setDictionariesFiltered([dict, ...dictionariesFiltered])
-                console.log(res)
+                setSaved(true)
             })
             .catch(err=>{
                 console.error(err)
             })
+            .finally(()=>{
+                setDialogOpen(false)
+            })
     }
-    // function handleDictionaryChange(target: any) {
-    //     setDictionary({...dictionary as Dictionary, [target.id]: target.value})
-    // }
     
     function toggleDialog() {
         setDialogOpen(!dialogOpen)

@@ -7,11 +7,19 @@ export const TableWrapper = styled.div`
     /* filter: sepia(20%); */
     /* position: sticky; */
   /* } */
+  & .Component-horizontalScrollContainer-15 {
+    border-radius: 10px;
+  }
   & .MuiTableCell-head {
     background-color: #303030;
     color: #fafafa;
+
     // font-size: 14px;
     text-align: center;
+    /* white-space: nowrap; */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
   & .MuiTableRow-head {
       background-color: #303030;
@@ -32,9 +40,11 @@ export const TableWrapper = styled.div`
   & div::-webkit-scrollbar {
     background-color: #fafbfd;
     min-width: 10px;
+    border-radius: 10px;
   }
   & div::-webkit-scrollbar-track {
     background-color: #fafbfd;
+    border-radius: 10px;
   }
   & div::-webkit-scrollbar-thumb {
     background-color: #babac0;
