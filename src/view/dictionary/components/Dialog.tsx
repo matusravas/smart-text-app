@@ -1,9 +1,9 @@
 import { ChangeEvent, forwardRef, useEffect, useState } from "react"
 import { Dictionary } from "../../../model/dictionary/types"
-import { ConfirmDialog } from "./ConfirmDialog"
+import { ConfirmDialog } from "../../app/components/ConfirmDialog"
+import { ActionButtonsWrapper, ActionButton } from "../../app/components/styles/action.button.styles"
 import {
-    ActionButton, ActionButtonsWrapper,
-    DialogContent, DialogContentWrapper, DialogForm, DialogHeader,
+    DialogContent, DialogContentWrapper, ControlledInput, DialogForm, DialogHeader,
     DialogLabel, DialogSubHeader, DialogWrapper
 } from "./styles/dialog.styles"
 import Synonyms from "./Synonyms"
@@ -22,6 +22,7 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
         { ...props.dictionary } : { keyword: '', definition: '', synonyms: [] }
     const [dictionary, setDictionary] = useState(dictionaryOriginal)
     const [isChanged, setIsChanged] = useState(false)
+    const [formErrors, setFormErrors] = useState({ keyword: '', synonyms: '' })
     const [mustConfirm, setMustConfirm] = useState(false)
 
     useEffect(() => {
@@ -32,7 +33,6 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
     function checkIfValuesChanged() {
         let key: keyof typeof dictionary;
         for (key in dictionary) {
-            console.log(key)
             if (key !== 'synonyms') {
                 if (dictionary[key] !== dictionaryOriginal[key]) {
                     setIsChanged(true)
@@ -73,7 +73,16 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
     };
 
     function validateForm() {
-
+        if (!dictionary.keyword) {
+            setFormErrors({ ...formErrors, keyword: 'Keyword must be set...' })
+            return
+        }
+        if (dictionary.synonyms.length === 0) {
+            console.log('error synonyms')
+            setFormErrors({ ...formErrors, synonyms: 'At least one synonym must be set...' })
+            return
+        }
+        setFormErrors({ keyword: '', synonyms: '' })
     }
 
     function closeDialog() {
@@ -87,45 +96,50 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
     return (
         <DialogWrapper>
             <DialogContentWrapper>
-
-                {/* <DialogCancelButton>
-                    <IconButton>
-                        <Cancel />
-                    </IconButton>
-                </DialogCancelButton> */}
                 <DialogContent>
                     <DialogForm autoComplete={"off"} editable={true}>
-                        <DialogLabel>
-                            Keyword:
-                        </DialogLabel>
+                        <ControlledInput
+                            error={formErrors.keyword ? true : false}
+                            errorText={formErrors.keyword}
+                        >
+                            <DialogLabel>
+                                Keyword:
+                            </DialogLabel>
+                            <DialogHeader
+                                id="keyword"
+                                className="header"
+                                type="text"
+                                placeholder="Enter keyword"
+                                value={dictionary.keyword}
+                                onChange={(e) => handleDictionaryChange(e.target)}
+                            />
+                        </ControlledInput>
+                        <ControlledInput>
 
-                        <DialogHeader
-                            id="keyword"
-                            className="header"
-                            type="text"
-                            // autoFocus={editable}
-                            placeholder="Enter keyword"
-                            value={dictionary.keyword}
-                            // onBlur={() => { }}
-                            onChange={(e) => handleDictionaryChange(e.target)}
-                        />
+                            <DialogLabel>
+                                Description:
+                            </DialogLabel>
+                            <DialogSubHeader
+                                id="definition"
+                                className="sub-header"
+                                type="text"
+                                placeholder="Enter simple definition (otional)..."
+                                value={dictionary.definition}
+                                onChange={(e) => handleDictionaryChange(e.target)}
+                            />
+                        </ControlledInput>
 
-                        <DialogLabel>
-                            Description:
-                        </DialogLabel>
-                        <DialogSubHeader
-                            id="definition"
-                            className="sub-header"
-                            type="text"
-                            placeholder="Enter simple definition (otional)..."
-                            value={dictionary.definition}
-                            onChange={(e) => handleDictionaryChange(e.target)}
-                        />
                         {/* <Divider /> */}
-                        <DialogLabel>
-                            Synonyms:
-                        </DialogLabel>
-                        <Synonyms synonyms={dictionary.synonyms} onChange={handleSynonymsChange} />
+                        <ControlledInput
+                            error={formErrors.synonyms ? true : false}
+                            errorText={formErrors.synonyms}
+                        >
+
+                            <DialogLabel>
+                                Synonyms:
+                            </DialogLabel>
+                            <Synonyms synonyms={dictionary.synonyms} onChange={handleSynonymsChange} />
+                        </ControlledInput>
                     </DialogForm>
 
                 </DialogContent>
@@ -134,7 +148,8 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
                     <ActionButton
                         disabled={!isChanged}
                         backgroundColor={'#43a047'}
-                        onClick={() => handleSave(dictionary)}>
+                        // onClick={() => handleSave(dictionary)}>
+                        onClick={validateForm}>
                         Save
                     </ActionButton>
 
@@ -146,7 +161,7 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
             </DialogContentWrapper>
 
             {mustConfirm && <ConfirmDialog onConfirm={toggleOpen} onCancel={() => setMustConfirm(false)} />}
-            
+
         </DialogWrapper>
     )
 }

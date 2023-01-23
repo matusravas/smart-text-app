@@ -33,7 +33,7 @@ export default function AppBar({ drawerItems, ...props }: AppBarProps) {
             <Drawer items={drawerItems} open={drawerOpen} handleOpen={handleDrawerOpen} />
           </IconButton>
           <Link to='/'>
-            <img style={{height: '25px'}} src='/img/pds-logo.svg' alt='PDS'/>
+            <img style={{height: '35px'}} src='/img/bekaert-logo.svg' alt='PDS'/>
           </Link>
         </Toolbar>
       </MUIAppBar>

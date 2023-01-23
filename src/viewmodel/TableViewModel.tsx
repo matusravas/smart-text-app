@@ -90,7 +90,7 @@ export function useTable({
         let options: Options<any> = {};
         options = {
             grouping: false,
-            maxBodyHeight: "60vh",
+            maxBodyHeight: "50vh",
             headerStyle: {
                 position: "sticky",
                 top: 0,

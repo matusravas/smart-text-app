@@ -1,18 +1,25 @@
+import { ActionButton, ActionButtonsWrapper } from "./styles/action.button.styles";
 import { DialogContent, DialogContentWrapper, DialogHeader, DialogText, DialogWrapper } from "./styles/confirm.dialog.styles";
-import { ActionButton, ActionButtonsWrapper } from "./styles/dialog.styles";
+
 
 interface ConfirmDialogProps {
+    headerText?: string,
+    text?: string,
     onConfirm: () => void,
     onCancel: () => void
 }
 
-export function ConfirmDialog(props: ConfirmDialogProps) {
+export function ConfirmDialog({headerText, text, ...props}: ConfirmDialogProps) {
     return (
         <DialogWrapper >
             <DialogContentWrapper>
                 <DialogContent >
-                    <DialogHeader>Confirmation</DialogHeader>
-                    <DialogText>Would you like the cancel the unsaved process?</DialogText>
+                    <DialogHeader>
+                        {headerText? headerText : 'Confirmation'}
+                        </DialogHeader>
+                    <DialogText>
+                        {text? text : 'Would you like the cancel the unsaved process?'}
+                        </DialogText>
                     <ActionButtonsWrapper>
                         <ActionButton backgroundColor={'#de4848'} onClick={props.onConfirm}>Yes</ActionButton>
                         <ActionButton onClick={props.onCancel}>No</ActionButton>

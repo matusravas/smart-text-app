@@ -14,7 +14,7 @@ export const DialogWrapper = styled.div`
     align-items: center;
     /* &.visible { */
     /* display: block; */
-    animation: all 0.5s ease-in-out;
+    animation: all 0.2s ease-in-out;
     animation-name: slideIn;
   /* } */
   
@@ -67,64 +67,11 @@ export const DialogContentWrapper = styled.div`
 `
 
 export const DialogContent = styled.div`
-    /* box-shadow: 0px 0px 5px #333;
-    border-radius: 10px; */
-    /* width: 50%;
-    height: 60%; */
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* overflow: auto;
-    ::-webkit-scrollbar {
-        display: none;
-    } */
-    /* background-color: #fafafa; */
-    /* padding: 64px; */
 `
 
-// export const DialogCancelButton = styled.div`
-//     position: absolute;
-//     top: 0px;
-//     right: 0px;
-// `
-
-export const ActionButtonsWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 100px;
-    padding: 8px;
-    width: 100%;
-    box-sizing: border-box;
-`
-
-interface ActionButtonProps {
-    backgroundColor?: string
-}
-
-export const ActionButton = styled.button<ActionButtonProps>`
-    padding: 8px;
-    width: fit-content;
-    height: 60px;
-    outline: none;
-    padding: 0px 100px;
-    border-style: none;
-    border-radius: 6px;
-    box-sizing: border-box;
-    /* border: 1px solid ${props => props.backgroundColor ? props.backgroundColor : '#004ba033'}; */
-    font-weight: bolder;
-    background: ${props => props.disabled? '#f0f0f0' : props.backgroundColor ? props.backgroundColor : '#f1f1f1'};
-    /* transition: all 0.2s ease-in-out; */
-    :hover {
-        ${(props) => 
-            !props.disabled && css`
-                cursor: pointer;
-                filter: brightness(90%);
-                `
-            }   
-        }
-`
 
 type DialogFormProps = {
     editable: boolean
@@ -134,8 +81,22 @@ export const DialogForm = styled.form<DialogFormProps>`
     display: flex;
     width: 100%;
     flex-direction: column;
+    align-items: center;
     gap: 20px;
     pointer-events: ${p => !p.editable && 'none'};
+`
+
+interface DialogControlledInputProps {
+    editable?: boolean
+    label?: string,
+    error?: boolean,
+    errorText?: string
+}
+
+export const ControlledInput = styled.div<DialogControlledInputProps>`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     input {
         text-align: center;
         background: transparent;
@@ -144,85 +105,38 @@ export const DialogForm = styled.form<DialogFormProps>`
         padding: 16px;
         overflow: hidden;
         width: auto;
+        border: ${props=> props.error ? '2px solid #b61827': 'none'};
         box-shadow: 2px 2px 5px #004ba033;
-        ${p => p.editable && `{
-                color: black;
-                //overflow: hidden;
-                //box-sizing: content-box;
-                
-            }`
-    }
         ::placeholder {
-            color: rgba(0,0,0,0.54)
-        }
-    };
-    /* .header, .sub-header {
-            width: 100%;
-            ${p => p.editable && `{
-                 //border-bottom: 2px solid #004ba0;
-                }`
-    };
-        }; */
-    .header, .sub-header, .word {
-        @keyframes pulse {
-            0% {
-            transform: scale(1, 1);
-            }
-
-            50% {
-            transform: scale(1.05, 1.05);
-            }
-
-            100% {
-            transform: scale(1, 1);
-            }
+            color: #00000090
         };
-        ${p => p.editable && `{
-            background: #f1f1f1;
-            box-shadow: 2px 2px 5px #004ba033;
-            :hover, :focus {
-                box-shadow: 2px 2px 5px #004ba066;
-                animation: pulse 0.5s linear 1;
-                //box-shadow: 0 0 15px 2px #30303033
-            }
-            }`
+        :hover, :focus {
+            box-shadow: 2px 2px 5px #004ba070;
+            /* animation: pulse 0.5s linear 1; */
+        }
     }
-        
-
+    p {
+        align-self: flex-start;
+        content: 'Required';
+        ::after {
+            ${props=> props.error && 
+                css`
+                    content: ' Required property*';
+                    color: #b61827;
+                    font-weight: 500;
+                `
+            };
+        }
     }
-    /* .word {
-        background: #f2f2f2;
-        border-radius: 10px;
-        padding: 16px;
-        box-shadow: 2px 2px 5px #004ba033;
-            ${p => p.editable && `{
-                background: #f2f2f2;
-                border-radius: 10px;
-                padding: 16px;
-                box-shadow: 2px 2px 5px #004ba033;
-
-                }`
-    }
-        }; */
+    
 `
-
-// export const DialogGrid = styled.div`
-//     /* width: 100%; */
-//     display: grid;
-//     align-items: center;
-//     box-sizing: border-box;
-//     grid-template-columns: 1fr 1fr;
-//     /* text-transform: capitalize; */
-// `
 
 export const DialogLabel = styled.p`
     font-size: 1.1em;
     font-weight: 300;
     text-align: left;
-    padding: 6;
+    padding-bottom: 6px;
     margin: 0;
-    /* text-decoration: underline;
-    text-decoration-color: currentColor; */
 `
 
 export const DialogHeader = styled.input`
@@ -230,41 +144,9 @@ export const DialogHeader = styled.input`
     font-weight: 600;
     overflow: hidden;
     width: auto;
-    /* text-transform: capitalize; */
 `
 
 export const DialogSubHeader = styled.input`
     font-size: 2em;
     font-weight: 400;
-`
-
-
-export const Divider = styled.div`
-    /* height: 1px; */
-    background: transparent;
-    padding: 0px !important;
-    border: 1px solid #004ba066;
-    /* box-shadow: 10px 10px 5px #004ba066; */
-`
-
-export const SynonymsWrapper = styled.div`
-    padding: 8px !important;
-    display: flex;
-    flex-wrap: wrap;
-    width: auto;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-`
-
-export const SynonymInput = styled.input`
-    font-size: 1em;
-    font-weight: 250;
-    display: inline-block;
-    width: auto;
-    background: #f1f1f1;
-    box-sizing: border-box;
-    border-radius: 10px;
-    border: 1px solid #004ba066;
 `

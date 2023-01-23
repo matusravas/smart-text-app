@@ -1,8 +1,9 @@
-import { FormEvent, useEffect, useState } from "react"
+import { FormEvent, useState } from "react"
 import { Dictionary } from "../../../model/dictionary/types"
 import { Date, Operator, Search, SearchData, SearchPaginationDefault } from "../../../model/search/types"
-import { SearchBarSynonyms, SearchBarForm, SearchButton, SearchInput, SearchToolBar, SearchToolBarWrapper, SearchBarWrapper, SynonymParagraph } from '../styles/searchbar.styles'
-import { Calendar, DatePicker } from "./Calendar"
+import { SearchBarForm, SearchBarWrapper, SearchButton, SearchInput, SearchToolBar, SearchToolBarWrapper } from '../styles/searchbar.styles'
+import { SearchBarSynonyms, SynonymParagraph } from "../styles/searchbar.synonyms.styles"
+import { Calendar } from "./Calendar"
 import { SelectButton } from "./SelectButton"
 
 interface SearchBarProps {
@@ -19,9 +20,10 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
     const [operator, setOperator] = useState(search.operator)
     const [dateRange, setDateRange] = useState(date)
     const selectOptions = [
-        { label: 'Text', value: 'TEXT' }
-        , { label: 'AND', value: 'AND' }
-        , { label: 'OR', value: 'OR' }]
+        // { label: 'Text', value: 'TEXT' }
+        { label: 'OR', value: 'OR' }
+        ,{ label: 'AND', value: 'AND' }
+    ]
 
     // useEffect(() => {
     //     setDateRange(date)
@@ -63,7 +65,7 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
 
     return (
         <SearchBarWrapper id="searchBar">
-            {/* <img style={{height: '50px', 'margin': '8px'}} src='/img/pds-logo.svg' alt='PDS'/> */}
+            <img style={{height: '60px', 'margin': '32px'}} src='/img/bekaert-logo.svg' alt='PDS'/>
             <SearchBarForm id="searchForm" autoComplete="off" onSubmit={handleSubmit}>
                 <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
                 <SearchToolBarWrapper id="searchToolBarWrapper">

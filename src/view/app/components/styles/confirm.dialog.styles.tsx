@@ -13,18 +13,16 @@ export const DialogWrapper = styled.div`
     justify-content: center;
     align-items: center;
     animation: all 0.5s ease-in-out;
-    animation-name: slideIn;
-  /* } */
-  
-  @keyframes slideIn{
-    from {
-      opacity: 0;
-      transform: translateY(100%-30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    animation-name: slideIn;  
+    @keyframes slideIn{
+      from {
+        opacity: 0;
+        transform: translateY(100%-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
   }
 `
 

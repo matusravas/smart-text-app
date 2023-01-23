@@ -29,7 +29,7 @@ export const useDictionaryViewModel = () => {
     }, [])
 
     function handleSearchQueryChange(query: string) {
-        query = query.trim()
+        query = query.length > 1? query : query.trim()
         const queryLower = query.toLowerCase()
         if (searchQuery.toLowerCase() === queryLower) return
         if (queryLower === '') {
@@ -84,6 +84,5 @@ export const useDictionaryViewModel = () => {
         handleSearchQueryChange,
         handleClick,
         handleSave
-        // handleDictionaryChange
     }
 }

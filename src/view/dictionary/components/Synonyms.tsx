@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { SynonymInput, SynonymsWrapper } from "./styles/dialog.styles";
+import { SynonymsWrapper, SynonymInput } from "./styles/synonyms.styles";
+
 
 type SynonymsProps = {
     synonyms: string[],
