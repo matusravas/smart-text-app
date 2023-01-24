@@ -1,4 +1,4 @@
-import { TablePagination } from "@material-ui/core";
+import { TableCell, TablePagination } from "@material-ui/core";
 import MaterialTable, { MTableBody, MTableBodyRow } from "material-table";
 import React from "react";
 import { TableProps } from "../../model/table/types";
@@ -47,6 +47,20 @@ export const Table = (props: TableProps) => {
                     style={{borderRadius: 10}}
                     localization={localization}
                     options={options}
+                    actions={[
+                        {
+                          icon: 'save',
+                          tooltip: 'Save',
+                          onClick: (event, rowData) => {
+                            alert("You saved " + rowData.name);
+                          }
+                        },
+                        {
+                          icon: 'save',
+                          tooltip: 'Export',
+                          onClick: (event, data) => {}
+                        }
+                      ]}
                     components={{
                         Body: (props: any) => {
                             return (

@@ -1,22 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Dictionary, Dictionary as DictionaryResult } from '../model/dictionary/types'
 import DictionaryRepository from '../repository/dictionary/DictionaryRepository'
-import { DialogType } from './types/dictionary.types'
+import { ActionType, RequestType } from './types/dictionary.types'
 
 
 export const useDictionaryViewModel = () => {
     const repository = DictionaryRepository.getInstance()
-    const [saved, setSaved] = useState(false)
-    const [type, setType] = useState<DialogType>()
+    // const [saved, setSaved] = useState(false)
+    const [message, setMessage] = useState()
+    const [type, setType] = useState<ActionType>()
     const [searchQuery, setSearchQuery] = useState<string>('')
     const [dialogOpen, setDialogOpen] = useState(false)
     const [dictionary, setDictionary] = useState<Dictionary>()
     const [dictionaries, setDictionaries] = useState<Dictionary[]>([])
     const [dictionariesFiltered, setDictionariesFiltered] = useState<Dictionary[]>(dictionaries)
-    
+
     useEffect(() => {
         repository.getSynonyms()
             .then(res => {
+                console.log(res)
                 const dicts = res as DictionaryResult[]
                 setDictionaries(dicts)
                 setDictionariesFiltered(dicts)
@@ -24,10 +26,10 @@ export const useDictionaryViewModel = () => {
             .catch(err => {
                 console.error(err)
             })
-    }, [saved])
+    }, [])
 
     function handleSearchQueryChange(query: string) {
-        query = query.length > 1? query : query.trim()
+        query = query.length > 1 ? query : query.trim()
         const queryLower = query.toLowerCase()
         if (searchQuery.toLowerCase() === queryLower) return
         if (queryLower === '') {
@@ -38,7 +40,7 @@ export const useDictionaryViewModel = () => {
 
         const filteredDictionaries = dictionaries.filter(dict => {
             if (dict.keyword.toLowerCase().includes(queryLower) ||
-                    dict.definition.toLowerCase().includes(queryLower)) return dict
+                dict.definition.toLowerCase().includes(queryLower)) return dict
             for (let synonym of dict.synonyms) {
                 if (synonym.toLowerCase().includes(queryLower)) return dict
             }
@@ -48,26 +50,47 @@ export const useDictionaryViewModel = () => {
 
     }
 
-    function handleClick(type: DialogType, dict?: Dictionary) {
+    function handleClick(type: ActionType, dict?: Dictionary) {
         setDictionary(dict)
         setDialogOpen(true)
-        setSaved(false)
+        // setSaved(false)
         setType(type)
     }
-    
-    function handleSave(dict: Dictionary) {
-        repository.upsert(dict)
-            .then(res=>{
-                setSaved(true)
-            })
-            .catch(err=>{
-                console.error(err)
-            })
-            .finally(()=>{
-                setDialogOpen(false)
-            })
+
+    function handleUpsertOrDelete(requestType: RequestType, dict: Dictionary) {
+        switch (requestType) {
+            case 'upsert': {
+                repository.upsert(dict)
+                    .then(res => {
+                        setType('update') // in order to allow delete button
+                        setMessage(res)
+                    })
+                    .catch(err => {
+                        console.error(err)
+                        setMessage(err)
+                    })
+                    .finally(() => {
+                    })
+                break
+            }
+            case 'delete': {
+                repository.removeKeyword(dict.keyword)
+                    .then(res => {
+                        setMessage(res)
+                    })
+                    .catch(err => {
+                        console.error(err)
+                        setMessage(err)
+                    })
+                    .finally(() => {
+                        setDialogOpen(false)
+                    })
+                break
+            }
+        }
+
     }
-    
+
     function toggleDialog() {
         setDialogOpen(!dialogOpen)
     }
@@ -81,6 +104,6 @@ export const useDictionaryViewModel = () => {
         toggleDialog,
         handleSearchQueryChange,
         handleClick,
-        handleSave
+        handleUpsertOrDelete
     }
 }

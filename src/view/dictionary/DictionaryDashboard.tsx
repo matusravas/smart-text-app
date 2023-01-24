@@ -6,7 +6,7 @@ import { DictionaryWrapper, FAB } from "./components/styles/dictionary.dashboard
 
 function DictionaryDashboard() {
     const { dictionaries, dictionary, searchQuery,
-        dialogOpen, dialogType, toggleDialog, handleSave,
+        dialogOpen, dialogType, toggleDialog, handleUpsertOrDelete,
         handleClick, handleSearchQueryChange } = useDictionaryViewModel()
     // const ref = createRef<HTMLDivElement>();
     // useEffect(() => {
@@ -40,7 +40,7 @@ function DictionaryDashboard() {
                 type={dialogType}
                 toggleOpen={toggleDialog}
                 dictionary={dictionary} 
-                handleSave={handleSave}
+                onUpsertOrDelete={handleUpsertOrDelete}
                 // handleDictionaryChange={handleDictionaryChange}
                  />
             }

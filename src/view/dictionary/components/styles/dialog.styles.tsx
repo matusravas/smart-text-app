@@ -31,7 +31,7 @@ export const DialogWrapper = styled.div`
 `
 
 export const DialogContentWrapper = styled.div`
-    position: absolute;
+    /* position: absolute; */
     box-shadow: 0px 0px 5px #333;
     border-radius: 10px;
     width: 50%;
@@ -41,6 +41,15 @@ export const DialogContentWrapper = styled.div`
     /* align-items: center; */
     justify-content: space-between;
     background-color: #fafafa;
+    /* padding: 16px; */
+`
+
+export const DialogContent = styled.div`
+    display: flex;
+    /* flex: 1 1 auto; */
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 32px;
     overflow: auto;
     ::-webkit-scrollbar {
         width: 10px;
@@ -63,15 +72,14 @@ export const DialogContentWrapper = styled.div`
     ::-webkit-scrollbar-thumb:hover {
     background: #f0f0f0; 
     }
-    padding: 64px 64px 0px 64px;
 `
 
-export const DialogContent = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+export const DialogTopBar= styled.div`
+  display: flex;
+  flex: 0 0 60px;
+  justify-content: flex-end;
+  flex-direction: row;
 `
-
 
 type DialogFormProps = {
     editable: boolean

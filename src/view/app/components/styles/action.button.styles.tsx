@@ -7,7 +7,7 @@ interface ActionButtonProps {
 export const ActionButtonsWrapper = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     gap: 20px;
     padding: 8px;
@@ -18,9 +18,10 @@ export const ActionButtonsWrapper = styled.div`
 export const ActionButton = styled.button<ActionButtonProps>`
     padding: 8px;
     width: fit-content;
-    height: 60px;
+    height: 50px;
+    width: 150px;
     outline: none;
-    padding: 0px 100px;
+    /* padding: 0px 100px; */
     border-style: none;
     border-radius: 6px;
     box-sizing: border-box;

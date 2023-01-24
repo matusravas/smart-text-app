@@ -1,62 +1,59 @@
-import { ChangeEvent, forwardRef, useEffect, useState } from "react"
+import { IconButton } from "@material-ui/core"
+import Close from "@material-ui/icons/Close"
+import DeleteOutline from "@material-ui/icons/DeleteOutline"
+import { ChangeEvent, useEffect, useState } from "react"
 import { Dictionary } from "../../../model/dictionary/types"
-import { DialogType } from "../../../viewmodel/types/dictionary.types"
+import { ActionType, FormErrors, RequestType } from "../../../viewmodel/types/dictionary.types"
 import { ConfirmDialog } from "../../app/components/ConfirmDialog"
-import { ActionButtonsWrapper, ActionButton } from "../../app/components/styles/action.button.styles"
+import { ActionButton, ActionButtonsWrapper } from "../../app/components/styles/action.button.styles"
 import { FormControlledInput, FormHeader, FormLabel, FormSubHeader } from "../../app/components/styles/form.styles"
-import { DialogWrapper, DialogContentWrapper, 
-    DialogContent, DialogForm } from "./styles/dialog.styles"
+import { DialogContent, DialogContentWrapper, DialogForm, DialogTopBar, DialogWrapper } from "./styles/dialog.styles"
 import Synonyms from "./Synonyms"
 
 interface DialogProps {
-    // isOpen: boolean,
-    type: DialogType,
+    type: ActionType,
     dictionary?: Dictionary,
     toggleOpen: () => void,
-    handleSave: (dictionary: Dictionary) => void
-    // handleDictionaryChange: (target: any) => void
+    onUpsertOrDelete: (requestType: RequestType, dictionary: Dictionary) => void
 }
 
-type FormErrors = {
-    keyword?: string,
-    synonyms?: string
+type ConfirmPrompt = {
+    type?: 'cancel' | 'delete'
+    headerText?: string
+    text?: string
 }
 
-
-
-// function DialogWithRef({ handleSave, toggleOpen, ...props }: DialogProps, ref: any) {
-export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
+export function Dialog(props: DialogProps) {
     const dictionaryOriginal = props.dictionary !== undefined ?
         { ...props.dictionary } : { keyword: '', definition: '', synonyms: [] }
     const [dictionary, setDictionary] = useState(dictionaryOriginal)
     const [isChanged, setIsChanged] = useState(false)
-    const [formErrors, setFormErrors] = useState<FormErrors>({})
-    const [mustConfirm, setMustConfirm] = useState(false)
+    const [formErrors, setFormErrors] = useState<FormErrors>({ keyword: '', synonyms: '' })
+    const [confirmation, setConfirmation] = useState<ConfirmPrompt>({})
 
     useEffect(() => {
-        checkIfValuesChanged()
-    }, [dictionary])
-
-
-    function checkIfValuesChanged() {
         let key: keyof typeof dictionary;
+        let changeFlag = false
         for (key in dictionary) {
             if (key !== 'synonyms') {
                 if (dictionary[key] !== dictionaryOriginal[key]) {
-                    setIsChanged(true)
-                    return
+                    changeFlag = true
+                    setFormErrors({...formErrors, keyword: ''})
                 }
             }
-            console.log(dictionary.synonyms)
-            for (let synonym of dictionary.synonyms) {
-                if (dictionaryOriginal.synonyms.indexOf(synonym) === -1) {
-                    setIsChanged(true)
-                    return
+            if (!dictionary.synonyms.length) changeFlag = true
+            else {
+                for (let synonym of dictionary.synonyms) {
+                    if (dictionaryOriginal.synonyms.indexOf(synonym) === -1) {
+                        changeFlag = true
+                        setFormErrors({...formErrors, synonyms: ''})
+                    }
                 }
             }
         }
-        setIsChanged(false)
-    }
+        setIsChanged(changeFlag)
+
+    }, [dictionary])
 
     function handleDictionaryChange(target: any) {
         setDictionary({ ...dictionary as Dictionary, [target.id]: target.value })
@@ -73,43 +70,67 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
                 synonyms[index] = e.target.value
             }
             else {
-
                 synonyms.push(e.target.value)
             }
         }
         setDictionary({ ...dictionary, synonyms: [...synonyms] })
-    };
+    }
 
-    function validateForm() {
+    function handleSave() {
         if (!dictionary.keyword) {
             setFormErrors({ keyword: 'Keyword must be set...' })
             return
         }
         if (dictionary.synonyms.length === 0) {
-            console.log('error synonyms')
             setFormErrors({ synonyms: 'At least one synonym must be set...' })
             return
         }
-        setFormErrors({})
-        handleSave(dictionary)
+        props.onUpsertOrDelete('upsert', dictionary)
     }
 
-    function closeDialog() {
+    function handleDelete() {
+        setConfirmation({type: 'delete',
+            headerText: 'Delete confirmation',
+            text: 'Are you sure you want to delete this item?'})
+    }
+
+    function tryDialogClose() {
         if (!isChanged) {
-            toggleOpen()
+            props.toggleOpen()
             return
         }
-        setMustConfirm(true)
+        setConfirmation({type: 'cancel'})
+    }
+
+    function handleConfirmationDialog(){
+        switch(confirmation.type) {
+            case 'cancel': {
+                props.toggleOpen(); break
+            }
+            case 'delete': {
+                props.onUpsertOrDelete('delete', dictionary)
+                break
+            }
+        }
     }
 
     return (
         <DialogWrapper>
             <DialogContentWrapper>
+                <DialogTopBar>
+                    <IconButton disabled={props.type === 'create'} onClick={handleDelete}>
+                        <DeleteOutline />
+                    </IconButton>
+                    <IconButton onClick={tryDialogClose}>
+                        <Close />
+                    </IconButton>
+                </DialogTopBar>
                 <DialogContent>
                     <DialogForm autoComplete={"off"} editable={true}>
                         <FormControlledInput
-                            error={formErrors?.keyword ? true : false}
-                            errorText={formErrors?.keyword}
+                            error={formErrors.keyword ? true : false}
+                            errorText={formErrors.keyword}
+                            required={true}
                         >
                             <FormLabel>
                                 Keyword:
@@ -118,7 +139,7 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
                                 id="keyword"
                                 className="header"
                                 type="text"
-                                disabled={props.type === 'update'? true : false}
+                                disabled={props.type === 'update' ? true : false}
                                 placeholder="Enter keyword"
                                 value={dictionary.keyword}
                                 onChange={(e) => handleDictionaryChange(e.target)}
@@ -133,19 +154,20 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
                                 id="definition"
                                 className="sub-header"
                                 type="text"
-                                placeholder="Enter simple definition (otional)..."
+                                placeholder="Enter simple definition (optional)..."
                                 value={dictionary.definition}
                                 onChange={(e) => handleDictionaryChange(e.target)}
                             />
                         </FormControlledInput>
 
-                        {/* <Divider /> */}
+                        {console.log(formErrors.synonyms ? true : false)}
                         <FormControlledInput
-                            error={formErrors?.synonyms ? true : false}
-                            errorText={formErrors?.synonyms}
+                            error={formErrors.synonyms ? true : false}
+                            errorText={formErrors.synonyms}
+                            required={true}
                         >
                             <FormLabel>
-                                Synonyms:
+                                Synonyms*:
                             </FormLabel>
                             <Synonyms synonyms={dictionary.synonyms} onChange={handleSynonymsChange} />
                         </FormControlledInput>
@@ -157,22 +179,18 @@ export function Dialog({ handleSave, toggleOpen, ...props }: DialogProps) {
                     <ActionButton
                         disabled={!isChanged}
                         backgroundColor={'#43a047'}
-                        // onClick={() => handleSave(dictionary)}>
-                        onClick={validateForm}>
+                        onClick={handleSave}>
                         Save
-                    </ActionButton>
-
-                    <ActionButton
-                        onClick={closeDialog}>
-                        Cancel
                     </ActionButton>
                 </ActionButtonsWrapper>
             </DialogContentWrapper>
 
-            {mustConfirm && <ConfirmDialog onConfirm={toggleOpen} onCancel={() => setMustConfirm(false)} />}
-
+            {confirmation.type && 
+                <ConfirmDialog
+                    headerText={confirmation.headerText} 
+                    text={confirmation.text} 
+                    onConfirm={handleConfirmationDialog} 
+                    onCancel={() => setConfirmation({})} />}
         </DialogWrapper>
     )
 }
-
-// export const Dialog = forwardRef(DialogWithRef)

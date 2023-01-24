@@ -15,10 +15,8 @@ export const SynonymsWrapper = styled.div`
 export const SynonymInput = styled(FormInput)`
     font-size: 1em;
     font-weight: 250;
-    display: inline-block;
-    width: auto;
-    background: #f1f1f1;
-    box-sizing: border-box;
+    /* display: inline-block; */
+    /* width: auto; */
+    /* box-sizing: border-box; */
     border-radius: 10px;
-    border: 1px solid #004ba066;
 `

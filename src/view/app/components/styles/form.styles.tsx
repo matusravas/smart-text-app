@@ -1,9 +1,10 @@
-import styled, {css} from "styled-components"
+import styled, { css } from "styled-components"
 
 interface ControlledInputProps {
-    editable?: boolean,
-    error?: boolean,
+    editable?: boolean
+    error?: boolean
     errorText?: string
+    required?: boolean
 }
 
 export const FormInput = styled.input`
@@ -32,21 +33,23 @@ export const FormControlledInput = styled.div<ControlledInputProps>`
     display: flex;
     flex-direction: column;
     input {
-        border: ${props=> props.error ? '2px solid #b61827': 'none'};
+        border: ${props => props.error ? '2px solid #b61827' : 'none'};
     }
     p {
         align-self: flex-start;
-        content: 'Required';
         ::after {
-            ${props=> props.error && 
+            ${props => props.required && css`
+                content: '*';
+            `};
+            ${props => props.error &&
                 css`
-                    content: ' Required property*';
+                    content: ' Required property';
                     color: #b61827;
                     font-weight: 500;
                 `
             };
-        }
-    }
+        };
+    };
 `
 
 export const FormLabel = styled.p`

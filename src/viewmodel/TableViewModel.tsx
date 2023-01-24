@@ -109,6 +109,7 @@ export function useTable({
             exportButton: {
                 csv: true,
             },
+            actionsColumnIndex: -1,
             exportCsv: handleExport,
             filtering: false,
             loadingType: "linear",

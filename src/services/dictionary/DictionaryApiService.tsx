@@ -86,7 +86,7 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
     removeKeyword(keyword: string): Promise<Response<any>> {
         return new Promise<Response<any>>((resolve, reject) => axios({
             method: 'DELETE',
-            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/?${keyword}`,
+            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/${keyword}`,
             responseType: 'json',
             headers: {
                 'Access-Control-Allow-Origin': '*',
