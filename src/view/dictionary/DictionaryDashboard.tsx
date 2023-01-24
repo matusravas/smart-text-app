@@ -1,5 +1,5 @@
-import { Snackbar } from "@material-ui/core"
 import { useDictionaryViewModel } from "../../viewmodel/DictionaryViewModel"
+import { Snackbar } from "../app/components/Snackbar"
 import { Card } from "./components/Card"
 import { Dialog } from "./components/Dialog"
 import SearchBar from "./components/SearchBar"
@@ -25,7 +25,7 @@ function DictionaryDashboard() {
             />
             }
             <FAB onClick={() => handleClick('create')} />
-            <Snackbar open={message !== undefined} message={message}/>
+            <Snackbar open={message !== undefined} text={message!} timeout={5000}/>
         </DictionaryWrapper>
     )
 }

@@ -54,22 +54,24 @@ export function Dialog(props: DialogProps) {
 
     }, [dictionary])
 
-    function handleDictionaryChange(target: any) {
-        setDictionary({ ...dictionary as Dictionary, [target.id]: target.value })
+    function handleDictionaryChange(target: EventTarget & HTMLInputElement) {
+        const value = target.id === 'keyword' ? target.value.trim() : target.value
+        setDictionary({ ...dictionary as Dictionary, [target.id]: value })
     }
 
     const handleSynonymsChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+        const value = e.target.value.trim()
         const existingItem = index <= dictionary.synonyms.length - 1
         let synonyms = [...dictionary.synonyms]
-        if (existingItem && e.target.value === '') {
+        if (existingItem && value === '') {
             synonyms.splice(index, 1)
         }
         else {
             if (existingItem) {
-                synonyms[index] = e.target.value
+                synonyms[index] = value
             }
             else {
-                synonyms.push(e.target.value)
+                synonyms.push(value)
             }
         }
         setDictionary({ ...dictionary, synonyms: [...synonyms] })
