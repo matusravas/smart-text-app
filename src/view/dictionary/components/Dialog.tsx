@@ -2,8 +2,7 @@ import { IconButton } from "@material-ui/core"
 import Close from "@material-ui/icons/Close"
 import DeleteOutline from "@material-ui/icons/DeleteOutline"
 import { ChangeEvent, useEffect, useState } from "react"
-import { Dictionary } from "../../../model/dictionary/types"
-import { ActionType, FormErrors, RequestType } from "../../../viewmodel/types/dictionary.types"
+import { ActionType, Dictionary, FormErrors, RequestType } from "../../../model/dictionary/types"
 import { ConfirmDialog } from "../../app/components/ConfirmDialog"
 import { ActionButton, ActionButtonsWrapper } from "../../app/components/styles/action.button.styles"
 import { FormControlledInput, FormHeader, FormLabel, FormSubHeader } from "../../app/components/styles/form.styles"
@@ -11,7 +10,7 @@ import { DialogContent, DialogContentWrapper, DialogForm, DialogTopBar, DialogWr
 import Synonyms from "./Synonyms"
 
 interface DialogProps {
-    type: ActionType,
+    ationType: ActionType,
     dictionary?: Dictionary,
     toggleOpen: () => void,
     onUpsertOrDelete: (requestType: RequestType, dictionary: Dictionary) => void
@@ -41,7 +40,7 @@ export function Dialog(props: DialogProps) {
                     setFormErrors({...formErrors, keyword: ''})
                 }
             }
-            if (!dictionary.synonyms.length) changeFlag = true
+            if (!dictionary.synonyms.length) changeFlag = true // ! this makes create dialog saveable without any change
             else {
                 for (let synonym of dictionary.synonyms) {
                     if (dictionaryOriginal.synonyms.indexOf(synonym) === -1) {
@@ -85,6 +84,7 @@ export function Dialog(props: DialogProps) {
             setFormErrors({ synonyms: 'At least one synonym must be set...' })
             return
         }
+        setIsChanged(false)
         props.onUpsertOrDelete('upsert', dictionary)
     }
 
@@ -118,7 +118,7 @@ export function Dialog(props: DialogProps) {
         <DialogWrapper>
             <DialogContentWrapper>
                 <DialogTopBar>
-                    <IconButton disabled={props.type === 'create'} onClick={handleDelete}>
+                    <IconButton disabled={props.ationType === 'create'} onClick={handleDelete}>
                         <DeleteOutline />
                     </IconButton>
                     <IconButton onClick={tryDialogClose}>
@@ -139,7 +139,7 @@ export function Dialog(props: DialogProps) {
                                 id="keyword"
                                 className="header"
                                 type="text"
-                                disabled={props.type === 'update' ? true : false}
+                                disabled={props.ationType === 'update' ? true : false}
                                 placeholder="Enter keyword"
                                 value={dictionary.keyword}
                                 onChange={(e) => handleDictionaryChange(e.target)}

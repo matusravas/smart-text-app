@@ -1,7 +1,7 @@
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Dictionary } from '../model/dictionary/types'
-import { SearchPaginationDefault, SearchData, SearchDataDefault } from '../model/search/types'
+import { SearchData, SearchDataDefault } from '../model/search/types'
 import SearchRepository from '../repository/search/SearchRepository'
 
 

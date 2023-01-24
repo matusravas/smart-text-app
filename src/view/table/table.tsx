@@ -41,7 +41,7 @@ export const Table = (props: TableProps) => {
             <TableWrapper>
                 <IconButton onClick={handleExport} style={{ alignSelf: 'flex-end' }}>
                     <Tooltip title='Export' placement="top">
-                        <FileCopy style={{ color: '#DFDFDF' }} />
+                        <FileCopy style={{ color: '#DCDCDC' }} />
                     </Tooltip>
                 </IconButton>
                 <MaterialTable

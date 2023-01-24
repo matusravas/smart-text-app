@@ -1,14 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
-import { Dictionary, Dictionary as DictionaryResult } from '../model/dictionary/types'
+import { useEffect, useState } from 'react'
+import { ActionType, Dictionary, Dictionary as DictionaryResult, RequestType } from '../model/dictionary/types'
 import DictionaryRepository from '../repository/dictionary/DictionaryRepository'
-import { ActionType, RequestType } from './types/dictionary.types'
 
 
 export const useDictionaryViewModel = () => {
     const repository = DictionaryRepository.getInstance()
-    // const [saved, setSaved] = useState(false)
-    const [message, setMessage] = useState()
-    const [type, setType] = useState<ActionType>()
+    const [message, setMessage] = useState<string>()
+    const [actionType, setActionType] = useState<ActionType>()
     const [searchQuery, setSearchQuery] = useState<string>('')
     const [dialogOpen, setDialogOpen] = useState(false)
     const [dictionary, setDictionary] = useState<Dictionary>()
@@ -53,21 +51,21 @@ export const useDictionaryViewModel = () => {
     function handleClick(type: ActionType, dict?: Dictionary) {
         setDictionary(dict)
         setDialogOpen(true)
-        // setSaved(false)
-        setType(type)
+        setActionType(type)
     }
 
     function handleUpsertOrDelete(requestType: RequestType, dict: Dictionary) {
         switch (requestType) {
             case 'upsert': {
+                const status = actionType === 'create'? 'created' : 'updated'
                 repository.upsert(dict)
                     .then(res => {
-                        setType('update') // in order to allow delete button
-                        setMessage(res)
+                        setActionType('update') // in order to make delete button visible
+                        setMessage(`Resource ${status}`)
                     })
                     .catch(err => {
                         console.error(err)
-                        setMessage(err)
+                        setMessage(`Resource could not be ${status}`)
                     })
                     .finally(() => {
                     })
@@ -76,11 +74,11 @@ export const useDictionaryViewModel = () => {
             case 'delete': {
                 repository.removeKeyword(dict.keyword)
                     .then(res => {
-                        setMessage(res)
+                        setMessage('Resource deleted')
                     })
                     .catch(err => {
                         console.error(err)
-                        setMessage(err)
+                        setMessage('Resource could not be deleted')
                     })
                     .finally(() => {
                         setDialogOpen(false)
@@ -99,8 +97,9 @@ export const useDictionaryViewModel = () => {
         dictionaries: dictionariesFiltered,
         dictionary,
         searchQuery,
+        message,
         dialogOpen,
-        dialogType: type,
+        actionType,
         toggleDialog,
         handleSearchQueryChange,
         handleClick,
