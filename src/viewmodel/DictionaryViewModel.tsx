@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { ActionType, Dictionary, Dictionary as DictionaryResult, RequestType } from '../model/dictionary/types'
+import { Status, StatusDefalt } from '../model/types'
 import DictionaryRepository from '../repository/dictionary/DictionaryRepository'
 
 
 export const useDictionaryViewModel = () => {
     const repository = DictionaryRepository.getInstance()
-    const [message, setMessage] = useState<string>()
+    const [fetch, setFetch] = useState(true)
+    const [status, setStatus] = useState<Status>(StatusDefalt)
     const [actionType, setActionType] = useState<ActionType>()
     const [searchQuery, setSearchQuery] = useState<string>('')
     const [dialogOpen, setDialogOpen] = useState(false)
@@ -14,7 +16,8 @@ export const useDictionaryViewModel = () => {
     const [dictionariesFiltered, setDictionariesFiltered] = useState<Dictionary[]>(dictionaries)
 
     useEffect(() => {
-        repository.getSynonyms()
+        // console.log('Should fetch', fetch)
+        fetch && repository.getSynonyms()
             .then(res => {
                 console.log(res)
                 const dicts = res as DictionaryResult[]
@@ -23,8 +26,10 @@ export const useDictionaryViewModel = () => {
             })
             .catch(err => {
                 console.error(err)
+            }).finally(() => {
+                setFetch(false)
             })
-    }, [])
+    }, [fetch]) // Todo handle when to refetch
 
     function handleSearchQueryChange(query: string) {
         query = query.length > 1 ? query : query.trim()
@@ -57,31 +62,33 @@ export const useDictionaryViewModel = () => {
     function handleUpsertOrDelete(requestType: RequestType, dict: Dictionary) {
         switch (requestType) {
             case 'upsert': {
-                const status = actionType === 'create'? 'created' : 'updated'
+                const status = actionType === 'create' ? 'created' : 'updated'
                 repository.upsert(dict)
                     .then(res => {
                         setActionType('update') // in order to make delete button visible
-                        setMessage(`Resource ${status}`)
+                        setStatus({ type: 'success', message: `Resource ${status}` })
                     })
                     .catch(err => {
                         console.error(err)
-                        setMessage(`Resource could not be ${status}`)
+                        setStatus({ type: 'error', message: `Resource could not be ${status}` })
                     })
                     .finally(() => {
+                        setFetch(true)
                     })
                 break
             }
             case 'delete': {
                 repository.removeKeyword(dict.keyword)
                     .then(res => {
-                        setMessage('Resource deleted')
+                        setStatus({ type: 'success', message: 'Resource deleted' })
                     })
                     .catch(err => {
                         console.error(err)
-                        setMessage('Resource could not be deleted')
+                        setStatus({ type: 'error', message: 'Resource could not be deleted' })
                     })
                     .finally(() => {
                         setDialogOpen(false)
+                        setFetch(true)
                     })
                 break
             }
@@ -93,16 +100,22 @@ export const useDictionaryViewModel = () => {
         setDialogOpen(!dialogOpen)
     }
 
+    // function resetStatus() {
+    //     setStatus(StatusDefalt)
+    //     setFetch(true)
+    // }
+
     return {
         dictionaries: dictionariesFiltered,
         dictionary,
         searchQuery,
-        message,
+        status,
         dialogOpen,
         actionType,
         toggleDialog,
         handleSearchQueryChange,
         handleClick,
-        handleUpsertOrDelete
+        handleUpsertOrDelete,
+        // resetStatus
     }
 }

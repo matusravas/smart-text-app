@@ -1,29 +1,31 @@
 import { useEffect, useState } from "react";
+import { StatusTypes } from "../../../model/types";
 import { SnackbarText, SnackbarWrapper } from "./styles/snackbar.styles";
-
-function SnackbarContent(props: any) {
-    return <div style={{ height: '60px', background: '#398a20' }}>
-        This is a success message!
-    </div>;
-}
 
 interface SnackbarProps {
     text: string
     open: boolean
-    type?: 'info' | 'success' | 'error'
+    type?: StatusTypes
     position?: 'bottom'
-    timeout?: number
+    autoCloseAfter?: number
+    onClose?: () => void
 }
+
 export function Snackbar(props: SnackbarProps) {
     const [open, setOpen] = useState(props.open)
+
     useEffect(() => {
-        props.timeout && setTimeout(() => {
-            setOpen(false)
-        }, props.timeout)
-    }, [props.open, props.timeout, open])
+        setOpen(props.open)
+        return () => {
+            props.autoCloseAfter && setTimeout(() => {
+                setOpen(false)
+                // props.onClose && props.onClose()
+            }, props.autoCloseAfter)
+        }
+    }, [props.open])
 
     return (
-        <SnackbarWrapper open={open} position={props.position} type={props.type? props.type: 'info'}>
+        <SnackbarWrapper open={open} position={props.position} type={props.type ? props.type : 'info'}>
             <SnackbarText>{props.text}</SnackbarText>
         </SnackbarWrapper>
     )

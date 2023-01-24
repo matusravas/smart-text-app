@@ -6,7 +6,7 @@ import SearchBar from "./components/SearchBar"
 import { DictionaryWrapper, FAB } from "./components/styles/dictionary.dashboard.styles"
 
 function DictionaryDashboard() {
-    const { dictionaries, dictionary, searchQuery, message,
+    const { dictionaries, dictionary, searchQuery, status,
         dialogOpen, actionType, toggleDialog, handleUpsertOrDelete,
         handleClick, handleSearchQueryChange } = useDictionaryViewModel()
 
@@ -25,7 +25,14 @@ function DictionaryDashboard() {
             />
             }
             <FAB onClick={() => handleClick('create')} />
-            <Snackbar open={message !== undefined} text={message!} timeout={5000}/>
+            {console.log('message', status.message , status.message ? true : false)}
+            <Snackbar
+                open={status.message ? true : false}
+                type={status.type}
+                text={status.message}
+                autoCloseAfter={5000}
+                // onClose={resetStatus}
+            />
         </DictionaryWrapper>
     )
 }

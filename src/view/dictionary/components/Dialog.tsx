@@ -162,14 +162,13 @@ export function Dialog(props: DialogProps) {
                             />
                         </FormControlledInput>
 
-                        {console.log(formErrors.synonyms ? true : false)}
                         <FormControlledInput
                             error={formErrors.synonyms ? true : false}
                             errorText={formErrors.synonyms}
                             required={true}
                         >
                             <FormLabel>
-                                Synonyms*:
+                                Synonyms:
                             </FormLabel>
                             <Synonyms synonyms={dictionary.synonyms} onChange={handleSynonymsChange} />
                         </FormControlledInput>

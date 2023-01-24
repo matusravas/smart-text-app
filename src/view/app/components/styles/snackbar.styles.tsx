@@ -29,7 +29,7 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
 `
 
 export const SnackbarText = styled.p`
-    font-size: 1em;
+    font-size: 0.8em;
     font-weight: bolder;
     /* color: #ffffff */
 `

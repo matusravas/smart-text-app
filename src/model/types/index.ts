@@ -4,7 +4,12 @@ export type Response<T> = {
     message?: string
 }
 
-// export type Data<T> = {
-//     ok: boolean,
-//     data: Array<T>|T
-// }
+export type StatusTypes = 'info' | 'success' | 'error'
+
+export type Status = {
+    error?: boolean,
+    type: StatusTypes
+    message: string
+}
+
+export const StatusDefalt: Status = {type: 'info', message: ''}
