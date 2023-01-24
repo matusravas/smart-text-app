@@ -22,7 +22,7 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
     const selectOptions = [
         // { label: 'Text', value: 'TEXT' }
         { label: 'OR', value: 'OR' }
-        ,{ label: 'AND', value: 'AND' }
+        , { label: 'AND', value: 'AND' }
     ]
 
     // useEffect(() => {
@@ -65,7 +65,7 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
 
     return (
         <SearchBarWrapper id="searchBar">
-            <img style={{height: '60px', 'marginBottom': '32px', 'marginTop': '16px'}} src='/img/bekaert-logo.svg' alt='PDS'/>
+            <img style={{ height: '60px', 'marginBottom': '32px', 'marginTop': '16px' }} src='/img/bekaert-logo.svg' alt='PDS' />
             <SearchBarForm id="searchForm" autoComplete="off" onSubmit={handleSubmit}>
                 <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
                 <SearchToolBarWrapper id="searchToolBarWrapper">
@@ -80,7 +80,6 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
                             label="Operator" options={selectOptions}
                             value={operator} onSelected={handleSearchOperatorChange} />
                     </SearchToolBar>
-
                     <SearchButton />
                 </SearchToolBarWrapper>
             </SearchBarForm>

@@ -3,6 +3,8 @@ import styled from "styled-components";
 export const TableWrapper = styled.div`
   max-height: 100%;
   max-width: 90%;
+  display: flex;
+  flex-direction: column;
   /* & .MuiTableRow-head th:hover { */
     /* filter: sepia(20%); */
     /* position: sticky; */

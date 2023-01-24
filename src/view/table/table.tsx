@@ -1,4 +1,5 @@
-import { TableCell, TablePagination } from "@material-ui/core";
+import { IconButton, TableCell, TablePagination, Tooltip } from "@material-ui/core";
+import { FileCopy } from "@material-ui/icons";
 import MaterialTable, { MTableBody, MTableBodyRow } from "material-table";
 import React from "react";
 import { TableProps } from "../../model/table/types";
@@ -13,7 +14,8 @@ export const Table = (props: TableProps) => {
         columns,
         pagination,
         options,
-        localization
+        localization,
+        handleExport
     } = useTable({
         requestData: props.requestData,
         onDictionary: props.onDictionary,
@@ -34,9 +36,14 @@ export const Table = (props: TableProps) => {
     }
 
     const renderTable = () => {
-        if (!columns.length) return ( <React.Fragment /> )
+        if (!columns.length) return (<React.Fragment />)
         return (
             <TableWrapper>
+                <IconButton onClick={handleExport} style={{ alignSelf: 'flex-end' }}>
+                    <Tooltip title='Export' placement="top">
+                        <FileCopy style={{ color: '#DFDFDF' }} />
+                    </Tooltip>
+                </IconButton>
                 <MaterialTable
                     // title='Table title'
                     icons={tableIcons}
@@ -44,23 +51,23 @@ export const Table = (props: TableProps) => {
                     isLoading={isLoading}
                     columns={columns}
                     data={rows}
-                    style={{borderRadius: 10}}
+                    style={{ borderRadius: 10 }}
                     localization={localization}
                     options={options}
                     actions={[
                         {
-                          icon: 'save',
-                          tooltip: 'Save',
-                          onClick: (event, rowData) => {
-                            alert("You saved " + rowData.name);
-                          }
+                            icon: 'save',
+                            tooltip: 'Save',
+                            onClick: (event, rowData) => {
+                                alert("You saved " + rowData.name);
+                            }
                         },
                         {
-                          icon: 'save',
-                          tooltip: 'Export',
-                          onClick: (event, data) => {}
+                            icon: 'save',
+                            tooltip: 'Export',
+                            onClick: (event, data) => { }
                         }
-                      ]}
+                    ]}
                     components={{
                         Body: (props: any) => {
                             return (
@@ -92,6 +99,6 @@ export const Table = (props: TableProps) => {
         )
     }
 
-    return renderTable()
+return renderTable()
 
 }

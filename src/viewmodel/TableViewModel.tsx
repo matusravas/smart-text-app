@@ -106,11 +106,11 @@ export function useTable({
             search: false,
             showTitle: false,
             sorting: false,
-            exportButton: {
-                csv: true,
-            },
+            // exportButton: {
+            //     csv: true,
+            // },
             actionsColumnIndex: -1,
-            exportCsv: handleExport,
+            // exportCsv: handleExport,
             filtering: false,
             loadingType: "linear",
             columnsButton: false,
@@ -122,5 +122,7 @@ export function useTable({
         return options
     }, [requestData.search, requestData.date, pagination.pageSize]);
 
-    return { rows, isLoading, columns, pagination, options: tableOptions, localization, componentDidUnmount: isMounted };
+    return { rows, isLoading, columns, pagination, 
+        options: tableOptions, localization, componentDidUnmount: isMounted,
+         handleExport };
 }
