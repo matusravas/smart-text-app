@@ -24,7 +24,7 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
     ${props => props.type === 'error' && css`background: #d32f2f; color: #ffffff;`}
     opacity: 90%;
     padding: 6px;
-    border-radius: 6px;
+    border-radius: 4px;
     box-shadow: 2px 2px 10px #303030;
 `
 

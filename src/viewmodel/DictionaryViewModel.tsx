@@ -103,10 +103,10 @@ export const useDictionaryViewModel = () => {
         setDialogOpen(!dialogOpen)
     }
 
-    // function resetStatus() {
-    //     setStatus(StatusDefalt)
-    //     setFetch(true)
-    // }
+    function resetStatus() {
+        setStatus(StatusDefalt)
+        // setFetch(true)
+    }
 
     return {
         dictionaries: dictionariesFiltered,
@@ -119,6 +119,6 @@ export const useDictionaryViewModel = () => {
         handleSearchQueryChange,
         handleClick,
         handleUpsertOrDelete,
-        // resetStatus
+        resetStatus
     }
 }

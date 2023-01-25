@@ -8,7 +8,7 @@ import { DictionaryWrapper, FAB } from "./components/styles/dictionary.dashboard
 function DictionaryDashboard() {
     const { dictionaries, dictionary, searchQuery, status,
         dialogOpen, actionType, toggleDialog, handleUpsertOrDelete,
-        handleClick, handleSearchQueryChange } = useDictionaryViewModel()
+        handleClick, handleSearchQueryChange, resetStatus } = useDictionaryViewModel()
 
     return (
         <DictionaryWrapper size={dictionaries.length}>
@@ -30,8 +30,7 @@ function DictionaryDashboard() {
                 open={status.message ? true : false}
                 type={status.type}
                 text={status.message}
-                autoCloseAfter={5000}
-                // onClose={resetStatus}
+                onClose={resetStatus}
             />
         </DictionaryWrapper>
     )
