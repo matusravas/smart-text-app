@@ -39,7 +39,6 @@ export const DialogContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
     /* align-items: center; */
-    justify-content: space-between;
     background-color: #fafafa;
     /* padding: 16px; */
 `
@@ -49,7 +48,7 @@ export const DialogContent = styled.div`
     /* flex: 1 1 auto; */
     flex-direction: column;
     align-items: center;
-    padding: 16px 32px;
+    padding: 16px 64px;
     overflow: auto;
     ::-webkit-scrollbar {
         width: 10px;
@@ -92,4 +91,11 @@ export const DialogForm = styled.form<DialogFormProps>`
     align-items: center;
     gap: 20px;
     pointer-events: ${p => !p.editable && 'none'};
+`
+
+export const DialogBottomBar= styled.div`
+  display: flex;
+  flex: 0 0 60px;
+  margin-top: auto;
+  flex-direction: row;
 `

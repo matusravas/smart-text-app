@@ -25,10 +25,10 @@ export default class SearchRepository implements ISearchRepository {
                 totalHits: paginationRaw.total_hits,
                 totalPages: paginationRaw.total_pages
             }}
-            return response
-        }
+        return response
+    }
     async searchExport(search: Search, date: Date) {
-            //! Todo catch potenial errors
+        //! Todo catch potenial errors
         const result = await this.api.searchExport(search, date)
         return result
     }

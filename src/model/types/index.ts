@@ -1,7 +1,21 @@
 export type Response<T> = {
-    ok: boolean,
-    data: T,
+    ok: boolean
+    data: T
     message?: string
+}
+
+export type ResponseUpsert<T> = {
+    ok: boolean
+    result: string
+    data?: T
+    id?: string | number
+    version?: number
+}
+
+export type ResponseDelete = {
+    ok: boolean
+    id: string | number
+    result: string
 }
 
 export type StatusTypes = 'info' | 'success' | 'error'

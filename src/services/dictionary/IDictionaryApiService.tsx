@@ -1,10 +1,8 @@
 import { Dictionary } from "../../model/dictionary/types"
-import { Response } from "../../model/types"
+import { Response, ResponseDelete, ResponseUpsert } from "../../model/types"
 
 export default interface IDictionaryApiService {
-    getAllKeywordsWithSynonyms(): Promise<Response<Array<Dictionary>>>
-    getAllSynonymsForKeyword(keyword: string): Promise<Response<Dictionary>>
-    upsertSynonymsForKeyword(keyword: string, synonyms: Array<string>): Promise<Response<any>>
-    upsert(dictionary: Dictionary): Promise<Response<any>>
-    removeKeyword(keyword: string): Promise<Response<any>>
+    getAllKeywordsWithSynonyms(): Promise<Response<Dictionary[]>>
+    upsert(dictionary: Dictionary): Promise<ResponseUpsert<Dictionary>>
+    removeKeyword(keyword: string): Promise<ResponseDelete>
 }

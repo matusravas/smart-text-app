@@ -30,7 +30,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
             resolve({ ok: res.data.ok, data: res.data.data })
         }).catch(err => {
             console.error(err)
-            reject('Unable to fetch data')
+            reject({ok: false, message: 'Unable to fetch data'})
         })
         )
     }
@@ -59,7 +59,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
             resolve(true)
         }).catch(err => {
             console.error(err)
-            reject('Unable to export data')
+            reject(false)
         })
         )
     }
@@ -77,7 +77,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
             resolve({ok: true, data: res.data.data.timestamp})
         }).catch(err => {
             console.error(err)
-            reject('Unable to obtain last timestamp')
+            reject({ok: false, message: 'Unable to obtain last timestamp'})
         })
         )
     }

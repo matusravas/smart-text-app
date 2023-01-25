@@ -6,7 +6,7 @@ import { ActionType, Dictionary, FormErrors, RequestType } from "../../../model/
 import { ConfirmDialog } from "../../app/components/ConfirmDialog"
 import { ActionButton, ActionButtonsWrapper } from "../../app/components/styles/action.button.styles"
 import { FormControlledInput, FormHeader, FormLabel, FormSubHeader } from "../../app/components/styles/form.styles"
-import { DialogContent, DialogContentWrapper, DialogForm, DialogTopBar, DialogWrapper } from "./styles/dialog.styles"
+import { DialogBottomBar, DialogContent, DialogContentWrapper, DialogForm, DialogTopBar, DialogWrapper } from "./styles/dialog.styles"
 import Synonyms from "./Synonyms"
 
 interface DialogProps {
@@ -37,7 +37,7 @@ export function Dialog(props: DialogProps) {
             if (key !== 'synonyms') {
                 if (dictionary[key] !== dictionaryOriginal[key]) {
                     changeFlag = true
-                    setFormErrors({...formErrors, keyword: ''})
+                    setFormErrors({ ...formErrors, keyword: '' })
                 }
             }
             if (!dictionary.synonyms.length) changeFlag = true // ! this makes create dialog saveable without any change
@@ -45,7 +45,7 @@ export function Dialog(props: DialogProps) {
                 for (let synonym of dictionary.synonyms) {
                     if (dictionaryOriginal.synonyms.indexOf(synonym) === -1) {
                         changeFlag = true
-                        setFormErrors({...formErrors, synonyms: ''})
+                        setFormErrors({ ...formErrors, synonyms: '' })
                     }
                 }
             }
@@ -91,9 +91,11 @@ export function Dialog(props: DialogProps) {
     }
 
     function handleDelete() {
-        setConfirmation({type: 'delete',
+        setConfirmation({
+            type: 'delete',
             headerText: 'Delete confirmation',
-            text: 'Are you sure you want to delete this item?'})
+            text: 'Are you sure you want to delete this item?'
+        })
     }
 
     function tryDialogClose() {
@@ -101,11 +103,11 @@ export function Dialog(props: DialogProps) {
             props.toggleOpen()
             return
         }
-        setConfirmation({type: 'cancel'})
+        setConfirmation({ type: 'cancel' })
     }
 
-    function handleConfirmationDialog(){
-        switch(confirmation.type) {
+    function handleConfirmationDialog() {
+        switch (confirmation.type) {
             case 'cancel': {
                 props.toggleOpen(); break
             }
@@ -175,22 +177,23 @@ export function Dialog(props: DialogProps) {
                     </DialogForm>
 
                 </DialogContent>
-
-                <ActionButtonsWrapper>
-                    <ActionButton
-                        disabled={!isChanged}
-                        backgroundColor={'#43a047'}
-                        onClick={handleSave}>
-                        Save
-                    </ActionButton>
-                </ActionButtonsWrapper>
+                <DialogBottomBar>
+                    <ActionButtonsWrapper>
+                        <ActionButton
+                            disabled={!isChanged}
+                            backgroundColor={'#43a047'}
+                            onClick={handleSave}>
+                            Save
+                        </ActionButton>
+                    </ActionButtonsWrapper>
+                </DialogBottomBar>
             </DialogContentWrapper>
 
-            {confirmation.type && 
+            {confirmation.type &&
                 <ConfirmDialog
-                    headerText={confirmation.headerText} 
-                    text={confirmation.text} 
-                    onConfirm={handleConfirmationDialog} 
+                    headerText={confirmation.headerText}
+                    text={confirmation.text}
+                    onConfirm={handleConfirmationDialog}
                     onCancel={() => setConfirmation({})} />}
         </DialogWrapper>
     )

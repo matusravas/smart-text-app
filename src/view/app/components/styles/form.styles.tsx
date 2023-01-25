@@ -53,7 +53,7 @@ export const FormControlledInput = styled.div<ControlledInputProps>`
 `
 
 export const FormLabel = styled.p`
-    font-size: 1.1em;
+    font-size: 0.8em;
     font-weight: 300;
     text-align: left;
     padding-bottom: 6px;
@@ -61,13 +61,13 @@ export const FormLabel = styled.p`
 `
 
 export const FormHeader = styled(FormInput)`
-    font-size: 2.25em;
+    font-size: 1.3em;
     font-weight: 600;
     overflow: hidden;
     width: auto;
 `
 
 export const FormSubHeader = styled(FormInput)`
-    font-size: 2em;
+    font-size: 1em;
     font-weight: 400;
 `

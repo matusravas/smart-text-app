@@ -20,12 +20,12 @@ export const SnackbarWrapper = styled.div<SnackbarWrapperProps>`
     min-height: 30px;
     /* background: ${props => props.background ? props.background: '#398a20'}; */
     ${props => props.type === 'info' && css`background: #303030; color: #ffffff;`}
-    ${props => props.type === 'success' && css`background: #398a20; color: #ffffff;`}
-    ${props => props.type === 'error' && css`background: #c83d01; color: #ffffff;`}
+    ${props => props.type === 'success' && css`background: #388e3c; color: #ffffff;`}
+    ${props => props.type === 'error' && css`background: #d32f2f; color: #ffffff;`}
     opacity: 90%;
     padding: 6px;
     border-radius: 6px;
-    box-shadow: 2px 2px 30px #303030;
+    box-shadow: 2px 2px 10px #303030;
 `
 
 export const SnackbarText = styled.p`

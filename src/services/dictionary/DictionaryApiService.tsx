@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Dictionary } from "../../model/dictionary/types";
-import { Response } from "../../model/types";
+import { Response, ResponseDelete, ResponseUpsert } from "../../model/types";
 import ApiService from "../ApiService";
 import IDictionaryApiService from "./IDictionaryApiService";
 
@@ -9,8 +9,8 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
         super()
         this.ucPrefix = 'dictionary'
     }
-    getAllKeywordsWithSynonyms(): Promise<Response<Array<Dictionary>>> {
-        return new Promise<Response<any>>((resolve, reject) => axios({
+    getAllKeywordsWithSynonyms(): Promise<Response<Dictionary[]>> {
+        return new Promise<Response<Dictionary[]>>((resolve, reject) => axios({
             method: 'GET',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/`,
             responseType: 'json',
@@ -23,30 +23,12 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
                 resolve({ ok: res.data.ok, data: res.data.data })
             }).catch(err => {
                 console.error(err)
-                reject('Unable to fetch data')
+                reject({ok: false , message: 'Unable to fetch data'})
             })
         )
     }
-    getAllSynonymsForKeyword(keyword: string): Promise<Response<Dictionary>> {
-        return new Promise<Response<any>>((resolve, reject) => axios({
-            method: 'GET',
-            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/${keyword}`,
-            responseType: 'json',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-            }).then(res => {
-                resolve({ ok: res.data.ok, data: res.data.data })
-            }).catch(err => {
-                console.error(err)
-                reject('Unable to fetch data')
-            })
-        )
-    }
-    upsert(dictionary: Dictionary): Promise<Response<any>> {
-        return new Promise<Response<any>>((resolve, reject) => axios({
+    upsert(dictionary: Dictionary): Promise<ResponseUpsert<Dictionary>> {
+        return new Promise<ResponseUpsert<Dictionary>>((resolve, reject) => axios({
             method: 'POST',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/upsert`,
             responseType: 'json',
@@ -57,34 +39,18 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
             },
             data: dictionary
             }).then(res => {
-                resolve({ ok: res.data.ok, data: res.data })
+                console.log(res)
+                const data = res.data
+                resolve({ ok: data.ok, id: data.id, result: data.result,
+                     data: data.data, version: data.version })
             }).catch(err => {
                 console.error(err)
-                reject('Unable upsert data')
+                reject({ok: false, result: 'Unable upsert data'})
             })
         )
     }
-    upsertSynonymsForKeyword(keyword: string, synonyms: Array<string>): Promise<Response<any>> {
-        return new Promise<Response<any>>((resolve, reject) => axios({
-            method: 'POST',
-            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/?${keyword}`,
-            responseType: 'json',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            data: {synonyms: synonyms}
-            }).then(res => {
-                resolve({ ok: res.data.ok, data: res.data })
-            }).catch(err => {
-                console.error(err)
-                reject('Unable to fetch data')
-            })
-        )
-    }
-    removeKeyword(keyword: string): Promise<Response<any>> {
-        return new Promise<Response<any>>((resolve, reject) => axios({
+    removeKeyword(keyword: string): Promise<ResponseDelete> {
+        return new Promise<ResponseDelete>((resolve, reject) => axios({
             method: 'DELETE',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/${keyword}`,
             responseType: 'json',
@@ -94,10 +60,11 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
                 'Content-Type': 'application/json',
             }
             }).then(res => {
-                resolve({ ok: res.data.ok, data: res.data })
+                const data = res.data
+                resolve({ ok: data.ok, id: data.id, result: data.result });
             }).catch(err => {
                 console.error(err)
-                reject('Unable to fetch data')
+                reject({ok: false, result: 'Unable to remove data'})
             })
         )
     }

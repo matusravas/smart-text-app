@@ -16,16 +16,19 @@ export const useDictionaryViewModel = () => {
     const [dictionariesFiltered, setDictionariesFiltered] = useState<Dictionary[]>(dictionaries)
 
     useEffect(() => {
-        // console.log('Should fetch', fetch)
         fetch && repository.getSynonyms()
             .then(res => {
-                console.log(res)
-                const dicts = res as DictionaryResult[]
-                setDictionaries(dicts)
-                setDictionariesFiltered(dicts)
+                console.log(res.data)
+                if (res.ok) {
+                    setDictionaries(res.data)
+                    setDictionariesFiltered(res.data)
+                } else {
+                    setStatus({type: 'error', message: res.message!})
+                }
             })
             .catch(err => {
                 console.error(err)
+                setStatus({type: 'error', message: 'Unable to fetch'})
             }).finally(() => {
                 setFetch(false)
             })
