@@ -64,7 +64,8 @@ export function useTable({
             if (!(idx === columnIndex || idx === columnIndex + 1 || idx === columnIndex + 2)) return col
             const color = idx === columnIndex? '#9a0007': idx === columnIndex +1? '#00600f': '#004ba0'
             const newCol = {...col, 
-                headerStyle: {color: color, fontWeight: 'bold'},
+                // headerStyle: {color: color, fontWeight: 'bold'},
+                headerStyle: {fontWeight: 'bold'},
                 cellStyle: {color: color, fontWeight: 'bold'}}
             return newCol
         })

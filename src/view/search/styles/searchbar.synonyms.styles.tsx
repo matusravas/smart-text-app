@@ -7,6 +7,7 @@ export const SearchBarSynonyms = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: row;
+  gap: 5px;
   .p {
     font-weight: bold;
   }

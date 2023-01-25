@@ -5,17 +5,19 @@ import { SearchBarForm, SearchBarWrapper, SearchButton, SearchInput, SearchToolB
 import { SearchBarSynonyms, SynonymParagraph } from "../styles/searchbar.synonyms.styles"
 import { Calendar } from "./Calendar"
 import { SelectButton } from "./SelectButton"
+import { SwitchButton } from "./SwitchButton"
 
 interface SearchBarProps {
-    search: Search,
-    date: Date,
+    search: Search
+    date: Date
     dictionary: Dictionary | null
-    lastTimestamp: number | null,
+    lastTimestamp: number | null
     onRequestDataChange: (requestData: Partial<SearchData>) => void,
 }
 
-const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestamp }: SearchBarProps) => {
-    const [query, setQuery] = useState('')
+function SearchBar({ search, date, dictionary, lastTimestamp, onRequestDataChange }: SearchBarProps) {
+    const [query, setQuery] = useState(search.phrase)
+    const [isKeywords, setIsKeywords] = useState(search.keywords)
     const [disabled, setDisabled] = useState(true)
     const [operator, setOperator] = useState(search.operator)
     const [dateRange, setDateRange] = useState(date)
@@ -29,27 +31,28 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
     //     setDateRange(date)
     // }, [lastTimestamp])
 
-    const hasSearchMultiplePhrases = (searchQuery: string) => {
+    function hasSearchMultiplePhrases(searchQuery: string) {
         const queryPhrases = searchQuery.split(' ').filter(q => q.length > 2)
         return queryPhrases.length > 1
     }
 
-    const handleSearchQueryChange = (searchQuery: string) => {
+    function handleSearchQueryChange(searchQuery: string) {
         setDisabled(!hasSearchMultiplePhrases(searchQuery))
         setQuery(searchQuery)
     }
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
         onRequestDataChange({
-            search: { ...search, phrase: query.trim(), operator: operator }
+            search: { ...search, phrase: query.trim(), operator: operator, keywords: isKeywords }
             , date: { ...dateRange }
             , pagination: SearchPaginationDefault
         })
     }
 
 
-    const handleSearchOperatorChange = (value: Operator) => {
+
+    function handleSearchOperatorChange(value: Operator) {
         // if (search.phrase && operator !== value) {
         //     setOperator(value)
         //     onRequestDataChange({ search: { ...search, operator: value }, pagination: SearchPaginationDefault })
@@ -58,9 +61,13 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
         setOperator(value)
     }
 
-    const handleDateChange = (date: Date) => {
+    function handleDateChange(date: Date) {
         console.log(date)
         setDateRange({ ...dateRange, ...date })
+    }
+
+    function handleUseKeywordsChange() {
+        setIsKeywords(!isKeywords)
     }
 
     return (
@@ -85,12 +92,22 @@ const SearchBar = ({ search, onRequestDataChange, date, dictionary, lastTimestam
             </SearchBarForm>
 
             <SearchBarSynonyms id="synonyms">
-                {dictionary && <><p>Searched also for:</p><>{dictionary.synonyms.map((synonym, idx) => (
-                    <>
-                        <SynonymParagraph>{synonym}</SynonymParagraph>
-                        {idx !== dictionary.synonyms.length - 1 && <p>•</p>}
+                {dictionary && <>
+                    <SwitchButton toggled={isKeywords} onChange={handleUseKeywordsChange} />
+                    {isKeywords ? <>
+                        <p>Searched also for:</p>
+                        <>
+                            {dictionary.synonyms.map((synonym, idx) => (
+                                <>
+                                    <SynonymParagraph>{synonym}</SynonymParagraph>
+                                    {idx !== dictionary.synonyms.length - 1 && <p>•</p>}
+                                </>
+                            ))}
+                        </>
                     </>
-                ))}</></>}
+                    : <div style={{margin: 'auto'}}></div>
+                    }</>
+                }
             </SearchBarSynonyms>
 
         </SearchBarWrapper>
