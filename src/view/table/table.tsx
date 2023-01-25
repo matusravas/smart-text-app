@@ -31,8 +31,9 @@ export const Table = (props: TableProps) => {
     }
 
     const onPageSizeChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { target: { value: rowsPerPage } } = event
-        props.onRequestDataChange({ pagination: { currentPage: pagination.currentPage, pageSize: +rowsPerPage } })
+        const rowsPerPage = +event.target.value
+        const currentPage = rowsPerPage >= pagination.totalHits ? 0 : pagination.currentPage
+        props.onRequestDataChange({ pagination: { currentPage: currentPage, pageSize: +rowsPerPage } })
     }
 
     const renderTable = () => {
