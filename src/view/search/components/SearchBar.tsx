@@ -10,7 +10,7 @@ import { SwitchButton } from "./SwitchButton"
 interface SearchbarProps {
     search: Search
     date: Date
-    dictionaryData: DictionaryData| null
+    dictionaryData: DictionaryData | null
     lastTimestamp: number | null
     onRequestDataChange: (requestData: Partial<SearchData>) => void,
 }
@@ -20,6 +20,7 @@ function Searchbar({ search, date, dictionaryData, lastTimestamp, onRequestDataC
     const [useKeywords, setUseKeywords] = useState(true)
     const [disabled, setDisabled] = useState(true)
     const [operator, setOperator] = useState(search.operator)
+    console.log(date)
     const [dateRange, setDateRange] = useState(date)
     const selectOptions = [
         { label: 'OR', value: 'OR' }
@@ -29,6 +30,10 @@ function Searchbar({ search, date, dictionaryData, lastTimestamp, onRequestDataC
     useEffect(() => {
         dictionaryData && setUseKeywords(dictionaryData.useKeywords)
     }, [dictionaryData?.useKeywords])
+
+    // useEffect(() => {
+    //     setDateRange(date)
+    // }, [date])
 
     function hasSearchMultiplePhrases(searchQuery: string) {
         const queryPhrases = searchQuery.split(' ').filter(q => q.length > 2)
@@ -40,8 +45,16 @@ function Searchbar({ search, date, dictionaryData, lastTimestamp, onRequestDataC
         setQuery(searchQuery)
     }
 
+    // function allowSubmit() {
+    //     if (search.phrase.toLocaleLowerCase() !== query.trim().toLowerCase() ||
+    //         search.operator !== operator || useKeywords !== dictionaryData?.useKeywords ||
+    //         date.from !== dateRange.from || date.to !== dateRange.to) return true
+    //     return false
+    // }
+
     function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
+        // if (!allowSubmit()) return
         onRequestDataChange({
             search: {
                 ...search, phrase: query.trim(), operator: operator

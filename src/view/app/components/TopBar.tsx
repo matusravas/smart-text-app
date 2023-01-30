@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { DrawerItem } from '../../../hooks/commons/router';
 import Drawer from './Drawer';
+import { SidebarWrapper } from './styles/sidebar.styles';
 
 
 type AppBarProps = {
@@ -20,24 +21,31 @@ export default function AppBar({ drawerItems, ...props }: AppBarProps) {
     setDrawerOpen(isOpen)
   }
   return (
-    <Box style={{ flexGrow: 1 }}>
-      {/* <MUIAppBar position="static" style={{'height': '80px', 'background': '#fcfcfc', 'color': '#303030'}}> */}
-      <MUIAppBar position="static" color='transparent'>
-        <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={() => setDrawerOpen(!drawerOpen)}
-          >
-          <Drawer items={drawerItems} open={drawerOpen} handleOpen={handleDrawerOpen} />
-            <MenuIcon />
-          </IconButton>
-          <Link to='/'>
-            <img style={{height: '20px'}} src='/img/pds-logo.svg' alt='PDS'/>
-          </Link>
-        </Toolbar>
-      </MUIAppBar>
-    </Box>
-  );
+    <SidebarWrapper>
+      {drawerItems.map(item=>{
+        return <p>{item.label}</p>
+      })}
+    </SidebarWrapper>
+  )
+  // return (
+  //   <Box style={{ flexGrow: 1 }}>
+  //     {/* <MUIAppBar position="static" style={{'height': '80px', 'background': '#fcfcfc', 'color': '#303030'}}> */}
+  //     <MUIAppBar position="static" color='transparent'>
+  //       <Toolbar>
+  //         <IconButton
+  //           edge="start"
+  //           color="inherit"
+  //           aria-label="menu"
+  //           onClick={() => setDrawerOpen(!drawerOpen)}
+  //         >
+  //         <Drawer items={drawerItems} open={drawerOpen} handleOpen={handleDrawerOpen} />
+  //           <MenuIcon />
+  //         </IconButton>
+  //         <Link to='/'>
+  //           <img style={{height: '20px'}} src='/img/pds-logo.svg' alt='PDS'/>
+  //         </Link>
+  //       </Toolbar>
+  //     </MUIAppBar>
+  //   </Box>
+  // );
 }
