@@ -1,17 +1,17 @@
 import { useSearchViewModel } from "../../viewmodel/SearchViewModel";
 import { Table } from "../table/Table";
-import SearchBar from "./components/SearchBar";
+import Searchbar from "./components/Searchbar";
 
 import { SearchDashboardWrapper } from "./styles/searchbar.styles";
 
 function SearchDashboard() {
-    const { requestData, dictionary, onDictionaryObtained, handleRequestDataChange } = useSearchViewModel()
+    const { requestData, dictionaryData, onDictionaryObtained, handleRequestDataChange } = useSearchViewModel()
     const {search, date, lastTimestamp} = requestData
     return (
         <SearchDashboardWrapper>
-            <SearchBar 
+            <Searchbar 
                 search={search} date={date}
-                dictionary={dictionary}
+                dictionaryData={dictionaryData}
                 lastTimestamp={lastTimestamp} 
                 onRequestDataChange={handleRequestDataChange} />
             {lastTimestamp && <Table 

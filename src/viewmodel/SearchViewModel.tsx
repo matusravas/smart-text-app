@@ -1,13 +1,13 @@
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Dictionary } from '../model/dictionary/types'
-import { SearchData, SearchDataDefault } from '../model/search/types'
+import { DictionaryData, SearchData, SearchDataDefault } from '../model/search/types'
 import SearchRepository from '../repository/search/SearchRepository'
 
 
 export const useSearchViewModel = () => {
     // const [lastTimestamp, setLastTimestamp] = useState<number>()
-    const [dictionary, setDictionary] = useState<Dictionary | null>(null)
+    const [dictionaryData, setDictionaryData] = useState<DictionaryData | null>(null)
     const [requestData, setRequestData] = useState<SearchData>(SearchDataDefault)
     const repository = SearchRepository.getInstance()
 
@@ -20,14 +20,14 @@ export const useSearchViewModel = () => {
             .catch((err: Error) => {
                 console.error(err)
             });
-    },[])
+    }, [])
 
     const onLastTimestampObtained = (timestamp: number) => {
         const dateTo = moment.unix(timestamp).valueOf()
         setRequestData({
             ...requestData
             , lastTimestamp: dateTo
-            , date: {from: null, to: dateTo }
+            , date: { from: null, to: dateTo }
         })
     }
 
@@ -36,12 +36,13 @@ export const useSearchViewModel = () => {
     }
 
     const onDictionaryObtained = (dictionary: Dictionary | null) => {
-        setDictionary(dictionary)
+        setDictionaryData(dictionary ? {dictionary: dictionary, useKeywords: true }: null)
+        // dictionary && setRequestData({...requestData, search: {...requestData.search, keywords: true}})
     }
 
     return {
         requestData,
-        dictionary,
+        dictionaryData,
         onDictionaryObtained,
         handleRequestDataChange
     }

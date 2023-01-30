@@ -7,7 +7,6 @@ interface SwitchButtonProps {
 }
 
 export function SwitchButton(props: SwitchButtonProps) {
-
     return (
         <SwitchWrapper onClick={props.onChange}>
             <Switch toggle={props.toggled} />

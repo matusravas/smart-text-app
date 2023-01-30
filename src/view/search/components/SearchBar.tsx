@@ -1,35 +1,34 @@
-import { FormEvent, useState } from "react"
-import { Dictionary } from "../../../model/dictionary/types"
-import { Date, Operator, Search, SearchData, SearchPaginationDefault } from "../../../model/search/types"
-import { SearchBarForm, SearchBarWrapper, SearchButton, SearchInput, SearchToolBar, SearchToolBarWrapper } from '../styles/searchbar.styles'
-import { SearchBarSynonyms, SynonymParagraph } from "../styles/searchbar.synonyms.styles"
+import { FormEvent, useEffect, useState } from "react"
+import { Date, DictionaryData, Operator, Search, SearchData, SearchPaginationDefault } from "../../../model/search/types"
+import { SearchbarForm, SearchbarWrapper, SearchButton, SearchInput } from '../styles/searchbar.styles'
+import { SearchBarSynonyms, SwitchWrapper, SynonymParagraph, SynonymsWrapper } from "../styles/searchbar.synonyms.styles"
+import { SearchToolBar, SearchToolBarWrapper } from "../styles/searchbar.toolbar"
 import { Calendar } from "./Calendar"
 import { SelectButton } from "./SelectButton"
 import { SwitchButton } from "./SwitchButton"
 
-interface SearchBarProps {
+interface SearchbarProps {
     search: Search
     date: Date
-    dictionary: Dictionary | null
+    dictionaryData: DictionaryData| null
     lastTimestamp: number | null
     onRequestDataChange: (requestData: Partial<SearchData>) => void,
 }
 
-function SearchBar({ search, date, dictionary, lastTimestamp, onRequestDataChange }: SearchBarProps) {
+function Searchbar({ search, date, dictionaryData, lastTimestamp, onRequestDataChange }: SearchbarProps) {
     const [query, setQuery] = useState(search.phrase)
-    const [isKeywords, setIsKeywords] = useState(search.keywords)
+    const [useKeywords, setUseKeywords] = useState(true)
     const [disabled, setDisabled] = useState(true)
     const [operator, setOperator] = useState(search.operator)
     const [dateRange, setDateRange] = useState(date)
     const selectOptions = [
-        // { label: 'Text', value: 'TEXT' }
         { label: 'OR', value: 'OR' }
         , { label: 'AND', value: 'AND' }
     ]
 
-    // useEffect(() => {
-    //     setDateRange(date)
-    // }, [lastTimestamp])
+    useEffect(() => {
+        dictionaryData && setUseKeywords(dictionaryData.useKeywords)
+    }, [dictionaryData?.useKeywords])
 
     function hasSearchMultiplePhrases(searchQuery: string) {
         const queryPhrases = searchQuery.split(' ').filter(q => q.length > 2)
@@ -44,20 +43,16 @@ function SearchBar({ search, date, dictionary, lastTimestamp, onRequestDataChang
     function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
         onRequestDataChange({
-            search: { ...search, phrase: query.trim(), operator: operator, keywords: isKeywords }
+            search: {
+                ...search, phrase: query.trim(), operator: operator
+                , keywords: search.phrase.toLowerCase() !== query.trim().toLowerCase() ? true : useKeywords
+            }
             , date: { ...dateRange }
             , pagination: SearchPaginationDefault
         })
     }
 
-
-
     function handleSearchOperatorChange(value: Operator) {
-        // if (search.phrase && operator !== value) {
-        //     setOperator(value)
-        //     onRequestDataChange({ search: { ...search, operator: value }, pagination: SearchPaginationDefault })
-        // }
-        // else setOperator(value)
         setOperator(value)
     }
 
@@ -67,16 +62,16 @@ function SearchBar({ search, date, dictionary, lastTimestamp, onRequestDataChang
     }
 
     function handleUseKeywordsChange() {
-        setIsKeywords(!isKeywords)
+        setUseKeywords(!useKeywords)
     }
 
     return (
-        <SearchBarWrapper id="searchBar">
+        <SearchbarWrapper>
             <img style={{ height: '60px', 'marginBottom': '32px', 'marginTop': '16px' }} src='/img/bekaert-logo.svg' alt='PDS' />
-            <SearchBarForm id="searchForm" autoComplete="off" onSubmit={handleSubmit}>
+            <SearchbarForm autoComplete="off" onSubmit={handleSubmit}>
                 <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
-                <SearchToolBarWrapper id="searchToolBarWrapper">
-                    <SearchToolBar id="searchToolBar">
+                <SearchToolBarWrapper>
+                    <SearchToolBar>
                         <Calendar
                             dateRange={dateRange}
                             lastTimestamp={lastTimestamp}
@@ -89,30 +84,29 @@ function SearchBar({ search, date, dictionary, lastTimestamp, onRequestDataChang
                     </SearchToolBar>
                     <SearchButton />
                 </SearchToolBarWrapper>
-            </SearchBarForm>
+            </SearchbarForm>
 
-            <SearchBarSynonyms id="synonyms">
-                {dictionary && <>
-                    <SwitchButton toggled={isKeywords} onChange={handleUseKeywordsChange} />
-                    {isKeywords ? <>
-                        <p>Searched also for:</p>
-                        <>
-                            {dictionary.synonyms.map((synonym, idx) => (
-                                <>
-                                    <SynonymParagraph>{synonym}</SynonymParagraph>
-                                    {idx !== dictionary.synonyms.length - 1 && <p>•</p>}
-                                </>
-                            ))}
-                        </>
+            <SearchBarSynonyms>
+                {dictionaryData &&
+                    <>
+                        <SwitchWrapper>
+                            <SwitchButton toggled={useKeywords} onChange={handleUseKeywordsChange} />
+                        </SwitchWrapper>
+                        {
+                            <SynonymsWrapper>
+                                <p>Searched also for:</p>
+                                {dictionaryData.dictionary.synonyms.map((synonym, idx) => (
+                                    <SynonymParagraph key={idx} use={useKeywords}>{synonym}</SynonymParagraph>
+                                ))}
+                            </SynonymsWrapper>
+                        }
                     </>
-                    : <div style={{margin: 'auto'}}></div>
-                    }</>
                 }
             </SearchBarSynonyms>
 
-        </SearchBarWrapper>
+        </SearchbarWrapper>
 
     )
 }
 
-export default SearchBar
+export default Searchbar

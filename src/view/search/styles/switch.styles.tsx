@@ -32,3 +32,7 @@ export const Switch = styled.span<SwitchProps>`
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.4s ease-in-out;
 `;
+
+export const SwitchLabel = styled.p`
+    font-size: 0.8em;
+`

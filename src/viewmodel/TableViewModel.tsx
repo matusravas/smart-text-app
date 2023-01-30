@@ -56,13 +56,13 @@ export function useTable({
                 textOverflow: 'ellipsis',
                 'overflow': 'hidden',
                 'whiteSpace': 'nowrap',
-              }}
+            }}
         })
         if (!requestData.search.phrase) return centeredColumns
         const columnIndex = centeredColumns.findIndex(column=>column.field === requestData.search.field)
         return centeredColumns.map((col, idx)=> {
-            if (!(idx === columnIndex || idx === columnIndex + 1 || idx === columnIndex + 2)) return col
-            const color = idx === columnIndex? '#9a0007': idx === columnIndex +1? '#00600f': '#004ba0'
+            if (!(idx === columnIndex || idx === columnIndex + 1)) return col
+            const color = idx === columnIndex? '#9a0007': '#00600f'
             const newCol = {...col, 
                 // headerStyle: {color: color, fontWeight: 'bold'},
                 headerStyle: {fontWeight: 'bold'},
@@ -125,5 +125,5 @@ export function useTable({
 
     return { rows, isLoading, columns, pagination, 
         options: tableOptions, localization, componentDidUnmount: isMounted,
-         handleExport };
+        handleExport };
 }

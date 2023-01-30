@@ -27,7 +27,7 @@ export const SelectWrapper = styled.div`
   }
 `
 
-export const SearchBarWrapper = styled.div`
+export const SearchbarWrapper = styled.div`
   height: auto;
   width: 100%;
   /* border: 1px solid #fafafa;
@@ -39,7 +39,7 @@ export const SearchBarWrapper = styled.div`
 `;
 
 
-export const SearchBarForm = styled.form`
+export const SearchbarForm = styled.form`
   height: auto;
   width: 40%;
   box-sizing: border-box;
@@ -54,29 +54,6 @@ export const SearchBarForm = styled.form`
     border-radius: 10px;
   }
 `;
-
-export const SearchToolBarWrapper = styled.div`
-  display: flex;
-  width: 90%;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fdfdfd;
-  border-radius: 10px;
-  padding: 10px 8px;
-  /* border-color: #004ba0; */
-  /* box-shadow: 0px 2px 10px #004ba033; */
-`
-
-export const SearchToolBar = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-`
 
 export const SearchInput = styled.input.attrs({
   id: 'searchInput',

@@ -12,7 +12,7 @@ export const CardWrapper = styled.div`
     flex-direction: column;
     background-color: #fafafa;
     border-radius: 10px;
-    box-shadow: 0 0 15px 2px #30303033;
+    box-shadow: 0 0 10px 1px #30303033;
     transition: all 0.3s ease-in-out;
     /* h4 {
         display: list-item;
