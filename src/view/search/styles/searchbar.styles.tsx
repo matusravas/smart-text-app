@@ -39,7 +39,7 @@ export const SearchbarWrapper = styled.div`
 `;
 
 
-export const SearchbarForm = styled.form`
+export const SearchbarFormWrapper = styled.form`
   height: auto;
   width: 40%;
   box-sizing: border-box;
@@ -54,6 +54,12 @@ export const SearchbarForm = styled.form`
     border-radius: 10px;
   }
 `;
+
+export const SearchImage = styled.img`
+  :hover {
+    cursor: pointer;
+  }
+`
 
 export const SearchInput = styled.input.attrs({
   id: 'searchInput',

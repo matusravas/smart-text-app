@@ -14,7 +14,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
     }
     search(search: Search, pagination: Pagination, date: Date): Promise<Response<SearchResponseRaw>> {
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
-        const keywordQueryString = `use-keywords=${search.keywords}`
+        const keywordQueryString = `use-keywords=${search.isKeywords}`
         const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
         const paginationQueryString = `page=${pagination.currentPage}&pageSize=${pagination.pageSize}`
         const queryString = `${searchQueryString}&${dateQueryString}&${paginationQueryString}&${keywordQueryString}`
@@ -37,7 +37,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
     }
     searchExport(search: Search, date: Date): Promise<boolean> {
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
-        const keywordQueryString = `use-keywords=${search.keywords}`
+        const keywordQueryString = `use-keywords=${search.isKeywords}`
         const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
         const queryString = `${searchQueryString}&${dateQueryString}&${keywordQueryString}`
         return new Promise<boolean>((resolve, reject) => axios({

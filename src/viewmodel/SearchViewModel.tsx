@@ -32,6 +32,7 @@ export const useSearchViewModel = () => {
     }
 
     const handleRequestDataChange = (newRequestData: Partial<SearchData>) => {
+        console.log(newRequestData)
         setRequestData(prev => ({ ...prev, ...newRequestData }))
     }
 

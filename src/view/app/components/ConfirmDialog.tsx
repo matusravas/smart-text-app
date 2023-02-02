@@ -1,5 +1,5 @@
-import { ActionButton, ActionButtonsWrapper } from "./styles/action.button.styles";
-import { DialogContent, DialogContentWrapper, DialogHeader, DialogText, DialogWrapper } from "./styles/confirm.dialog.styles";
+import { ActionButton, ActionButtonsWrapper } from "./styles/action-button.styles";
+import { DialogContent, DialogContentWrapper, DialogHeader, DialogText, DialogWrapper } from "./styles/confirm-dialog.styles";
 
 
 interface ConfirmDialogProps {

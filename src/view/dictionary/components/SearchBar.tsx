@@ -1,4 +1,4 @@
-import { SearchbarForm, SearchbarWrapper, SearchButton, SearchInput } from "../../search/styles/searchbar.styles"
+import { SearchbarFormWrapper, SearchbarWrapper, SearchButton, SearchInput } from "../../search/styles/searchbar.styles"
 
 
 interface SearchBarProps {
@@ -10,9 +10,9 @@ const SearchBar = ({searchQuery, handleSearchQueryChange }: SearchBarProps) => {
 
     return (
         <SearchbarWrapper>
-            <SearchbarForm autoComplete="off">
+            <SearchbarFormWrapper autoComplete="off">
                 <SearchInput value={searchQuery !== null ? searchQuery : ''} onChange={(e) => handleSearchQueryChange(e.target.value)} />
-            </SearchbarForm>
+            </SearchbarFormWrapper>
         </SearchbarWrapper>
 
     )

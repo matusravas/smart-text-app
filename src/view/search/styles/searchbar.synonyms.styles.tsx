@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-export const SearchBarSynonyms = styled.div`
+export const SearchBarSynonymsWrapper = styled.div`
   display: flex;
   height: 55px;
   width: 100%;

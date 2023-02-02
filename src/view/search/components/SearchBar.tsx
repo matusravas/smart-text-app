@@ -1,11 +1,8 @@
-import { FormEvent, useEffect, useState } from "react"
-import { Date, DictionaryData, Operator, Search, SearchData, SearchPaginationDefault } from "../../../model/search/types"
-import { SearchbarForm, SearchbarWrapper, SearchButton, SearchInput } from '../styles/searchbar.styles'
-import { SearchBarSynonyms, SwitchWrapper, SynonymParagraph, SynonymsWrapper } from "../styles/searchbar.synonyms.styles"
-import { SearchToolBar, SearchToolBarWrapper } from "../styles/searchbar.toolbar"
-import { Calendar } from "./Calendar"
-import { SelectButton } from "./SelectButton"
-import { SwitchButton } from "./SwitchButton"
+import { useEffect, useState } from "react"
+import { Date, DictionaryData, Search, SearchData, SearchDataDefault } from "../../../model/search/types"
+import { SearchbarWrapper, SearchImage } from '../styles/searchbar.styles'
+import SearchbarForm from "./SearchbarForm"
+import SearchbarSynonyms from "./SearchbarSynonyms"
 
 interface SearchbarProps {
     search: Search
@@ -16,109 +13,33 @@ interface SearchbarProps {
 }
 
 function Searchbar({ search, date, dictionaryData, lastTimestamp, onRequestDataChange }: SearchbarProps) {
-    const [query, setQuery] = useState(search.phrase)
-    const [useKeywords, setUseKeywords] = useState(true)
-    const [disabled, setDisabled] = useState(true)
-    const [operator, setOperator] = useState(search.operator)
-    console.log(date)
-    const [dateRange, setDateRange] = useState(date)
-    const selectOptions = [
-        { label: 'OR', value: 'OR' }
-        , { label: 'AND', value: 'AND' }
-    ]
+    const [isKeywords, setIsKeywords] = useState(() => search.isKeywords)
 
     useEffect(() => {
-        dictionaryData && setUseKeywords(dictionaryData.useKeywords)
+        dictionaryData && setIsKeywords(dictionaryData.useKeywords)
     }, [dictionaryData?.useKeywords])
 
-    // useEffect(() => {
-    //     setDateRange(date)
-    // }, [date])
-
-    function hasSearchMultiplePhrases(searchQuery: string) {
-        const queryPhrases = searchQuery.split(' ').filter(q => q.length > 2)
-        return queryPhrases.length > 1
-    }
-
-    function handleSearchQueryChange(searchQuery: string) {
-        setDisabled(!hasSearchMultiplePhrases(searchQuery))
-        setQuery(searchQuery)
-    }
-
-    // function allowSubmit() {
-    //     if (search.phrase.toLocaleLowerCase() !== query.trim().toLowerCase() ||
-    //         search.operator !== operator || useKeywords !== dictionaryData?.useKeywords ||
-    //         date.from !== dateRange.from || date.to !== dateRange.to) return true
-    //     return false
-    // }
-
-    function handleSubmit(e: FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-        // if (!allowSubmit()) return
-        onRequestDataChange({
-            search: {
-                ...search, phrase: query.trim(), operator: operator
-                , keywords: search.phrase.toLowerCase() !== query.trim().toLowerCase() ? true : useKeywords
-            }
-            , date: { ...dateRange }
-            , pagination: SearchPaginationDefault
-        })
-    }
-
-    function handleSearchOperatorChange(value: Operator) {
-        setOperator(value)
-    }
-
-    function handleDateChange(date: Date) {
-        console.log(date)
-        setDateRange({ ...dateRange, ...date })
-    }
-
-    function handleUseKeywordsChange() {
-        setUseKeywords(!useKeywords)
+    function handleIsKeywordsChange() {
+        setIsKeywords(!isKeywords)
     }
 
     return (
         <SearchbarWrapper>
-            <img style={{ height: '60px', 'marginBottom': '32px', 'marginTop': '16px' }} src='/img/bekaert-logo.svg' alt='PDS' />
-            <SearchbarForm autoComplete="off" onSubmit={handleSubmit}>
-                <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
-                <SearchToolBarWrapper>
-                    <SearchToolBar>
-                        <Calendar
-                            dateRange={dateRange}
-                            lastTimestamp={lastTimestamp}
-                            onChange={handleDateChange}
-                        />
-                        <SelectButton
-                            disabled={disabled}
-                            label="Operator" options={selectOptions}
-                            value={operator} onSelected={handleSearchOperatorChange} />
-                    </SearchToolBar>
-                    <SearchButton />
-                </SearchToolBarWrapper>
-            </SearchbarForm>
-
-            <SearchBarSynonyms>
-                {dictionaryData &&
-                    <>
-                        <SwitchWrapper>
-                            <SwitchButton toggled={useKeywords} onChange={handleUseKeywordsChange} />
-                        </SwitchWrapper>
-                        {
-                            <SynonymsWrapper>
-                                <p>Searched also for:</p>
-                                {dictionaryData.dictionary.synonyms.map((synonym, idx) => (
-                                    <SynonymParagraph key={idx} use={useKeywords}>{synonym}</SynonymParagraph>
-                                ))}
-                            </SynonymsWrapper>
-                        }
-                    </>
-                }
-            </SearchBarSynonyms>
-
+            <SearchImage
+                onClick={()=>onRequestDataChange({...SearchDataDefault, lastTimestamp})}
+                style={{ height: '60px', 'marginBottom': '32px', 'marginTop': '16px' }} 
+                src='/img/bekaert-logo.svg' alt='PDS' />
+            <SearchbarForm
+                search={search}
+                date={date}
+                isKeywords={isKeywords}
+                lastTimestamp={lastTimestamp}
+                onRequestDataChange={onRequestDataChange} />
+            <SearchbarSynonyms
+                dictionaryData={dictionaryData}
+                isKeywords={isKeywords}
+                onIsKeywordsChange={handleIsKeywordsChange} />
         </SearchbarWrapper>
-
     )
 }
 
