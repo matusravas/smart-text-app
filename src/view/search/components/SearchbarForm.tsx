@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from "react"
 import { Date, Operator, Search, SearchData, SearchPaginationDefault } from "../../../model/search/types"
 import { SearchbarFormWrapper, SearchButton, SearchInput } from '../styles/searchbar.styles'
-import { SearchToolBar, SearchToolBarWrapper } from "../styles/searchbar.toolbar.styles"
+import { SearchToolbar } from "../styles/searchbar.toolbar.styles"
 import { Calendar } from "./Calendar"
 import { SelectButton } from "./SelectButton"
 
@@ -68,8 +68,8 @@ function SearchbarForm({ search, date, isKeywords: useKeywords, lastTimestamp, o
     return (
         <SearchbarFormWrapper autoComplete="off" onSubmit={handleSubmit}>
             <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
-            <SearchToolBarWrapper>
-                <SearchToolBar>
+            {/* <SearchToolbarWrapper> */}
+                <SearchToolbar>
                     <Calendar
                         dateRange={dateRange}
                         lastTimestamp={lastTimestamp}
@@ -79,9 +79,9 @@ function SearchbarForm({ search, date, isKeywords: useKeywords, lastTimestamp, o
                         disabled={disabled}
                         label="Operator" options={selectOptions}
                         value={operator} onSelected={handleSearchOperatorChange} />
-                </SearchToolBar>
                 <SearchButton />
-            </SearchToolBarWrapper>
+                </SearchToolbar>
+            {/* </SearchToolbarWrapper> */}
         </SearchbarFormWrapper>
     )
 }
