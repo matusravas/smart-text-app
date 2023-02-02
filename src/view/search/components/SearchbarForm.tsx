@@ -1,32 +1,31 @@
-import { FormEvent, useEffect, useState } from "react"
-import { Date, Operator, Search, SearchData, SearchPaginationDefault } from "../../../model/search/types"
+import { FormEvent, useState } from "react"
+import { Date, Operator, SearchData } from "../../../model/search/types"
 import { SearchbarFormWrapper, SearchButton, SearchInput } from '../styles/searchbar.styles'
 import { SearchToolbar } from "../styles/searchbar.toolbar.styles"
 import { Calendar } from "./Calendar"
 import { SelectButton } from "./SelectButton"
 
 interface SearchbarFormProps {
-    search: Search
-    isKeywords: boolean
-    date: Date
-    lastTimestamp: number | null
-    onRequestDataChange: (requestData: Partial<SearchData>) => void,
+    searchData: SearchData
+    onSearchDataChange: (requestData: Partial<SearchData>) => void
+    onSubmit: () => void
 }
 
-function SearchbarForm({ search, date, isKeywords: useKeywords, lastTimestamp, onRequestDataChange }: SearchbarFormProps) {
-    const [query, setQuery] = useState(search.phrase)
+function SearchbarForm({ 
+        onSearchDataChange, onSubmit, 
+        searchData: { search, date, lastTimestamp } 
+    }: SearchbarFormProps) {
     const [disabled, setDisabled] = useState(true)
-    const [operator, setOperator] = useState(search.operator)
-    const [dateRange, setDateRange] = useState(date)
     const selectOptions = [
         { label: 'OR', value: 'OR' }
         , { label: 'AND', value: 'AND' }
     ]
 
-    useEffect(() => {
-        setQuery(search.phrase)
-    }, [search.phrase])
-
+    function handleSubmit(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+        onSubmit()
+    }
+    
     function hasSearchMultiplePhrases(searchQuery: string) {
         const queryPhrases = searchQuery.split(' ').filter(q => q.length > 2)
         return queryPhrases.length > 1
@@ -34,7 +33,7 @@ function SearchbarForm({ search, date, isKeywords: useKeywords, lastTimestamp, o
 
     function handleSearchQueryChange(searchQuery: string) {
         setDisabled(!hasSearchMultiplePhrases(searchQuery))
-        setQuery(searchQuery)
+        onSearchDataChange({ search: { ...search, phrase: searchQuery } })
     }
 
     // function allowSubmit() {
@@ -44,44 +43,29 @@ function SearchbarForm({ search, date, isKeywords: useKeywords, lastTimestamp, o
     //     return false
     // }
 
-    function handleSubmit(e: FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-        // if (!allowSubmit()) return
-        onRequestDataChange({
-            search: {
-                ...search, phrase: query.trim(), operator: operator
-                , isKeywords: search.phrase.toLowerCase() !== query.trim().toLowerCase() ? true : useKeywords
-            }
-            , date: { ...dateRange }
-            , pagination: SearchPaginationDefault
-        })
-    }
-
     function handleSearchOperatorChange(value: Operator) {
-        setOperator(value)
+        onSearchDataChange({ search: { ...search, operator: value } })
     }
 
     function handleDateChange(date: Date) {
-        setDateRange({ ...dateRange, ...date })
+        onSearchDataChange({ date })
     }
 
     return (
         <SearchbarFormWrapper autoComplete="off" onSubmit={handleSubmit}>
-            <SearchInput value={query} onChange={(e) => handleSearchQueryChange(e.target.value)} />
-            {/* <SearchToolbarWrapper> */}
-                <SearchToolbar>
-                    <Calendar
-                        dateRange={dateRange}
-                        lastTimestamp={lastTimestamp}
-                        onChange={handleDateChange}
-                    />
-                    <SelectButton
-                        disabled={disabled}
-                        label="Operator" options={selectOptions}
-                        value={operator} onSelected={handleSearchOperatorChange} />
+            <SearchInput value={search.phrase} onChange={(e) => handleSearchQueryChange(e.target.value)} />
+            <SearchToolbar>
+                <Calendar
+                    dateRange={date}
+                    lastTimestamp={lastTimestamp}
+                    onChange={handleDateChange}
+                />
+                <SelectButton
+                    disabled={disabled}
+                    label="Operator" options={selectOptions}
+                    value={search.operator} onSelected={handleSearchOperatorChange} />
                 <SearchButton />
-                </SearchToolbar>
-            {/* </SearchToolbarWrapper> */}
+            </SearchToolbar>
         </SearchbarFormWrapper>
     )
 }

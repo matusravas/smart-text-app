@@ -5,7 +5,7 @@ import { SearchData } from "../search/types";
 type UseCases = 'bekaert'
 
 export type UseTableProps = {
-    requestData: SearchData;
+    searchData: SearchData;
     onDictionary: (dictionary: Dictionary | null) => void,
     // getRowsRequest: any;
     // updateRowRequest: any;
@@ -58,14 +58,12 @@ export interface MaterialTableProps<RowData extends object> {
 
 
 export type TableProps = {
-    // useCase: UseCases
-    // config: any;
-    requestData: SearchData;
-    onRequestDataChange: (requestData: Partial<SearchData>) => void,
-    onDictionary: (dictionary: Dictionary | null) => void,
-    handleTableObj?: (tableObj: any) => void;
-    handleError?: (errorMessage: string) => void;
-    handleSuccess?: (successMessage: string) => void;
+    searchData: SearchData;
+    onSearchDataChange: (searchData: Partial<SearchData>) => void
+    onDictionary: (dictionary: Dictionary | null) => void
+    handleTableObj?: (tableObj: any) => void
+    handleError?: (errorMessage: string) => void
+    handleSuccess?: (successMessage: string) => void
 } & MaterialTableProps<any>
 
 

@@ -1,15 +1,9 @@
-import { Dictionary } from "../dictionary/types"
-
 export type SearchData = {
     search: Search
     date: Date
+    // isKeywords: boolean
     pagination: Pagination,
     lastTimestamp: number | null
-}
-
-export type DictionaryData = {
-    useKeywords: boolean,
-    dictionary: Dictionary
 }
 
 export type Operator = 'OR' | 'AND'

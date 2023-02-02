@@ -16,8 +16,8 @@ export default function Sidebar({ drawerItems, ...props }: AppBarProps) {
         <SidebarWrapper onMouseEnter={() => setToggleDrawer(true)} onMouseLeave={() => setToggleDrawer(false)}>
             <List style={{ display: toggleDrawer ? 'flex' : 'none', alignItems: 'center', flexDirection: 'column' }}>
                 {drawerItems.map(item => (
-                    <Tooltip style={{ width: '60px' }} title={<h3>{item.label}</h3>} placement="right">
-                        <ListItem key={item.label} button onClick={() => {
+                    <Tooltip key={item.label} style={{ width: '60px' }} title={<h3>{item.label}</h3>} placement="right">
+                        <ListItem  button onClick={() => {
                             navigate(item.path)
                         }} >
                             <ListItemIcon>

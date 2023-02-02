@@ -1,5 +1,5 @@
 import { SearchResponse } from "../../model/search/SearchResponse";
-import { Search, Date, SearchData } from "../../model/search/types";
+import { Search, Date, SearchData, Pagination } from "../../model/search/types";
 import SearchApiService from "../../services/search/SearchApiService";
 import ISearchRepository from "./ISearchRepository";
 
@@ -13,7 +13,7 @@ export default class SearchRepository implements ISearchRepository {
         return this._instance || (this._instance = new this());
     }
 
-    async search({search, pagination, date}: SearchData) {
+    async search({search, date, pagination}: SearchData) {
         //! Todo catch potenial errors
         const responseRaw = await this.api.search(search, pagination, date)
         console.log(responseRaw.data)

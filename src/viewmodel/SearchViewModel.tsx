@@ -1,50 +1,47 @@
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Dictionary } from '../model/dictionary/types'
-import { DictionaryData, SearchData, SearchDataDefault } from '../model/search/types'
+import { SearchData, SearchDataDefault } from '../model/search/types'
 import SearchRepository from '../repository/search/SearchRepository'
 
 
 export const useSearchViewModel = () => {
-    // const [lastTimestamp, setLastTimestamp] = useState<number>()
-    const [dictionaryData, setDictionaryData] = useState<DictionaryData | null>(null)
-    const [requestData, setRequestData] = useState<SearchData>(SearchDataDefault)
+    const [dictionaryData, setDictionaryData] = useState<Dictionary | null>(null)
+    const [searchData, setSearchData] = useState<SearchData>(SearchDataDefault)
     const repository = SearchRepository.getInstance()
 
     useEffect(() => {
         repository
             .lastTimestamp()
             .then((timestamp) => {
-                onLastTimestampObtained(timestamp)
+                const dateTo = moment.unix(timestamp).valueOf()
+                setSearchData({
+                    ...searchData
+                    , lastTimestamp: dateTo
+                    , date: { from: null, to: dateTo }
+                })
             })
             .catch((err: Error) => {
                 console.error(err)
             });
     }, [])
 
-    const onLastTimestampObtained = (timestamp: number) => {
-        const dateTo = moment.unix(timestamp).valueOf()
-        setRequestData({
-            ...requestData
-            , lastTimestamp: dateTo
-            , date: { from: null, to: dateTo }
-        })
+
+    function handleSearchDataChange(newSearchData: Partial<SearchData>) {
+        console.log(newSearchData)
+        setSearchData(prev => ({ ...prev, ...newSearchData}))
     }
 
-    const handleRequestDataChange = (newRequestData: Partial<SearchData>) => {
-        console.log(newRequestData)
-        setRequestData(prev => ({ ...prev, ...newRequestData }))
-    }
-
-    const onDictionaryObtained = (dictionary: Dictionary | null) => {
-        setDictionaryData(dictionary ? {dictionary: dictionary, useKeywords: true }: null)
-        // dictionary && setRequestData({...requestData, search: {...requestData.search, keywords: true}})
+    function onDictionaryObtained(dictionary: Dictionary | null) {
+        setDictionaryData(dictionary)
+        //! Todo reset isKeywords
+        // dictionary && handleSearchDataChange({...requestData, search: {...requestData.search, keywords: true}})
     }
 
     return {
-        requestData,
+        searchData,
         dictionaryData,
         onDictionaryObtained,
-        handleRequestDataChange
+        handleSearchDataChange,
     }
 }

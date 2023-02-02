@@ -1,28 +1,32 @@
-import { useEffect, useState } from "react"
-import { DictionaryData } from "../../../model/search/types"
+import { Dictionary } from "../../../model/dictionary/types"
+import { Search, SearchData } from "../../../model/search/types"
 import { SearchBarSynonymsWrapper, SwitchWrapper, SynonymParagraph, SynonymsWrapper } from "../styles/searchbar.synonyms.styles"
 import { SwitchButton } from "./SwitchButton"
 
 interface SearchbarSynonymsProps {
-    dictionaryData: DictionaryData | null
-    isKeywords: boolean
-    onIsKeywordsChange: () => void
+    search: Search
+    dictionary: Dictionary | null
+    onSearchDataChange: (requestData: Partial<SearchData>) => void
 }
 
-function SearchbarSynonyms({ dictionaryData, isKeywords, onIsKeywordsChange: handleIsKeywordsChange }: SearchbarSynonymsProps) {
+function SearchbarSynonyms({ search, dictionary, onSearchDataChange}: SearchbarSynonymsProps) {
+    
+    function toggleKeywords() {
+        onSearchDataChange({search: {...search, isKeywords: !search.isKeywords}})
+    }
 
     return (
         <SearchBarSynonymsWrapper>
-            {dictionaryData &&
+            {dictionary &&
                 <>
                     <SwitchWrapper>
-                        <SwitchButton toggled={isKeywords} onChange={handleIsKeywordsChange} />
+                        <SwitchButton toggled={search.isKeywords} onChange={toggleKeywords} />
                     </SwitchWrapper>
                     {
                         <SynonymsWrapper>
                             <p>Searched also for:</p>
-                            {dictionaryData.dictionary.synonyms.map((synonym, idx) => (
-                                <SynonymParagraph key={idx} use={isKeywords}>{synonym}</SynonymParagraph>
+                            {dictionary.synonyms.map((synonym, idx) => (
+                                <SynonymParagraph key={idx} use={search.isKeywords}>{synonym}</SynonymParagraph>
                             ))}
                         </SynonymsWrapper>
                     }

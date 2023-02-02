@@ -1,5 +1,5 @@
 import { SearchResponse } from "../../model/search/SearchResponse"
-import { Date, Search, SearchData } from "../../model/search/types"
+import { Date, Search, SearchData, Pagination } from "../../model/search/types"
 
 export default interface ISearchRepository {
     search(requestData: SearchData): Promise<SearchResponse>

@@ -1,44 +1,50 @@
 import { useEffect, useState } from "react"
-import { Date, DictionaryData, Search, SearchData, SearchDataDefault } from "../../../model/search/types"
+import { Dictionary } from "../../../model/dictionary/types"
+import { SearchData, SearchDataDefault } from "../../../model/search/types"
+import { TablePaginationDefault } from "../../../model/table/types"
 import { SearchbarWrapper, SearchImage } from '../styles/searchbar.styles'
 import SearchbarForm from "./SearchbarForm"
 import SearchbarSynonyms from "./SearchbarSynonyms"
 
 interface SearchbarProps {
-    search: Search
-    date: Date
-    dictionaryData: DictionaryData | null
-    lastTimestamp: number | null
-    onRequestDataChange: (requestData: Partial<SearchData>) => void,
+    searchData: SearchData
+    dictionaryData: Dictionary | null
+    onSearchDataChange: (requestData: Partial<SearchData>) => void,
 }
 
-function Searchbar({ search, date, dictionaryData, lastTimestamp, onRequestDataChange }: SearchbarProps) {
-    const [isKeywords, setIsKeywords] = useState(() => search.isKeywords)
+function Searchbar({ onSearchDataChange, ...props }: SearchbarProps) {
+    const [searchData, setSearchData] = useState(props.searchData)
 
     useEffect(() => {
-        dictionaryData && setIsKeywords(dictionaryData.useKeywords)
-    }, [dictionaryData?.useKeywords])
+        setSearchData(props.searchData)
+    }, [props.searchData])
 
-    function handleIsKeywordsChange() {
-        setIsKeywords(!isKeywords)
+    function handleSearchDataChange(newSearchData: Partial<SearchData>) {
+        setSearchData(prev => ({ ...prev, ...newSearchData }))
+    }
+
+    function handleSubmit() {
+        onSearchDataChange({...searchData, pagination: TablePaginationDefault})
+    }
+
+    function handleReset() {
+        onSearchDataChange({ ...SearchDataDefault, lastTimestamp: searchData.lastTimestamp })
     }
 
     return (
         <SearchbarWrapper>
             <SearchImage
-                onClick={()=>onRequestDataChange({...SearchDataDefault, lastTimestamp})}
-                style={{ height: '60px', 'marginBottom': '32px', 'marginTop': '16px' }} 
+                onClick={handleReset}
+                style={{ height: '60px', 'marginBottom': '32px', 'marginTop': '16px' }}
                 src='/img/bekaert-logo.svg' alt='PDS' />
             <SearchbarForm
-                search={search}
-                date={date}
-                isKeywords={isKeywords}
-                lastTimestamp={lastTimestamp}
-                onRequestDataChange={onRequestDataChange} />
+                searchData={searchData}
+                onSearchDataChange={handleSearchDataChange}
+                onSubmit={handleSubmit} />
             <SearchbarSynonyms
-                dictionaryData={dictionaryData}
-                isKeywords={isKeywords}
-                onIsKeywordsChange={handleIsKeywordsChange} />
+                search={searchData.search}
+                dictionary={props.dictionaryData}
+                onSearchDataChange={handleSearchDataChange} />
         </SearchbarWrapper>
     )
 }
