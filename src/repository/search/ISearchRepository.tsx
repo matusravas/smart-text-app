@@ -3,6 +3,6 @@ import { Date, Search, SearchData, Pagination } from "../../model/search/types"
 
 export default interface ISearchRepository {
     search(requestData: SearchData): Promise<SearchResponse>
-    searchExport(search: Search, date: Date): Promise<boolean>
+    searchExport(requestData: SearchData): Promise<boolean>
     lastTimestamp(): Promise<number>
 }

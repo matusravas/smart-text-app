@@ -1,7 +1,7 @@
 export type SearchData = {
     search: Search
     date: Date
-    // isKeywords: boolean
+    isKeywords: boolean
     pagination: Pagination,
     lastTimestamp: number | null
 }
@@ -11,7 +11,7 @@ export type Operator = 'OR' | 'AND'
 export type Search = {
     phrase: string
     field: string
-    isKeywords: boolean
+    // isKeywords: boolean
     operator: Operator
 }
 
@@ -28,7 +28,8 @@ export const SearchPaginationDefault = {
 
 
 export const SearchDataDefault = {
-    search: { phrase: '', operator: 'OR' as Operator, field: 'Kr_text', isKeywords: true }
+    search: { phrase: '', operator: 'OR' as Operator, field: 'Kr_text' }
+    , isKeywords: true
     , pagination: SearchPaginationDefault
     , date: { from: null, to: null }
     , lastTimestamp: null

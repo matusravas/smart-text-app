@@ -1,7 +1,7 @@
 import axios from "axios";
 import moment from "moment";
 import { SearchResponseRaw } from "../../model/search/SearchResponse";
-import { Search, Date, Pagination } from "../../model/search/types";
+import { Search, Date, Pagination, SearchData } from "../../model/search/types";
 import { Response } from "../../model/types";
 import ApiService from "../ApiService";
 import ISearchApiService from "./ISearchApiService";
@@ -12,9 +12,9 @@ class SearchApiService extends ApiService implements ISearchApiService {
         this.ucPrefix = 'search'
         console.log(this)
     }
-    search(search: Search, pagination: Pagination, date: Date): Promise<Response<SearchResponseRaw>> {
+    search({search, isKeywords, date, pagination}: SearchData): Promise<Response<SearchResponseRaw>> {
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
-        const keywordQueryString = `use-keywords=${search.isKeywords}`
+        const keywordQueryString = `use-keywords=${isKeywords}`
         const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
         const paginationQueryString = `page=${pagination.currentPage}&pageSize=${pagination.pageSize}`
         const queryString = `${searchQueryString}&${dateQueryString}&${paginationQueryString}&${keywordQueryString}`
@@ -35,9 +35,9 @@ class SearchApiService extends ApiService implements ISearchApiService {
         })
         )
     }
-    searchExport(search: Search, date: Date): Promise<boolean> {
+    searchExport({search, isKeywords, date}: SearchData): Promise<boolean> {
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
-        const keywordQueryString = `use-keywords=${search.isKeywords}`
+        const keywordQueryString = `use-keywords=${isKeywords}`
         const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
         const queryString = `${searchQueryString}&${dateQueryString}&${keywordQueryString}`
         return new Promise<boolean>((resolve, reject) => axios({

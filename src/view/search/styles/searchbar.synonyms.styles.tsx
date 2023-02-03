@@ -14,7 +14,7 @@ export const SearchBarSynonymsWrapper = styled.div`
 `
 
 interface SynonymParagraphProps {
-  use: boolean
+  overLined: boolean
 }
 
 export const SynonymParagraph = styled.p<SynonymParagraphProps>`
@@ -29,7 +29,7 @@ export const SynonymParagraph = styled.p<SynonymParagraphProps>`
     border-radius: 10px;
     margin: 2px;
     font-weight: 500;
-    text-decoration: ${props => !props.use ? 'line-through' : 'none'};
+    text-decoration: ${props => props.overLined ? 'line-through' : 'none'};
 `
 
 export const SwitchWrapper = styled.div`

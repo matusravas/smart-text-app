@@ -30,12 +30,11 @@ export const useSearchViewModel = () => {
     function handleSearchDataChange(newSearchData: Partial<SearchData>) {
         console.log(newSearchData)
         setSearchData(prev => ({ ...prev, ...newSearchData}))
+        searchData.search.phrase !== newSearchData.search?.phrase && setDictionaryData(null)
     }
 
     function onDictionaryObtained(dictionary: Dictionary | null) {
         setDictionaryData(dictionary)
-        //! Todo reset isKeywords
-        // dictionary && handleSearchDataChange({...requestData, search: {...requestData.search, keywords: true}})
     }
 
     return {

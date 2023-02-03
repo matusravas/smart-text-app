@@ -13,9 +13,9 @@ export default class SearchRepository implements ISearchRepository {
         return this._instance || (this._instance = new this());
     }
 
-    async search({search, date, pagination}: SearchData) {
+    async search(searchData: SearchData) {
         //! Todo catch potenial errors
-        const responseRaw = await this.api.search(search, pagination, date)
+        const responseRaw = await this.api.search(searchData)
         console.log(responseRaw.data)
         const paginationRaw = responseRaw.data.pagination
         const response: SearchResponse = {...responseRaw.data, 
@@ -27,9 +27,9 @@ export default class SearchRepository implements ISearchRepository {
             }}
         return response
     }
-    async searchExport(search: Search, date: Date) {
+    async searchExport(searchData: SearchData) {
         //! Todo catch potenial errors
-        const result = await this.api.searchExport(search, date)
+        const result = await this.api.searchExport(searchData)
         return result
     }
     async lastTimestamp() {

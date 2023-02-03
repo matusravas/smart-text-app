@@ -14,17 +14,28 @@ interface SearchbarProps {
 
 function Searchbar({ onSearchDataChange, ...props }: SearchbarProps) {
     const [searchData, setSearchData] = useState(props.searchData)
+    const [synonymsVisible, setSynonymsVisible] = useState(props.searchData.isKeywords)
 
     useEffect(() => {
         setSearchData(props.searchData)
-    }, [props.searchData])
+        props.dictionaryData && props.searchData.isKeywords && setSynonymsVisible(true)
+    }, [props.searchData, props.dictionaryData])
+
+    function toggleSynonyms(searchPhrase: string) {
+        if (props.searchData.search.phrase !== searchPhrase) setSynonymsVisible(false)
+        else setSynonymsVisible(true)
+    }
 
     function handleSearchDataChange(newSearchData: Partial<SearchData>) {
+        newSearchData.search?.phrase && toggleSynonyms(newSearchData.search.phrase)
         setSearchData(prev => ({ ...prev, ...newSearchData }))
     }
 
     function handleSubmit() {
-        onSearchDataChange({...searchData, pagination: TablePaginationDefault})
+        onSearchDataChange({
+            ...searchData, pagination: TablePaginationDefault,
+            ...(props.searchData.search.phrase !== searchData.search.phrase && {isKeywords: true})
+        })
     }
 
     function handleReset() {
@@ -41,10 +52,13 @@ function Searchbar({ onSearchDataChange, ...props }: SearchbarProps) {
                 searchData={searchData}
                 onSearchDataChange={handleSearchDataChange}
                 onSubmit={handleSubmit} />
+
             <SearchbarSynonyms
-                search={searchData.search}
+                visible={synonymsVisible}
+                isKeywords={searchData.isKeywords}
                 dictionary={props.dictionaryData}
                 onSearchDataChange={handleSearchDataChange} />
+
         </SearchbarWrapper>
     )
 }

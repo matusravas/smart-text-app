@@ -4,29 +4,30 @@ import { SearchBarSynonymsWrapper, SwitchWrapper, SynonymParagraph, SynonymsWrap
 import { SwitchButton } from "./SwitchButton"
 
 interface SearchbarSynonymsProps {
-    search: Search
+    visible: boolean
+    isKeywords: boolean
     dictionary: Dictionary | null
     onSearchDataChange: (requestData: Partial<SearchData>) => void
 }
 
-function SearchbarSynonyms({ search, dictionary, onSearchDataChange}: SearchbarSynonymsProps) {
+function SearchbarSynonyms({ visible, isKeywords, dictionary, onSearchDataChange}: SearchbarSynonymsProps) {
     
     function toggleKeywords() {
-        onSearchDataChange({search: {...search, isKeywords: !search.isKeywords}})
+        onSearchDataChange({isKeywords: !isKeywords})
     }
 
     return (
         <SearchBarSynonymsWrapper>
-            {dictionary &&
+            {visible && dictionary &&
                 <>
                     <SwitchWrapper>
-                        <SwitchButton toggled={search.isKeywords} onChange={toggleKeywords} />
+                        <SwitchButton toggled={isKeywords} onChange={toggleKeywords} />
                     </SwitchWrapper>
                     {
                         <SynonymsWrapper>
                             <p>Searched also for:</p>
                             {dictionary.synonyms.map((synonym, idx) => (
-                                <SynonymParagraph key={idx} use={search.isKeywords}>{synonym}</SynonymParagraph>
+                                <SynonymParagraph key={idx} overLined={!isKeywords}>{synonym}</SynonymParagraph>
                             ))}
                         </SynonymsWrapper>
                     }

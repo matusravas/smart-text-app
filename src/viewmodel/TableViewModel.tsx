@@ -1,8 +1,5 @@
 import { Options } from "material-table";
-import {
-    useEffect,
-    useMemo, useState
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Column, Data } from "../model/search/types";
 import { TablePagination, TablePaginationDefault, UseTableProps } from "../model/table/types";
 import SearchRepository from "../repository/search/SearchRepository";
@@ -67,7 +64,7 @@ export function useTable({ searchData, onDictionary, onError, onSuccess }: UseTa
     function handleExport() {
         if (!searchData) return
         repository
-            .searchExport(searchData.search, searchData.date)
+            .searchExport(searchData)
             .then((res) => {
                 //
             })
@@ -89,7 +86,7 @@ export function useTable({ searchData, onDictionary, onError, onSuccess }: UseTa
         let options: Options<any> = {};
         options = {
             grouping: false,
-            maxBodyHeight: "50vh",
+            maxBodyHeight: "55vh",
             headerStyle: {
                 position: "sticky",
                 top: 0,
