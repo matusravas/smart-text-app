@@ -33,7 +33,7 @@ function Searchbar({ onSearchDataChange, ...props }: SearchbarProps) {
 
     function handleSubmit() {
         onSearchDataChange({
-            ...searchData, pagination: TablePaginationDefault,
+            ...searchData, pagination: {...TablePaginationDefault, pageSize: searchData.pagination.pageSize},
             ...(props.searchData.search.phrase !== searchData.search.phrase && {isKeywords: true})
         })
     }

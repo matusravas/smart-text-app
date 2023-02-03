@@ -8,7 +8,7 @@ import SearchDashboard from "../../view/search/SearchDashboard";
 
 
 export type DrawerItem = {
-    key: string,
+    // key: string,
     label: string,
     icon: any,
     path: string
@@ -16,13 +16,13 @@ export type DrawerItem = {
 
 export const drawerConfig: DrawerItem[] = [
     {
-        key: 'search',
+        // key: 'search',
         label: 'Search',
         icon: <Search />,
         path: '/',
     },
     {
-        key: 'dictionary',
+        // key: 'dictionary',
         label: 'Dictionary',
         icon: <Translate />,
         path: "/dictionary"

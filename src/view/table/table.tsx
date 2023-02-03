@@ -5,7 +5,7 @@ import React from "react";
 import { TableProps } from "../../model/table/types";
 import { useTable } from "../../viewmodel/TableViewModel";
 import { tableIcons } from "./styles/icons";
-import { TableWrapper } from "./styles/table.styles";
+import { TableTopbar, TableWrapper } from "./styles/table.styles";
 
 export const Table = (props: TableProps) => {
     const {
@@ -27,14 +27,14 @@ export const Table = (props: TableProps) => {
     let renderingGroupRows: boolean = false;
 
     const onPageChange = (gotoPage: number) => {
-        props.onSearchDataChange({pagination: {...pagination, currentPage: gotoPage}})
+        props.onSearchDataChange({ pagination: { ...pagination, currentPage: gotoPage } })
         // handlePagination({ currentPage: gotoPage })
     }
 
     const onPageSizeChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const rowsPerPage = +event.target.value
         const currentPage = rowsPerPage >= pagination.totalHits ? 0 : pagination.currentPage
-        props.onSearchDataChange({pagination: {...pagination, currentPage: currentPage, pageSize: +rowsPerPage}})
+        props.onSearchDataChange({ pagination: { ...pagination, currentPage: currentPage, pageSize: +rowsPerPage } })
         // handlePagination({ currentPage: currentPage, pageSize: +rowsPerPage })
     }
 
@@ -42,13 +42,15 @@ export const Table = (props: TableProps) => {
         if (!columns.length) return (<React.Fragment />)
         return (
             <TableWrapper>
-                <IconButton onClick={handleExport} style={{ alignSelf: 'flex-end' }}>
-                    <Tooltip title='Export' placement="top">
-                        <FileCopy style={{ color: '#DCDCDC' }} />
-                    </Tooltip>
-                </IconButton>
+                <TableTopbar>
+                    <IconButton onClick={handleExport} style={{ alignSelf: 'flex-end' }}>
+                        <Tooltip title='Export' placement="top">
+                            <FileCopy style={{ color: '#DCDCDC' }} />
+                        </Tooltip>
+                    </IconButton>
+                </TableTopbar>
                 <MaterialTable
-                    // title='Table title'
+                    title='Table title'
                     icons={tableIcons}
                     tableRef={materialTableRef}
                     isLoading={isLoading}
@@ -75,6 +77,7 @@ export const Table = (props: TableProps) => {
                                 {...props}
                                 count={pagination.totalHits}
                                 page={pagination.currentPage}
+                                rowsPerPage={pagination.pageSize}
                                 onChangePage={(_: any, gotoPage: number) => onPageChange(gotoPage)}
                                 onChangeRowsPerPage={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                     onPageSizeChange(e)
@@ -88,6 +91,6 @@ export const Table = (props: TableProps) => {
         )
     }
 
-return renderTable()
+    return renderTable()
 
 }

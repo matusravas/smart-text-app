@@ -1,5 +1,13 @@
 import styled from "styled-components";
 
+export const TableTopbar = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  width: auto;
+`
+
 export const TableWrapper = styled.div`
   max-height: 100%;
   max-width: 90%;
@@ -9,6 +17,9 @@ export const TableWrapper = styled.div`
     /* filter: sepia(20%); */
     /* position: sticky; */
   /* } */
+  & [class*="Component-horizontalScrollContainer"] {
+    border-radius: 10px;
+  }
   & .Component-horizontalScrollContainer-15 {
     border-radius: 10px;
   }

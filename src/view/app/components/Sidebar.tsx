@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemIcon, Tooltip } from '@material-ui/core';
+import { List, ListItem, ListItemIcon, ListItemText, Tooltip } from '@material-ui/core';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DrawerItem } from '../../../hooks/commons/router';
@@ -16,15 +16,18 @@ export default function Sidebar({ drawerItems, ...props }: AppBarProps) {
         <SidebarWrapper onMouseEnter={() => setToggleDrawer(true)} onMouseLeave={() => setToggleDrawer(false)}>
             <List style={{ display: toggleDrawer ? 'flex' : 'none', alignItems: 'center', flexDirection: 'column' }}>
                 {drawerItems.map(item => (
-                    <Tooltip key={item.label} style={{ width: '60px' }} title={<h3>{item.label}</h3>} placement="right">
-                        <ListItem  button onClick={() => {
+                    // <Tooltip key={item.label} style={{ width: '60px' }} title={<h3>{item.label}</h3>} placement="right">
+                        <ListItem key={item.path} button onClick={() => {
                             navigate(item.path)
                         }} >
                             <ListItemIcon>
                                 {item.icon}
                             </ListItemIcon>
+                            {/* <ListItemText style={{fontSize: '8px'}}>
+                                {item.label}
+                            </ListItemText> */}
                         </ListItem>
-                    </Tooltip>
+                    // </Tooltip>
                 ))}
             </List>
         </SidebarWrapper>

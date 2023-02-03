@@ -86,7 +86,7 @@ export function useTable({ searchData, onDictionary, onError, onSuccess }: UseTa
         let options: Options<any> = {};
         options = {
             grouping: false,
-            maxBodyHeight: "55vh",
+            maxBodyHeight: "50vh",
             headerStyle: {
                 position: "sticky",
                 top: 0,
