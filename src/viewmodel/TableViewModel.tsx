@@ -5,7 +5,7 @@ import { TablePagination, TablePaginationDefault, UseTableProps } from "../model
 import SearchRepository from "../repository/search/SearchRepository";
 
 
-export function useTable({ searchData, onDictionary, onError, onSuccess }: UseTableProps) {
+export function useTable({ searchData, onDictionary, onSource, onError, onSuccess }: UseTableProps) {
     const [rows, setRows] = useState<Data[]>(() => []);
     const [columns, setColumns] = useState<Column[]>(() => []);
     const [pagination, setPagination] = useState<TablePagination>(() => TablePaginationDefault);
@@ -25,13 +25,16 @@ export function useTable({ searchData, onDictionary, onError, onSuccess }: UseTa
                     && setColumns(prepareColumns(data.columns))
                 setIsLoading(false)
                 onDictionary(data.dictionary)
+                onSource(data.source)
             })
             .catch((err: Error) => {
                 // if (isMounted.current) return;
                 setIsLoading(false);
                 onError && onError(err.message);
             });
-    }, [searchData])
+    }, [searchData.search, searchData.dateRange,
+         searchData.pagination, searchData.isKeywords, 
+         searchData.source.index])
 
     function prepareColumns(columns: Column[]) {
         let centeredColumns = columns.map(col => {
@@ -47,7 +50,7 @@ export function useTable({ searchData, onDictionary, onError, onSuccess }: UseTa
             }
         })
         if (!searchData.search.phrase) return centeredColumns
-        const columnIndex = centeredColumns.findIndex(column => column.field === searchData.search.field)
+        const columnIndex = centeredColumns.findIndex(column => column.field === searchData.source.searchField)
         return centeredColumns.map((col, idx) => {
             if (!(idx === columnIndex || idx === columnIndex + 1)) return col
             const color = idx === columnIndex ? '#9a0007' : '#00600f'

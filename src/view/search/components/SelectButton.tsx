@@ -32,6 +32,7 @@ type SelectButtonProps<T> = {
     // selected?: string,
     options: SelectButtonOption[]
     onSelected: (value: T) => void
+    titleItem?: boolean
 } & SelectProps
 
 
@@ -52,9 +53,9 @@ export const SelectButton = <T,>({ options, value, onSelected, ...props }: Selec
                 onChange={(e) => {
                     handleSelect(e)
                 }}>
-                <MenuItem disabled value={''}>
-                    {'Select operator'}
-                </MenuItem>
+                {props.titleItem && <MenuItem disabled value={''}>
+                    {`Select ${props.label? props.label.toString().toLowerCase(): 'item'}`}
+                </MenuItem>}
                 {options.map(option => (
                     <MenuItem key={option.value} value={option.value}>
                         {option.label}

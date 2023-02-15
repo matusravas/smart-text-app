@@ -1,31 +1,37 @@
 import { FormEvent, useState } from "react"
-import { Date, Operator, SearchData } from "../../../model/search/types"
+import { DateRange, IndexTimestamp, Operator, SearchData, SearchDataDefault } from "../../../model/search/types"
+import { DateRangePicker } from "../../app/components/DatePicker/DateRangePicker"
 import { SearchbarFormWrapper, SearchButton, SearchInput } from '../styles/searchbar.styles'
 import { SearchToolbar } from "../styles/searchbar.toolbar.styles"
-import { Calendar } from "./Calendar"
+// import { Calendar } from "./Calendar"
 import { SelectButton } from "./SelectButton"
 
 interface SearchbarFormProps {
     searchData: SearchData
-    onSearchDataChange: (requestData: Partial<SearchData>) => void
+    indicesWithTimestamps: IndexTimestamp[]
+    onSearchDataChange: (requestData: Partial<SearchData>, submit?: boolean) => void
     onSubmit: () => void
 }
 
-function SearchbarForm({ 
-        onSearchDataChange, onSubmit, 
-        searchData: { search, date, lastTimestamp } 
-    }: SearchbarFormProps) {
+function SearchbarForm({
+    onSearchDataChange, onSubmit,
+    searchData: { search, source, dateRange: date },
+    indicesWithTimestamps
+}: SearchbarFormProps) {
     const [disabled, setDisabled] = useState(true)
-    const selectOptions = [
+    const selectOperatorOptions = [
         { label: 'OR', value: 'OR' }
         , { label: 'AND', value: 'AND' }
     ]
+    const selectSourceOptions = indicesWithTimestamps.map(it => {
+        return { 'label': it.indexAlias, 'value': it.index }
+    })
 
     function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
         onSubmit()
     }
-    
+
     function hasSearchMultiplePhrases(searchQuery: string) {
         const queryPhrases = searchQuery.split(' ').filter(q => q.length > 2)
         return queryPhrases.length > 1
@@ -46,23 +52,37 @@ function SearchbarForm({
     function handleSearchOperatorChange(value: Operator) {
         onSearchDataChange({ search: { ...search, operator: value } })
     }
+    
+    function handleSourceChange(value: string) {
+        onSearchDataChange({ ...SearchDataDefault, source: {index: value}}, true)
+    }
 
-    function handleDateChange(date: Date) {
-        onSearchDataChange({ date })
+    function handleDateChange(date: DateRange) {
+        onSearchDataChange({ dateRange: date })
     }
 
     return (
         <SearchbarFormWrapper autoComplete="off" onSubmit={handleSubmit}>
             <SearchInput value={search.phrase} onChange={(e) => handleSearchQueryChange(e.target.value)} />
             <SearchToolbar>
-                <Calendar
+                {/* <Calendar
                     dateRange={date}
                     lastTimestamp={lastTimestamp}
                     onChange={handleDateChange}
+                /> */}
+                <DateRangePicker 
+                    // title="Select date range"
+                    // id="date"
+                    selectedDateRange={date}
+                    onChange={handleDateChange}
                 />
                 <SelectButton
-                    disabled={disabled}
-                    label="Operator" options={selectOptions}
+                    label="Source" titleItem
+                    options={selectSourceOptions}
+                    value={source.index} onSelected={handleSourceChange} />
+                <SelectButton
+                    disabled={disabled} titleItem
+                    label="Operator" options={selectOperatorOptions}
                     value={search.operator} onSelected={handleSearchOperatorChange} />
                 <SearchButton />
             </SearchToolbar>

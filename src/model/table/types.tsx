@@ -1,12 +1,13 @@
 import { Action, Column, DetailPanel, Filter, Icons, Localization, Options, Query } from "material-table";
 import { Dictionary } from "../dictionary/types";
-import { SearchData } from "../search/types";
+import { SearchData, Source } from "../search/types";
 
 type UseCases = 'bekaert'
 
 export type UseTableProps = {
     searchData: SearchData;
     onDictionary: (dictionary: Dictionary | null) => void,
+    onSource: (source: Source) => void,
     // getRowsRequest: any;
     // updateRowRequest: any;
     // deleteRowRequest: any;
@@ -61,6 +62,7 @@ export type TableProps = {
     searchData: SearchData;
     onSearchDataChange: (searchData: Partial<SearchData>) => void
     onDictionary: (dictionary: Dictionary | null) => void
+    onSource: (source: Source) => void
     handleTableObj?: (tableObj: any) => void
     handleError?: (errorMessage: string) => void
     handleSuccess?: (successMessage: string) => void

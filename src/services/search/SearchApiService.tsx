@@ -1,7 +1,8 @@
 import axios from "axios";
 import moment from "moment";
+import { IndicesTimestampsResponseRaw } from "../../model/search/IndicesTimestampsResponse";
 import { SearchResponseRaw } from "../../model/search/SearchResponse";
-import { Search, Date, Pagination, SearchData } from "../../model/search/types";
+import { SearchData } from "../../model/search/types";
 import { Response } from "../../model/types";
 import ApiService from "../ApiService";
 import ISearchApiService from "./ISearchApiService";
@@ -12,12 +13,13 @@ class SearchApiService extends ApiService implements ISearchApiService {
         this.ucPrefix = 'search'
         console.log(this)
     }
-    search({search, isKeywords, date, pagination}: SearchData): Promise<Response<SearchResponseRaw>> {
-        const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
+    search({source, search, isKeywords, dateRange: date, pagination}: SearchData): Promise<Response<SearchResponseRaw>> {
+        const sourceQueryString = `source=${source.index}`
+        const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
         const keywordQueryString = `use-keywords=${isKeywords}`
-        const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
+        const dateQueryString = `date-from=${date.from}&date-to=${date.to}${source.dateField ? `&date-field=${source.dateField}` : ''}`
         const paginationQueryString = `page=${pagination.currentPage}&pageSize=${pagination.pageSize}`
-        const queryString = `${searchQueryString}&${dateQueryString}&${paginationQueryString}&${keywordQueryString}`
+        const queryString = `${sourceQueryString}&${searchQueryString}&${dateQueryString}&${paginationQueryString}&${keywordQueryString}`
         return new Promise<Response<SearchResponseRaw>>((resolve, reject) => axios({
             method: 'GET',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/?${queryString}`,
@@ -35,11 +37,12 @@ class SearchApiService extends ApiService implements ISearchApiService {
         })
         )
     }
-    searchExport({search, isKeywords, date}: SearchData): Promise<boolean> {
-        const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${search.field ? `&search-field=${search.field}` : ''}`
+    searchExport({source, search, isKeywords, dateRange: date}: SearchData): Promise<boolean> {
+        const sourceQueryString = `source=${source.index}`
+        const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
         const keywordQueryString = `use-keywords=${isKeywords}`
-        const dateQueryString = `date-from=${date.from}&date-to=${date.to}${date.field ? `&date-field=${date.field}` : ''}`
-        const queryString = `${searchQueryString}&${dateQueryString}&${keywordQueryString}`
+        const dateQueryString = `date-from=${date.from}&date-to=${date.to}${source.dateField ? `&date-field=${source.dateField}` : ''}`
+        const queryString = `${sourceQueryString}&${searchQueryString}&${dateQueryString}&${keywordQueryString}`
         return new Promise<boolean>((resolve, reject) => axios({
             method: 'GET',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/export?${queryString}`,
@@ -65,10 +68,10 @@ class SearchApiService extends ApiService implements ISearchApiService {
         })
         )
     }
-    lastTimestamp(): Promise<Response<number>> {
-        return new Promise<Response<number>>((resolve, reject) => axios({
+    indicesWithTimestamps(): Promise<Response<IndicesTimestampsResponseRaw>> {
+        return new Promise<Response<IndicesTimestampsResponseRaw>>((resolve, reject) => axios({
             method: 'GET',
-            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/timestamp`,
+            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/indices-timestamps`,
             responseType: 'json',
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -76,7 +79,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
                 'Content-Type': 'application/json',
             }
         }).then(res => {
-            resolve({ok: true, data: res.data.data.timestamp})
+            resolve({ok: true, data: res.data.data})
         }).catch(err => {
             console.error(err)
             reject({ok: false, message: 'Unable to obtain last timestamp'})

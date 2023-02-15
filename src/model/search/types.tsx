@@ -1,22 +1,29 @@
 export type SearchData = {
     search: Search
-    date: Date
+    dateRange: DateRange
+    source: Source
     isKeywords: boolean
     pagination: Pagination,
-    lastTimestamp: number | null
+    // lastTimestamp: number | null //! Todo put it elsewhere
 }
 
 export type Operator = 'OR' | 'AND'
 
 export type Search = {
     phrase: string
-    field: string
+    // field?: string
     // isKeywords: boolean
     operator: Operator
 }
 
-export type Date = {
-    field?: string,
+export type Source = {
+    index: string
+    searchField?: string
+    dateField?: string
+}
+
+export type DateRange = {
+    // field?: string,
     from: number | null
     to: number | null
 }
@@ -28,10 +35,12 @@ export const SearchPaginationDefault = {
 
 
 export const SearchDataDefault = {
-    search: { phrase: '', operator: 'OR' as Operator, field: 'Kr_text' }
-    , isKeywords: true
+    search: { phrase: '', operator: 'OR' as Operator }
+    // search: { phrase: '', operator: 'OR' as Operator, field: 'Kr_text' }
+    , source: {index: ''}
+    , isKeywords: false
     , pagination: SearchPaginationDefault
-    , date: { from: null, to: null }
+    , dateRange: { from: null, to: null }
     , lastTimestamp: null
 }
 
@@ -47,10 +56,24 @@ export type PaginationRaw = {
     total_pages: number
 }
 
+export type SourceRaw = {
+    index: string
+    search_field?: string
+    date_field?: string
+}
+
 export type Column = {
-    field: string,
-    title: string,
+    field: string
+    title: string
     type: 'string' | 'numeric' | 'date' | 'boolean'
+}
+
+export type IndexTimestamp = {
+    index: string
+    indexAlias: string
+    timestamp: number
+    searchField: string
+    dateField: string
 }
 
 export type Data = Record<string, string | number>

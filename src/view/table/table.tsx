@@ -19,6 +19,7 @@ export const Table = (props: TableProps) => {
     } = useTable({
         searchData: props.searchData,
         onDictionary: props.onDictionary,
+        onSource: props.onSource,
         onError: props.handleError,
         onSuccess: props.handleSuccess
     })

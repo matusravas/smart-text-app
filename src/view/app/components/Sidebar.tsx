@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemIcon, ListItemText, Tooltip } from '@material-ui/core';
+import { List, ListItem, ListItemIcon } from '@material-ui/core';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DrawerItem } from '../../../hooks/commons/router';
