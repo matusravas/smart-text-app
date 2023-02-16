@@ -15,23 +15,21 @@ export const useSearchViewModel = () => {
     useEffect(() => {
         repository
             .sourcesWithTimestamps()
-            .then((it) => {
-                const source: Source = it.length > 0 ? it[0] : { index: '' }
-                setSearchData({
-                    ...searchData
-                    , source: source
+                .then((it) => {
+                    const source: Source = it.length > 0 ? it[0] : { index: '' }
+                    setSearchData({
+                        ...searchData
+                        , source: source
+                    })
+                    setSources(it)
                 })
-                setSources(it)
-            })
-            .catch((err: Error) => {
-                console.error(err)
-            });
+                .catch((err: Error) => {
+                    console.error(err)
+                });
     }, [])
 
 
     function submitSearchData(newSearchData: Partial<SearchData>) {
-        console.log(searchData)
-        console.log(newSearchData)
         setSearchData(prev => ({ ...prev, ...newSearchData }))
         searchData.search.phrase !== newSearchData.search?.phrase && setDictionaryData(null)
     }
