@@ -16,7 +16,7 @@ export const useSearchViewModel = () => {
         repository
             .sourcesWithTimestamps()
                 .then((it) => {
-                    const source: Source = it.length > 0 ? it[0] : { index: '' }
+                    const source: Source = it.length > 0 ? it[0] : { index: '', indexAlias: '' }
                     setSearchData({
                         ...searchData
                         , source: source
@@ -42,7 +42,11 @@ export const useSearchViewModel = () => {
     function onSourceObtained(source: Source) {
         setSearchData(prev => (
             { ...prev 
-                , source: { index: prev.source.index, searchField: source.searchField, dateField: source.dateField } 
+                , source: {
+                     index: source.index,
+                     indexAlias: source.indexAlias,
+                     searchField: source.searchField, 
+                     dateField: source.dateField } 
             })
         )
         setLastTimestamp(source.timestamp ? moment(source.timestamp * 1000).format('MMM Do YYYY, HH:mm'): 'N/A')

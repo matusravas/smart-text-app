@@ -53,7 +53,7 @@ function Searchbar(props: SearchbarProps) {
     }
 
     function handleReset() {
-        props.submitSearchData({ ...SearchDataDefault, source: {index: searchData.source.index} })
+        props.submitSearchData({ ...SearchDataDefault, source: {index: searchData.source.index, indexAlias: searchData.source.indexAlias} })
     }
 
     return (

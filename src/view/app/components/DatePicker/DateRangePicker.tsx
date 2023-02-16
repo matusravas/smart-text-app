@@ -1,5 +1,5 @@
-import { Button } from "@material-ui/core"
-import { ArrowRightAlt } from "@material-ui/icons"
+import { IconButton, Tooltip } from "@material-ui/core"
+import { ArrowRightAlt, CalendarTodayRounded, Restore } from "@material-ui/icons"
 import en from "date-fns/locale/en-US"
 import moment from "moment"
 import {
@@ -12,7 +12,7 @@ import {
   DayPickerRangeProps
 } from "react-day-picker"
 import "react-day-picker/dist/style.css"
-import { DateRange as DateRangeCustom} from "../../../../model/search/types"
+import { DateRange as DateRangeCustom } from "../../../../model/search/types"
 import StringInput from "./StringInput"
 import {
   DateRangePickerConfirmButton, DateRangePickerContentWraper, DateRangePickerInputsWrapper, DateRangePickerWrapper
@@ -66,7 +66,7 @@ export function DateRangePicker(props: DateRangePickerProps) {
 
   const handleClickOutside = (event: MouseEvent) => {
     const target = event.target as HTMLElement
-    if (!target.closest('.my-div') && isOpen) {
+    if (!target.closest('.calendar') && isOpen) {
       setIsOpen(false);
     }
   };
@@ -157,44 +157,51 @@ export function DateRangePicker(props: DateRangePickerProps) {
       dateRange.from?.valueOf() === props.selectedDateRange?.from?.valueOf() &&
       dateRange.to?.valueOf() === props.selectedDateRange?.to?.valueOf()
     ) return
-    // props.onChange({
-    //   dateRange,
-    //   id: props.id,
-    // })
-    // console.log(dateRange)
-    // console.log(convertFromDateRange(dateRange))
     props.onChange(convertFromDateRange(dateRange))
     setIsOpen(false)
+  }, [dateRange])
+
+  const handleReset = useCallback(() => {
+    setDateRange({ from: undefined, to: undefined })
   }, [dateRange])
 
 
   function convertToDateRange(customDateRange: DateRangeCustom) {
     return {
-      from: customDateRange.from ? moment(customDateRange.from * 1000).toDate() : new Date(),
-      to: customDateRange.to ? moment(customDateRange.to * 1000).toDate() : new Date()
+      from: customDateRange.from ? moment(customDateRange.from * 1000).toDate() : undefined,
+      to: customDateRange.to ? moment(customDateRange.to * 1000).toDate() : undefined
     }
   }
-  
+
   function convertFromDateRange(dateRange: DateRange) {
     return {
-      from: dateRange.from ? moment(dateRange.from).unix() : moment().unix(),
-      to: dateRange.to ? moment(dateRange.to).unix() : moment().unix(),
+      from: dateRange.from ? moment(dateRange.from).unix() : null,
+      to: dateRange.to ? moment(dateRange.to).unix() : null,
     }
   }
 
   return (
     <>
       <div ref={anchorRef}>
-        <Button className="my-div" style={{ position: 'relative' }} onClick={() => setIsOpen(true)}>Calendar</Button>
+        <IconButton onClick={() => setIsOpen(true)}>
+          <Tooltip title="Calendar" placement="top">
+            <CalendarTodayRounded style={{ color: '#303030' }} />
+          </Tooltip>
+        </IconButton>
       </div>
       {isOpen &&
-        <DateRangePickerWrapper className="my-div" style={{
+        <DateRangePickerWrapper className="calendar" style={{
           position: 'absolute',
           top: anchorRef.current?.getBoundingClientRect().bottom,
           left: anchorRef.current?.getBoundingClientRect().left,
           zIndex: 1,
           maxHeight: '90vh', overflow: 'auto'
         }}>
+          <IconButton onClick={handleReset}>
+            <Tooltip title="Reset" placement="right">
+              <Restore style={{ color: '#dcdcdc' }} />
+            </Tooltip>
+          </IconButton>
           <DateRangePickerContentWraper>
             <DateRangePickerInputsWrapper>
               <StringInput

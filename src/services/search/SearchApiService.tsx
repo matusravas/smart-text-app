@@ -52,7 +52,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
                 'Content-Type': 'application/json',
             }
         }).then(res => {
-            const filename = `${search.phrase?`${search.phrase}_`:''}export_${moment().format('YYYY-MM-DDTHH-mm')}.xlsx`
+            const filename = `${search.phrase ? `${search.phrase}_` : ''}${source.indexAlias}_${moment().format('YYYY-MM-DDTHH-mm')}.xlsx`
             const url = window.URL.createObjectURL(new Blob([res.data], { type: 'text/xlsx;' }));
             const link = document.createElement('a');
             link.href = url;

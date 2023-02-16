@@ -4,6 +4,7 @@ import { PaginationRaw, Column, Data, Source } from "./types"
 
 export type SourceRaw = {
     index: string
+    alias: string
     search_field?: string
     date_field?: string
     timestamp?: number

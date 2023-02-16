@@ -22,6 +22,7 @@ export default class SearchRepository implements ISearchRepository {
             ...responseRaw.data,
             source: {
                 index: responseRaw.data.source.index,
+                indexAlias: responseRaw.data.source.alias,
                 searchField: responseRaw.data.source.search_field,
                 dateField: responseRaw.data.source.date_field,
                 timestamp: responseRaw.data.source.timestamp

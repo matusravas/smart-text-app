@@ -30,6 +30,7 @@ type SelectButtonProps<T> = {
     // label: string,
     // disabled?: boolean,
     // selected?: string,
+    showLabel?: boolean
     options: SelectButtonOption[]
     onSelected: (value: T) => void
     titleItem?: boolean
@@ -45,7 +46,7 @@ export const SelectButton = <T,>({ options, value, onSelected, ...props }: Selec
     }
     return (
         <FormControl>
-            <InputLabel >{props.label}</InputLabel>
+            {props.showLabel && <InputLabel>{props.label}</InputLabel>}
             <Select
                 disabled={props.disabled}
                 value={value}

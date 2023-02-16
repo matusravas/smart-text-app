@@ -18,6 +18,7 @@ export type Search = {
 
 export type Source = {
     index: string
+    indexAlias: string
     searchField?: string
     dateField?: string
     timestamp?: number 
@@ -38,7 +39,7 @@ export const SearchPaginationDefault = {
 export const SearchDataDefault = {
     search: { phrase: '', operator: 'OR' as Operator }
     // search: { phrase: '', operator: 'OR' as Operator, field: 'Kr_text' }
-    , source: {index: ''}
+    , source: {index: '', indexAlias: ''}
     , isKeywords: false
     , pagination: SearchPaginationDefault
     , dateRange: { from: null, to: null }

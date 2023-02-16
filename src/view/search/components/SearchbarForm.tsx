@@ -1,9 +1,9 @@
-import { SourceOption, SearchData } from "../../../model/search/types"
+import { SearchData, SourceOption } from "../../../model/search/types"
 import useSearchbarForm from "../../../viewmodel/SearchbarFormViewModel"
 import { DateRangePicker } from "../../app/components/DatePicker/DateRangePicker"
 import { SearchbarFormWrapper, SearchButton, SearchInput } from '../styles/searchbar.styles'
 import { SearchToolbar } from "../styles/searchbar.toolbar.styles"
-import { SelectButton } from "./SelectButton"
+import { MenuButton } from "./MenuButton"
 
 export interface SearchbarFormProps {
     searchData: SearchData
@@ -28,22 +28,34 @@ function SearchbarForm(props: SearchbarFormProps) {
         <SearchbarFormWrapper autoComplete="off" onSubmit={handleSubmit}>
             <SearchInput value={searchData.search.phrase} onChange={(e) => handleSearchQueryChange(e.target.value)} />
             <SearchToolbar>
-                <SelectButton
-                    label="Source" titleItem
-                    options={selectSourceOptions}
-                    value={searchData.source.index} onSelected={handleSourceChange} />
+                {/* <SearchToolbarInputs> */}
 
-                <DateRangePicker
-                    // title="Select date range"
-                    // id="date"
-                    selectedDateRange={searchData.dateRange}
-                    onChange={handleDateChange}
-                />
-                
-                <SelectButton
-                    disabled={operatorDisabled} titleItem
-                    label="Operator" options={selectOperatorOptions}
-                    value={searchData.search.operator} onSelected={handleSearchOperatorChange} />
+                    {/* <SelectButton
+                        label="Source"
+                        titleItem
+                        options={selectSourceOptions}
+                        value={searchData.source.index} onSelected={handleSourceChange} /> */}
+                    
+                    <MenuButton 
+                        titleItem
+                        title="Source"
+                        value={searchData.source.indexAlias} 
+                        options={selectSourceOptions} 
+                        onSelected={handleSourceChange}/>
+
+                    <DateRangePicker
+                        // title="Select date range"
+                        // id="date"
+                        selectedDateRange={searchData.dateRange}
+                        onChange={handleDateChange}
+                    />
+
+                    {/* <SelectButton
+                        disabled={operatorDisabled} titleItem
+                        label="Operator" options={selectOperatorOptions}
+                        value={searchData.search.operator} onSelected={handleSearchOperatorChange} /> */}
+                {/* </SearchToolbarInputs> */}
+
                 <SearchButton />
             </SearchToolbar>
         </SearchbarFormWrapper>

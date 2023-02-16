@@ -22,6 +22,14 @@ export const DateRangePickerInputsWrapper = styled.div`
   padding: 5px 5px 0px 5px;
 `
 
+export const DateRangePickerButtonsWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  /* gap: 5px */
+  /* padding: 5px 5px 0px 5px; */
+`
+
 export const DateRangePickerConfirmButton = styled.button`
   padding: 10px;
   outline: none;

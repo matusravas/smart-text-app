@@ -5,7 +5,7 @@ import { SearchbarFormProps } from "../view/search/components/SearchbarForm"
 
 function useSearchbarForm(props: SearchbarFormProps) {
     const [operatorDisabled, setOperatorDisabled] = useState(props.operatorDisabled)
-
+    
     useEffect(() => {
         setOperatorDisabled(props.operatorDisabled)
     }, [props.operatorDisabled])
@@ -45,7 +45,7 @@ function useSearchbarForm(props: SearchbarFormProps) {
     }
 
     function handleSourceChange(value: string) {
-        props.onSearchDataChange({ ...SearchDataDefault, source: { index: value } })
+        props.onSearchDataChange({ ...SearchDataDefault, source: { index: value, indexAlias: props.searchData.source.indexAlias } })
     }
 
     function handleDateChange(dateRange: DateRange) {
