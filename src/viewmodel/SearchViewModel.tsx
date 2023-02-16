@@ -30,6 +30,7 @@ export const useSearchViewModel = () => {
 
 
     function submitSearchData(newSearchData: Partial<SearchData>) {
+        console.log(newSearchData)
         setSearchData(prev => ({ ...prev, ...newSearchData }))
         searchData.search.phrase !== newSearchData.search?.phrase && setDictionaryData(null)
     }
@@ -44,7 +45,7 @@ export const useSearchViewModel = () => {
                 , source: { index: prev.source.index, searchField: source.searchField, dateField: source.dateField } 
             })
         )
-        setLastTimestamp(source.timestamp ? moment(source.timestamp * 1000).format('MMMM Do YYYY, HH:mm'): 'N/A')
+        setLastTimestamp(source.timestamp ? moment(source.timestamp * 1000).format('MMM Do YYYY, HH:mm'): 'N/A')
     }
 
     return {

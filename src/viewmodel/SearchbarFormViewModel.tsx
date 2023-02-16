@@ -49,6 +49,7 @@ function useSearchbarForm(props: SearchbarFormProps) {
     }
 
     function handleDateChange(dateRange: DateRange) {
+        console.log(dateRange)
         props.onSearchDataChange({ dateRange: dateRange })
     }
 

@@ -74,3 +74,9 @@ export const TableWrapper = styled.div`
 
   }
 `;
+
+
+export const TableLastTimestamp = styled.p`
+  margin: 0;
+  font-size: 16px;
+`

@@ -5,7 +5,7 @@ import React from "react";
 import { TableProps } from "../../model/table/types";
 import { useTable } from "../../viewmodel/TableViewModel";
 import { tableIcons } from "./styles/icons";
-import { TableTopbar, TableWrapper } from "./styles/table.styles";
+import { TableLastTimestamp, TableTopbar, TableWrapper } from "./styles/table.styles";
 
 export const Table = (props: TableProps) => {
     const {
@@ -44,7 +44,7 @@ export const Table = (props: TableProps) => {
         return (
             <TableWrapper>
                 <TableTopbar>
-                    <p style={{margin: 0}}>Last update: {props.lastTimestamp}</p>
+                    <TableLastTimestamp>Last update: {props.lastTimestamp}</TableLastTimestamp>
                     <IconButton onClick={handleExport} style={{ alignSelf: 'flex-end' }}>
                         <Tooltip title='Export' placement="top">
                             <FileCopy style={{ color: '#DCDCDC' }} />
