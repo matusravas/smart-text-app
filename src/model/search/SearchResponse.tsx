@@ -1,6 +1,13 @@
 import { Dictionary } from "../dictionary/types"
 import { TablePagination } from "../table/types"
-import { PaginationRaw, Column, Data, Source, SourceRaw } from "./types"
+import { PaginationRaw, Column, Data, Source } from "./types"
+
+export type SourceRaw = {
+    index: string
+    search_field?: string
+    date_field?: string
+    timestamp?: number
+}
 
 export type SearchResponseRaw = {
     columns: Column[]

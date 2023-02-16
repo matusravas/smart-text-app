@@ -1,8 +1,7 @@
 import axios from "axios";
 import moment from "moment";
-import { IndicesTimestampsResponseRaw } from "../../model/search/IndicesTimestampsResponse";
 import { SearchResponseRaw } from "../../model/search/SearchResponse";
-import { SearchData } from "../../model/search/types";
+import { SearchData, SourceOptionRaw } from "../../model/search/types";
 import { Response } from "../../model/types";
 import ApiService from "../ApiService";
 import ISearchApiService from "./ISearchApiService";
@@ -68,8 +67,8 @@ class SearchApiService extends ApiService implements ISearchApiService {
         })
         )
     }
-    indicesWithTimestamps(): Promise<Response<IndicesTimestampsResponseRaw>> {
-        return new Promise<Response<IndicesTimestampsResponseRaw>>((resolve, reject) => axios({
+    sourcesWithTimestamps(): Promise<Response<SourceOptionRaw[]>> {
+        return new Promise<Response<SourceOptionRaw[]>>((resolve, reject) => axios({
             method: 'GET',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/indices-timestamps`,
             responseType: 'json',

@@ -14,7 +14,6 @@ function SearchDashboard() {
         onDictionaryObtained, 
         submitSearchData, 
         } = useSearchViewModel()
-    console.log(lastTimestamp)
     return (
         <SearchDashboardWrapper>
             <Searchbar 

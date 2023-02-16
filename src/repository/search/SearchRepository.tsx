@@ -1,6 +1,5 @@
-import { IndicesTimestampsResponse } from "../../model/search/IndicesTimestampsResponse";
 import { SearchResponse } from "../../model/search/SearchResponse";
-import { SearchData } from "../../model/search/types";
+import { SearchData, SourceOption } from "../../model/search/types";
 import SearchApiService from "../../services/search/SearchApiService";
 import ISearchRepository from "./ISearchRepository";
 
@@ -41,16 +40,18 @@ export default class SearchRepository implements ISearchRepository {
         const result = await this.api.searchExport(searchData)
         return result
     }
-    async indicesWithTimestamps() {
+    async sourcesWithTimestamps() {
         //! Todo catch potenial errors
-        const responseRaw = await this.api.indicesWithTimestamps()
-        const response: IndicesTimestampsResponse = {
-            maxTimestamp: responseRaw.data.max_timestamp,
-            indicesTimestamps: responseRaw.data.indices_timestamps.map(it => {
-                return { index: it.index, indexAlias: it.index_alias, timestamp: it.timestamp,
-                searchField: it.search_field, dateField: it.date_field }
-            })
-        }
+        const responseRaw = await this.api.sourcesWithTimestamps()
+        console.log(responseRaw)
+        const response: SourceOption[] = responseRaw.data.map(it=>{
+            const source = {
+                index: it.index, 
+                indexAlias: it.index_alias,
+                timestamp: it.timestamp
+            }
+            return source
+        })
         return response
     }
 }

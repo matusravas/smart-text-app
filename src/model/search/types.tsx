@@ -57,25 +57,23 @@ export type PaginationRaw = {
     total_pages: number
 }
 
-export type SourceRaw = {
-    index: string
-    search_field?: string
-    date_field?: string
-    timestamp?: number
-}
-
 export type Column = {
     field: string
     title: string
     type: 'string' | 'numeric' | 'date' | 'boolean'
 }
 
+
+export type SourceOptionRaw = {
+    index: string,
+    index_alias: string,
+    timestamp: number
+}
+
 export type SourceOption = {
     index: string
     indexAlias: string
     timestamp: number
-    searchField: string
-    dateField: string
 }
 
 export type Data = Record<string, string | number>
