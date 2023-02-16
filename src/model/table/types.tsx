@@ -59,8 +59,9 @@ export interface MaterialTableProps<RowData extends object> {
 
 
 export type TableProps = {
-    searchData: SearchData;
-    onSearchDataChange: (searchData: Partial<SearchData>) => void
+    searchData: SearchData
+    lastTimestamp: string
+    submitSearchData: (searchData: Partial<SearchData>) => void
     onDictionary: (dictionary: Dictionary | null) => void
     onSource: (source: Source) => void
     handleTableObj?: (tableObj: any) => void

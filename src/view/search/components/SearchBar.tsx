@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Dictionary } from "../../../model/dictionary/types"
-import { IndexTimestamp, SearchData, SearchDataDefault } from "../../../model/search/types"
+import { SourceOption, SearchData, SearchDataDefault } from "../../../model/search/types"
 import { TablePaginationDefault } from "../../../model/table/types"
 import { SearchbarWrapper, SearchImage } from '../styles/searchbar.styles'
 import SearchbarForm from "./SearchbarForm"
@@ -8,9 +8,9 @@ import SearchbarSynonyms from "./SearchbarSynonyms"
 
 interface SearchbarProps {
     searchData: SearchData
-    indicesWithTimestamps: IndexTimestamp[]
+    sources: SourceOption[]
     dictionaryData: Dictionary | null
-    onSearchDataChange: (requestData: Partial<SearchData>) => void,
+    submitSearchData: (requestData: Partial<SearchData>) => void,
 }
 
 function Searchbar(props: SearchbarProps) {
@@ -22,34 +22,36 @@ function Searchbar(props: SearchbarProps) {
         props.dictionaryData && props.searchData.isKeywords && setSynonymsVisible(true)
     }, [props.searchData, props.dictionaryData])
 
+    // console.log(searchData)
+
     function toggleSynonyms(searchPhrase: string) {
         if (props.searchData.search.phrase !== searchPhrase) setSynonymsVisible(false)
         else setSynonymsVisible(true)
     }
 
-    function handleSearchDataChange(newSearchData: Partial<SearchData>, submit?: boolean) {
-        console.log(submit)
-        console.log(newSearchData)
-        if(submit === true) {
-            props.onSearchDataChange({
-                ...searchData, ...newSearchData,
-                 pagination: {...TablePaginationDefault, pageSize: searchData.pagination.pageSize},
+    function handleSearchDataChange(newSearchData: Partial<SearchData>) {
+        // console.log(newSearchData)
+        if(newSearchData.source?.index && newSearchData.source.index !== searchData.source.index) {
+            props.submitSearchData({
+                ...SearchDataDefault, ...newSearchData
             })
-        } else {
+        }
+        else {
             newSearchData.search?.phrase && toggleSynonyms(newSearchData.search.phrase)
             setSearchData(prev => ({ ...prev, ...newSearchData }))
         }
     }
 
     function handleSubmit() {
-        props.onSearchDataChange({
+        props.submitSearchData({
             ...searchData, pagination: {...TablePaginationDefault, pageSize: searchData.pagination.pageSize},
-            ...(props.searchData.search.phrase !== searchData.search.phrase && {isKeywords: true})
+            ...(props.searchData.search.phrase !== searchData.search.phrase 
+                && searchData.search.phrase.length > 0 && {isKeywords: true})
         })
     }
 
     function handleReset() {
-        props.onSearchDataChange({ ...SearchDataDefault })
+        props.submitSearchData({ ...SearchDataDefault })
     }
 
     return (
@@ -58,12 +60,14 @@ function Searchbar(props: SearchbarProps) {
                 onClick={handleReset}
                 style={{ height: '60px', 'marginBottom': '32px', 'marginTop': '16px' }}
                 src='/img/bekaert-logo.svg' alt='PDS' />
+
             <SearchbarForm
                 searchData={searchData}
-                indicesWithTimestamps={props.indicesWithTimestamps}
+                operatorDisabled={!searchData.isKeywords}
+                sources={props.sources}
                 onSearchDataChange={handleSearchDataChange}
                 onSubmit={handleSubmit} />
-
+                
             <SearchbarSynonyms
                 visible={synonymsVisible}
                 isKeywords={searchData.isKeywords}

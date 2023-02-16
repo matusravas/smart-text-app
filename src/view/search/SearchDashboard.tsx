@@ -7,28 +7,30 @@ import { SearchDashboardWrapper } from "./styles/searchbar.styles";
 function SearchDashboard() {
     const { 
         searchData, 
-        indicesTimestamps,
+        sources,
+        lastTimestamp,
         dictionaryData, 
         onSourceObtained,
         onDictionaryObtained, 
-        handleSearchDataChange, 
+        submitSearchData, 
         } = useSearchViewModel()
-    console.log(searchData)
+    console.log(lastTimestamp)
     return (
         <SearchDashboardWrapper>
             <Searchbar 
                 searchData={searchData}
-                indicesWithTimestamps={indicesTimestamps}
+                sources={sources}
                 dictionaryData={dictionaryData}
-                onSearchDataChange={handleSearchDataChange}
+                submitSearchData={submitSearchData}
                  />
-            {indicesTimestamps.length > 0 ? // Todo this is null and exclude it from searchData
+            {sources.length > 0 ?
                 <Table 
                     searchData={searchData}
+                    lastTimestamp={lastTimestamp}
                     onDictionary={onDictionaryObtained}
                     onSource={onSourceObtained}
-                    onSearchDataChange={handleSearchDataChange}
-                 />
+                    submitSearchData={submitSearchData}
+                    />
                  : null
             }
         </SearchDashboardWrapper>

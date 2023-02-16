@@ -28,14 +28,14 @@ export const Table = (props: TableProps) => {
     let renderingGroupRows: boolean = false;
 
     const onPageChange = (gotoPage: number) => {
-        props.onSearchDataChange({ pagination: { ...pagination, currentPage: gotoPage } })
+        props.submitSearchData({ pagination: { ...pagination, currentPage: gotoPage } })
         // handlePagination({ currentPage: gotoPage })
     }
 
     const onPageSizeChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const rowsPerPage = +event.target.value
         const currentPage = rowsPerPage >= pagination.totalHits ? 0 : pagination.currentPage
-        props.onSearchDataChange({ pagination: { ...pagination, currentPage: currentPage, pageSize: +rowsPerPage } })
+        props.submitSearchData({ pagination: { ...pagination, currentPage: currentPage, pageSize: +rowsPerPage } })
         // handlePagination({ currentPage: currentPage, pageSize: +rowsPerPage })
     }
 
@@ -44,6 +44,7 @@ export const Table = (props: TableProps) => {
         return (
             <TableWrapper>
                 <TableTopbar>
+                    <p style={{margin: 0}}>Last update: {props.lastTimestamp}</p>
                     <IconButton onClick={handleExport} style={{ alignSelf: 'flex-end' }}>
                         <Tooltip title='Export' placement="top">
                             <FileCopy style={{ color: '#DCDCDC' }} />

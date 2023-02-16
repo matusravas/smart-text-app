@@ -24,7 +24,8 @@ export default class SearchRepository implements ISearchRepository {
             source: {
                 index: responseRaw.data.source.index,
                 searchField: responseRaw.data.source.search_field,
-                dateField: responseRaw.data.source.date_field
+                dateField: responseRaw.data.source.date_field,
+                timestamp: responseRaw.data.source.timestamp
             },
             pagination: {
                 pageSize: paginationRaw.page_size,

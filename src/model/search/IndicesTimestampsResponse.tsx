@@ -1,4 +1,4 @@
-import { IndexTimestamp } from "./types"
+import { SourceOption } from "./types"
 
 export type IndexTimestampRaw = {
     index: string,
@@ -14,6 +14,6 @@ export type IndicesTimestampsResponseRaw = {
 }
 
 export type IndicesTimestampsResponse = {
-    indicesTimestamps: IndexTimestamp[]
+    indicesTimestamps: SourceOption[]
     maxTimestamp: number
 }

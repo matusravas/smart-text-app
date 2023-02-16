@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const DateRangePickerWrapper = styled.div`
   border-radius: 10px;
+  box-shadow: 2px 2px 10px #30303030;
 `
 
 export const DateRangePickerContentWraper = styled.div`
@@ -25,10 +26,11 @@ export const DateRangePickerConfirmButton = styled.button`
   padding: 10px;
   outline: none;
   border: 0px ;
-  background-color: #303030;
-  color: #fafafa;
+  background-color: #f2f2f2;
+  color: #303030;
   :hover {
     cursor: pointer;
+    filter: brightness(90%);
     /* filter: brightness(75%); */
   }
 `

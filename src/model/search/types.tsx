@@ -20,6 +20,7 @@ export type Source = {
     index: string
     searchField?: string
     dateField?: string
+    timestamp?: number 
 }
 
 export type DateRange = {
@@ -60,6 +61,7 @@ export type SourceRaw = {
     index: string
     search_field?: string
     date_field?: string
+    timestamp?: number
 }
 
 export type Column = {
@@ -68,7 +70,7 @@ export type Column = {
     type: 'string' | 'numeric' | 'date' | 'boolean'
 }
 
-export type IndexTimestamp = {
+export type SourceOption = {
     index: string
     indexAlias: string
     timestamp: number

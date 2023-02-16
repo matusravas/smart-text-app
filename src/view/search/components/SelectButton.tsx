@@ -14,7 +14,7 @@ const useStyles = makeStyles({
         },
         '&:after': {
             borderColor: 'black',
-        },
+        }
     },
     label: {
         textAlign: 'left',
@@ -50,6 +50,7 @@ export const SelectButton = <T,>({ options, value, onSelected, ...props }: Selec
                 disabled={props.disabled}
                 value={value}
                 MenuProps={{ className: styles.menu }}
+                IconComponent={undefined}
                 onChange={(e) => {
                     handleSelect(e)
                 }}>
