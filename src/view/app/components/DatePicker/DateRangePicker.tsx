@@ -1,5 +1,5 @@
 import { IconButton, Tooltip } from "@material-ui/core"
-import { ArrowRightAlt, CalendarTodayRounded, Restore } from "@material-ui/icons"
+import { ArrowRightAlt, Restore } from "@material-ui/icons"
 import en from "date-fns/locale/en-US"
 import moment from "moment"
 import {
@@ -21,9 +21,9 @@ import { useStyles } from "./styles/MultipleDatePicker.style"
 
 
 export type DateRangePickerProps = {
-  // onChange: (props: { dateRange: DateRange }) => void
-  onChange: (dateRange: DateRangeCustom) => void
-  // title: string
+  onChange?: (dateRange: DateRangeCustom) => void
+  onSubmit: (event: any, dateRange: DateRangeCustom) => void
+  displayDateFormat?: string
   selectedDateRange?: DateRangeCustom
   openOnClick?: boolean
   disabled?: boolean
@@ -38,14 +38,17 @@ export type DateRangeFocusedInput = "from" | "to" | "none"
 export function DateRangePicker(props: DateRangePickerProps) {
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false);
-  const [focusedInput, setFocusedInput] = useState<DateRangeFocusedInput>("from")
+  const [displayDateFormat, setDisplayDateFormat] = useState(()=>{
+    return props.displayDateFormat ? props.displayDateFormat : 'YYYY-MM-DD' 
+  })
+  const [focusedInput, setFocusedInput] = useState<DateRangeFocusedInput>("none")
   const [dateRange, setDateRange] = useState<DateRange>(() => {
     if (props.selectedDateRange) {
-      return convertToDateRange(props.selectedDateRange)
+      return props.selectedDateRange
     }
     return {
-      from: new Date(),
-      to: new Date(),
+      from: undefined,
+      to: undefined,
     }
   })
 
@@ -53,8 +56,12 @@ export function DateRangePicker(props: DateRangePickerProps) {
 
   useEffect(() => {
     if (!props.selectedDateRange) return
-    setDateRange(convertToDateRange(props.selectedDateRange))
+    setDateRange(props.selectedDateRange)
   }, [props.selectedDateRange])
+
+  useEffect(()=>{
+    props.displayDateFormat && setDisplayDateFormat(props.displayDateFormat)
+  },[props.displayDateFormat])
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -66,8 +73,9 @@ export function DateRangePicker(props: DateRangePickerProps) {
 
   const handleClickOutside = (event: MouseEvent) => {
     const target = event.target as HTMLElement
-    if (!target.closest('.calendar') && isOpen) {
+    if (!target.closest('.calendar') && !target.closest('.date') && isOpen) {
       setIsOpen(false);
+      setFocusedInput('none')
     }
   };
 
@@ -99,7 +107,7 @@ export function DateRangePicker(props: DateRangePickerProps) {
               props.onError &&
               props.onError(`Max allowed date range is ${props.maxRange} days`)
             newDateRange.from = selectedDay
-            newDateRange.to = isTooBig ? selectedDay : dateRange.to
+            newDateRange.to = isTooBig ? selectedDay : dateRange.to ? dateRange.to : new Date(newDateRange.from)
           }
           newFocusedInput = "to"
           break
@@ -113,12 +121,16 @@ export function DateRangePicker(props: DateRangePickerProps) {
             isTooBig &&
               props.onError &&
               props.onError(`Max allowed date range is ${props.maxRange} days`)
-            newDateRange.from = isTooBig ? selectedDay : dateRange.from
             newDateRange.to = selectedDay
+            newDateRange.from = isTooBig ? selectedDay : dateRange.from ? dateRange.from : new Date(newDateRange.to)
             newFocusedInput = "none"
           }
+          newFocusedInput = !dateRange.from ? "from" : "none"
+          // newFocusedInput = "from"
           break
         case "none":
+          // Todo decide if selected day was greater than max date in current date range if yes shift the "to" to selected
+          // if not shift "from" to selected and newFocusedInput = 
           const isTooBig = isRangeTooBig(selectedDay, "none", range)
           isTooBig &&
             props.onError &&
@@ -127,9 +139,8 @@ export function DateRangePicker(props: DateRangePickerProps) {
           else newDateRange = range
           break
       }
-      setDateRange(newDateRange)
+      onChange(newDateRange)
       setFocusedInput(newFocusedInput)
-      // props.onChange({ id: props.id, dateRange: newDateRange })
     },
     [focusedInput, dateRange]
   )
@@ -152,164 +163,162 @@ export function DateRangePicker(props: DateRangePickerProps) {
     }
   }
 
-  const handleConfirm = useCallback(() => {
+  function handleConfirm(event: any) {
     if (
-      dateRange.from?.valueOf() === props.selectedDateRange?.from?.valueOf() &&
+      !props.onChange && dateRange.from?.valueOf() === props.selectedDateRange?.from?.valueOf() &&
       dateRange.to?.valueOf() === props.selectedDateRange?.to?.valueOf()
     ) return
-    props.onChange(convertFromDateRange(dateRange))
     setIsOpen(false)
-  }, [dateRange])
-
-  const handleReset = useCallback(() => {
-    setDateRange({ from: undefined, to: undefined })
-  }, [dateRange])
-
-
-  function convertToDateRange(customDateRange: DateRangeCustom) {
-    return {
-      from: customDateRange.from ? moment(customDateRange.from * 1000).toDate() : undefined,
-      to: customDateRange.to ? moment(customDateRange.to * 1000).toDate() : undefined
-    }
+    setFocusedInput('none')
+    props.onSubmit(event, dateRange)
   }
 
-  function convertFromDateRange(dateRange: DateRange) {
-    return {
-      from: dateRange.from ? moment(dateRange.from).unix() : null,
-      to: dateRange.to ? moment(dateRange.to).unix() : null,
-    }
+  function handleReset() {
+    onChange({ from: undefined, to: undefined })
+    setFocusedInput('from')
   }
 
+
+  function onChange(range: DateRange) {
+    const newRange = {...range, ...( range.to && { to: new Date(range.to.setHours(23, 59))} )}
+    props.onChange 
+      ? props.onChange(newRange)
+      : setDateRange(newRange)
+
+  }
   return (
     <>
       <div ref={anchorRef}>
-        <IconButton onClick={() => setIsOpen(true)}>
-          <Tooltip title="Calendar" placement="top">
-            <CalendarTodayRounded style={{ color: '#303030' }} />
-          </Tooltip>
-        </IconButton>
+        <DateRangePickerInputsWrapper>
+          <StringInput
+            strInProps={{
+              className: "date",
+              style: { maxWidth: "150px" },
+              focused: focusedInput === "from",
+              inputProps: {
+                style: {
+                  textAlign: "center",
+                  fontSize: 18,
+                  color: `${focusedInput === "from" ? "inherit" : "gray"}`,
+                  fontWeight: `${focusedInput === "from" ? "bold" : "normal"
+                    }`,
+                },
+              },
+              value: moment(dateRange.from).format(displayDateFormat),
+              onBlur: () => { !isOpen && setFocusedInput('none') }
+            }}
+            onInputClick={() => { setFocusedInput("from"); setIsOpen(true) }}
+            onInputChange={(value, e) => {
+              const isTooBig = isRangeTooBig(value, "from")
+              if (isTooBig) return
+              const selectedDay = new Date(moment(value, displayDateFormat).valueOf())
+              const toMillis = dateRange.to?.getTime() || 0
+              const selectedDayMillis = selectedDay.getTime()
+              onChange({
+                from: selectedDay,
+                to: selectedDayMillis > toMillis ? selectedDay : dateRange.to,
+              })
+            }}
+            onChangeDelay={1000}
+            onInputError={props.onError}
+            validate={(value) => {
+              let message = ""
+              let isValid = true
+
+              if (!moment(value).isValid()) {
+                isValid = false
+                message = "Wrong date format"
+              }
+              if (
+                isValid &&
+                dateRange.to &&
+                isRangeTooBig(value, "from")
+              ) {
+                isValid = false
+                message = `Max allowed date range is ${props.maxRange} days`
+              }
+              return {
+                message,
+                isValid,
+              }
+            }}
+          />
+          <ArrowRightAlt style={{ margin: "0px 5px", color: '#808084' }} />
+          <StringInput
+            strInProps={{
+              className: "date",
+              focused: focusedInput === "to",
+              style: { maxWidth: "150px" },
+              inputProps: {
+                style: {
+                  fontSize: 18,
+                  borderBottomColor: '#palevioletred',
+                  textAlign: "center",
+                  color: `${focusedInput === "to" ? "inherit" : "gray"}`,
+                  fontWeight: `${focusedInput === "to" ? "bold" : "normal"
+                    }`,
+                }
+              },
+              value: moment(dateRange.to).format(displayDateFormat),
+              onBlur: () => { !isOpen && setFocusedInput('none') }
+            }}
+
+            onInputClick={() => { setFocusedInput("to"); setIsOpen(true) }}
+            onInputChange={(value, e) => {
+              const isTooBig = isRangeTooBig(value, "to")
+              if (isTooBig) return
+              const selectedDay = new Date(moment(value, displayDateFormat).valueOf())
+              const fromMillis = dateRange.from?.getTime() || 0
+              const selectedDayMillis = selectedDay.getTime()
+              onChange({
+                from: selectedDayMillis < fromMillis ? selectedDay : dateRange.from,
+                to: selectedDay,
+              })
+            }}
+            onChangeDelay={1000}
+            onInputError={props.onError}
+            validate={(value) => {
+              let message = ""
+              let isValid = true
+              if (!moment(value).isValid()) {
+                isValid = false
+                message = "Wrong date format"
+              }
+              if (
+                isValid &&
+                dateRange.from &&
+                isRangeTooBig(value, "to")
+              ) {
+                isValid = false
+                message = `Max allowed date range is ${props.maxRange} days`
+              }
+              return {
+                message,
+                isValid,
+              }
+            }}
+          />
+        </DateRangePickerInputsWrapper>
       </div>
       {isOpen &&
         <DateRangePickerWrapper className="calendar" style={{
           position: 'absolute',
           top: anchorRef.current?.getBoundingClientRect().bottom,
           left: anchorRef.current?.getBoundingClientRect().left,
+          width: anchorRef.current?.getBoundingClientRect().width,
           zIndex: 1,
           maxHeight: '90vh', overflow: 'auto'
         }}>
-          <IconButton onClick={handleReset}>
-            <Tooltip title="Reset" placement="right">
-              <Restore style={{ color: '#dcdcdc' }} />
-            </Tooltip>
-          </IconButton>
           <DateRangePickerContentWraper>
-            <DateRangePickerInputsWrapper>
-              <StringInput
-                strInProps={{
-                  style: { maxWidth: "150px" },
-                  inputProps: {
-                    style: {
-                      textAlign: "center",
-                      color: `${focusedInput === "to" ? "gray" : "inherit"}`,
-                      fontWeight: `${focusedInput === "to" ? "normal" : "bold"
-                        }`,
-                    },
-                  },
-                  value: moment(dateRange.from).format("YYYY-MM-DD"),
-                }}
-                onInputClick={() => setFocusedInput("from")}
-                onInputChange={(value, e) => {
-                  const isTooBig = isRangeTooBig(value, "from")
-                  if (isTooBig) return
-                  const selectedDay = new Date(moment(value).valueOf())
-                  const toMillis = dateRange.to?.getTime() || 0
-                  const selectedDayMillis = selectedDay.getTime()
-                  setDateRange((prev) => {
-                    return {
-                      from: selectedDay,
-                      to: selectedDayMillis > toMillis ? selectedDay : prev.to,
-                    }
-                  })
-                }}
-                onChangeDelay={1000}
-                onInputError={props.onError}
-                validate={(value) => {
-                  let message = ""
-                  let isValid = true
-
-                  if (!moment(value).isValid()) {
-                    isValid = false
-                    message = "Wrong date format"
-                  }
-                  if (
-                    isValid &&
-                    dateRange.to &&
-                    isRangeTooBig(value, "from")
-                  ) {
-                    isValid = false
-                    message = `Max allowed date range is ${props.maxRange} days`
-                  }
-                  return {
-                    message,
-                    isValid,
-                  }
-                }}
-              />
-              <ArrowRightAlt style={{ margin: "0px 5px" }} />
-              <StringInput
-                strInProps={{
-                  style: { maxWidth: "150px" },
-                  value: moment(dateRange.to).format("YYYY-MM-DD"),
-                  inputProps: {
-                    style: {
-                      textAlign: "center",
-                      color: `${focusedInput === "from" ? "gray" : "inherit"}`,
-                      fontWeight: `${focusedInput === "from" ? "normal" : "bold"
-                        }`,
-                    },
-                  },
-                }}
-                onInputClick={() => setFocusedInput("to")}
-                onInputChange={(value, e) => {
-                  const isTooBig = isRangeTooBig(value, "to")
-                  if (isTooBig) return
-                  const selectedDay = new Date(moment(value).valueOf())
-                  const fromMillis = dateRange.from?.getTime() || 0
-                  const selectedDayMillis = selectedDay.getTime()
-                  setDateRange((prev) => {
-                    return {
-                      from: selectedDayMillis < fromMillis ? selectedDay : prev.from,
-                      to: selectedDay,
-                    }
-                  })
-                }}
-                onChangeDelay={1000}
-                onInputError={props.onError}
-                validate={(value) => {
-                  let message = ""
-                  let isValid = true
-                  if (!moment(value).isValid()) {
-                    isValid = false
-                    message = "Wrong date format"
-                  }
-                  if (
-                    isValid &&
-                    dateRange.from &&
-                    isRangeTooBig(value, "to")
-                  ) {
-                    isValid = false
-                    message = `Max allowed date range is ${props.maxRange} days`
-                  }
-                  return {
-                    message,
-                    isValid,
-                  }
-                }}
-              />
-            </DateRangePickerInputsWrapper>
+            <IconButton style={{ alignSelf: 'flex-end' }} onClick={handleReset}>
+              <Tooltip title="Reset" placement="left">
+                <Restore style={{ color: '#dcdcdc' }} />
+              </Tooltip>
+            </IconButton>
             <DayPicker
               {...props}
               mode="range"
+              style={{ marginTop: 0 }}
               selected={dateRange}
               disabled={props.disabled === false}
               onSelect={handleDateRangeChange}
@@ -319,13 +328,16 @@ export function DateRangePicker(props: DateRangePickerProps) {
                 selected: classes.selectedDates,
               }}
               styles={{
+                button_reset: {
+                  margin: "2px 0px"
+                },
                 button: { border: "none" },
                 months: {
                   justifyContent: "center",
                 },
               }}
             />
-            <DateRangePickerConfirmButton onClick={handleConfirm}>
+            <DateRangePickerConfirmButton type="button" onClick={handleConfirm}>
               Confirm
             </DateRangePickerConfirmButton>
           </DateRangePickerContentWraper>

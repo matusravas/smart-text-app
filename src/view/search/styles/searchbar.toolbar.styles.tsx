@@ -19,10 +19,10 @@ export const MenuButtonWrapper = styled.button`
   outline: none;
   border: 0px ;
   border-radius: 10px;
-  background-color: #fafafa;
-  color: #f2f2f2;
+  background-color: #f7f7f7;
   :hover {
     cursor: pointer;
+    /* background-color: #f2f2f2; */
     filter: brightness(90%);
     /* filter: brightness(75%); */
   }

@@ -46,10 +46,11 @@ export const useSearchViewModel = () => {
                      index: source.index,
                      indexAlias: source.indexAlias,
                      searchField: source.searchField, 
-                     dateField: source.dateField } 
+                     dateField: source.dateField 
+                } 
             })
         )
-        setLastTimestamp(source.timestamp ? moment(source.timestamp * 1000).format('MMM Do YYYY, HH:mm'): 'N/A')
+        setLastTimestamp(source.timestamp ? moment(source.timestamp).format('MMM Do YYYY, HH:mm') : 'N/A')// .format('MMM Do YYYY, HH:mm'): 'N/A')
     }
 
     return {

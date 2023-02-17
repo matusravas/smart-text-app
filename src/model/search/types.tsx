@@ -21,13 +21,13 @@ export type Source = {
     indexAlias: string
     searchField?: string
     dateField?: string
-    timestamp?: number 
+    timestamp?: Date 
 }
 
 export type DateRange = {
     // field?: string,
-    from: number | null
-    to: number | null
+    from: Date | undefined
+    to?: Date
 }
 
 export const SearchPaginationDefault = {
@@ -42,8 +42,8 @@ export const SearchDataDefault = {
     , source: {index: '', indexAlias: ''}
     , isKeywords: false
     , pagination: SearchPaginationDefault
-    , dateRange: { from: null, to: null }
-    , lastTimestamp: null
+    , dateRange: { from: undefined, to: undefined }
+    // , lastTimestamp: null
 }
 
 export type Pagination = {
@@ -74,7 +74,7 @@ export type SourceOptionRaw = {
 export type SourceOption = {
     index: string
     indexAlias: string
-    timestamp: number
+    timestamp: Date
 }
 
 export type Data = Record<string, string | number>

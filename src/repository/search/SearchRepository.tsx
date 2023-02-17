@@ -16,7 +16,6 @@ export default class SearchRepository implements ISearchRepository {
     async search(searchData: SearchData) {
         //! Todo catch potenial errors
         const responseRaw = await this.api.search(searchData)
-        // console.log(responseRaw.data)
         const paginationRaw = responseRaw.data.pagination
         const response: SearchResponse = {
             ...responseRaw.data,
@@ -25,7 +24,7 @@ export default class SearchRepository implements ISearchRepository {
                 indexAlias: responseRaw.data.source.alias,
                 searchField: responseRaw.data.source.search_field,
                 dateField: responseRaw.data.source.date_field,
-                timestamp: responseRaw.data.source.timestamp
+                timestamp:  responseRaw.data.source.timestamp ? new Date(responseRaw.data.source.timestamp*1000) : undefined
             },
             pagination: {
                 pageSize: paginationRaw.page_size,
@@ -36,11 +35,13 @@ export default class SearchRepository implements ISearchRepository {
         }
         return response
     }
+    
     async searchExport(searchData: SearchData) {
         //! Todo catch potenial errors
         const result = await this.api.searchExport(searchData)
         return result
     }
+
     async sourcesWithTimestamps() {
         //! Todo catch potenial errors
         const responseRaw = await this.api.sourcesWithTimestamps()
@@ -49,7 +50,7 @@ export default class SearchRepository implements ISearchRepository {
             const source = {
                 index: it.index, 
                 indexAlias: it.index_alias,
-                timestamp: it.timestamp
+                timestamp: new Date(it.timestamp*1000)
             }
             return source
         })

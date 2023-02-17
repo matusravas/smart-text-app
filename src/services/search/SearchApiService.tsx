@@ -16,7 +16,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
         const sourceQueryString = `source=${source.index}`
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
         const keywordQueryString = `use-keywords=${isKeywords}`
-        const dateQueryString = `date-from=${date.from}&date-to=${date.to}${source.dateField ? `&date-field=${source.dateField}` : ''}`
+        const dateQueryString = `date-from=${date.from?.getTime()}&date-to=${date.to?.getTime()}${source.dateField ? `&date-field=${source.dateField}` : ''}`
         const paginationQueryString = `page=${pagination.currentPage}&pageSize=${pagination.pageSize}`
         const queryString = `${sourceQueryString}&${searchQueryString}&${dateQueryString}&${paginationQueryString}&${keywordQueryString}`
         return new Promise<Response<SearchResponseRaw>>((resolve, reject) => axios({
@@ -40,7 +40,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
         const sourceQueryString = `source=${source.index}`
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
         const keywordQueryString = `use-keywords=${isKeywords}`
-        const dateQueryString = `date-from=${date.from}&date-to=${date.to}${source.dateField ? `&date-field=${source.dateField}` : ''}`
+        const dateQueryString = `date-from=${date.from?.getTime()}&date-to=${date.to?.getTime()}${source.dateField ? `&date-field=${source.dateField}` : ''}`
         const queryString = `${sourceQueryString}&${searchQueryString}&${dateQueryString}&${keywordQueryString}`
         return new Promise<boolean>((resolve, reject) => axios({
             method: 'GET',

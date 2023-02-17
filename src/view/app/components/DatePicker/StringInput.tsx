@@ -1,9 +1,8 @@
-import { IconButton, TextField, TextFieldProps } from "@material-ui/core";
+import { IconButton, TextFieldProps } from "@material-ui/core";
 import { DeleteOutlineOutlined } from "@material-ui/icons";
 import { MouseEventHandler, useEffect, useRef, useState } from "react";
-// import palette from "../../theme/palette";
-// import PopUp from "../popUps/PopUp";
-// import PDSButton from "../buttons/PDSButton";
+import { StyledTextField } from "./styles/StringInput.style";
+
 
 type StrProps = {
   [K in keyof TextFieldProps]: TextFieldProps[K]
@@ -19,19 +18,16 @@ type StringInputProps = {
   defaultIcon?: (value: string) => JSX.Element;
   validate?: (value: string) => { message: string, isValid: boolean };
   anchorRef?: React.Ref<HTMLDivElement>;
-  validate_onBlur?: boolean;
+  validateOnBlur?: boolean;
   forceValidate?: boolean;
-  popupClose_Delay?: number;
+  popupCloseDelay?: number;
   id?: string;
-
 };
-
-
 
 function StringInput({
   strInProps, anchorRef, defaultIcon, typeOfInput,
-  validate, validate_onBlur, forceValidate, onInputError,
-  onInputChange, onChangeDelay, onInputClick, popupClose_Delay
+  validate, validateOnBlur, forceValidate, onInputError,
+  onInputChange, onChangeDelay, onInputClick, popupCloseDelay
 }: StringInputProps) {
   const [value, setValue] = useState<string>(() => {
     if (typeof strInProps.value !== 'undefined') return strInProps.value as string
@@ -75,7 +71,7 @@ function StringInput({
   useEffect(() => {
     if (
       !componentDidMount.current ||
-      validate_onBlur === false
+      validateOnBlur === false
     ) return
 
     validatorFn(typeof strInProps.value !== "undefined" ? strInProps.value as string : value)
@@ -156,9 +152,8 @@ function StringInput({
 
   const mainStringInput = (stringValue: string) => {
     return (
-      <TextField
+      <StyledTextField
         {...strInProps}
-        className={"stringFilter"}
         ref={anchorRef}
         autoFocus={autoFocus}
         onBlurCapture={(e) => {
@@ -187,50 +182,6 @@ function StringInput({
     );
   };
   return mainStringInput(value)
-  // return type.current === "classic" ? (
-  //   mainStringInput(value)
-  // ) : (
-  //   <PopUp
-  //     staticComponent={({ open, anchorRef }) => {
-  //       // console.log(value)
-  //       return (
-  //         <StringInput
-  //           strInProps={{
-  //             ...strInProps,
-  //             onClick: open,
-  //             error: errorObj.error,
-  //             value: value
-  //           }}
-  //           onInputChange={(newValue, event) => {
-  //             setValue(newValue)
-  //             if (validate && validate(newValue).isValid) onInputChange && onInputChange(newValue, event, strInProps.id)
-  //             if (newValue !== value) onInputChange && onInputChange(newValue, event, strInProps.id)
-  //           }}
-  //           defaultIcon={defaultIcon}
-  //           validate={validate}
-  //           anchorRef={anchorRef}
-  //           validate_onBlur={validate_onBlur}
-  //         />
-  //       );
-  //     }}
-  //     popUpComponent={({ close }) => {
-  //       return (
-  //         <div
-  //           style={{ display: "flex", flexDirection: "column", padding: "5px" }}
-  //         >
-  //           <div style={{ margin: "5px" }}>{mainStringInput(value)}</div>
-  //           <button
-  //             title="Okey"
-  //             //   backgroundColor={"black"}
-  //             color="white"
-  //             onClick={close}
-  //           />
-  //         </div>
-  //       );
-  //     }}
-  //     delayOnMouseLeave={popupClose_Delay ? popupClose_Delay : 500}
-  //   />
-  // );
 }
 
 export default StringInput;

@@ -63,7 +63,7 @@ export const MenuButton = <T,>({ options, onSelected, ...props }: MenuButtonProp
     };
     return (
         <div>
-            <MenuButtonWrapper aria-controls={`${title}-menu`} aria-haspopup="true" style={{color: '#303030', background: '#f2f2f2'}} onClick={handleClick}>
+            <MenuButtonWrapper aria-controls={`${title}-menu`} aria-haspopup="true" style={{color: '#303030'}} onClick={handleClick}>
                 <span style={{fontWeight: 'bolder'}}> {props.value}</span>
             </MenuButtonWrapper>
             <Menu

@@ -30,27 +30,28 @@ function SearchbarForm(props: SearchbarFormProps) {
             <SearchToolbar>
                 {/* <SearchToolbarInputs> */}
 
-                    {/* <SelectButton
+                {/* <SelectButton
                         label="Source"
                         titleItem
                         options={selectSourceOptions}
                         value={searchData.source.index} onSelected={handleSourceChange} /> */}
-                    
-                    <MenuButton 
-                        titleItem
-                        title="Source"
-                        value={searchData.source.indexAlias} 
-                        options={selectSourceOptions} 
-                        onSelected={handleSourceChange}/>
 
-                    <DateRangePicker
-                        // title="Select date range"
-                        // id="date"
-                        selectedDateRange={searchData.dateRange}
-                        onChange={handleDateChange}
-                    />
+                <MenuButton
+                    titleItem
+                    title="Source"
+                    value={searchData.source.indexAlias}
+                    options={selectSourceOptions}
+                    onSelected={handleSourceChange} />
 
-                    {/* <SelectButton
+                <DateRangePicker
+                    selectedDateRange={searchData.dateRange}
+                    onChange={handleDateChange}
+                    onSubmit={(e, dateRange) => {
+                        handleSubmit(e)
+                    }}
+                />
+
+                {/* <SelectButton
                         disabled={operatorDisabled} titleItem
                         label="Operator" options={selectOperatorOptions}
                         value={searchData.search.operator} onSelected={handleSearchOperatorChange} /> */}
