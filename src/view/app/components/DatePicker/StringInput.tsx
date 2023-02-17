@@ -155,6 +155,7 @@ function StringInput({
       <StyledTextField
         {...strInProps}
         ref={anchorRef}
+        spellCheck={false}
         autoFocus={autoFocus}
         onBlurCapture={(e) => {
           setForceRender((prev) => !prev);

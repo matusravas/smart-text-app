@@ -36,6 +36,8 @@ export type DateRangeFocusedInput = "from" | "to" | "none"
 
 
 export function DateRangePicker(props: DateRangePickerProps) {
+  const fromPlaceholder = 'Date from'
+  const toPlaceholder = 'Date to'
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false);
   const [displayDateFormat, setDisplayDateFormat] = useState(()=>{
@@ -78,6 +80,29 @@ export function DateRangePicker(props: DateRangePickerProps) {
       setFocusedInput('none')
     }
   };
+
+  function validateStringInput(value: string, datePart: 'from'|'to') {
+    // i(value) => {
+      let message = ""
+      let isValid = true
+      if (![fromPlaceholder, toPlaceholder].includes(value) && !moment(value).isValid()) {
+        isValid = false
+        message = "Wrong date format"
+      }
+      if (
+        isValid &&
+        dateRange[datePart] &&
+        isRangeTooBig(value, datePart)
+      ) {
+        isValid = false
+        message = `Max allowed date range is ${props.maxRange} days`
+      }
+      return {
+        message,
+        isValid,
+      }
+    // }
+  }
 
   const handleDateRangeChange = useCallback(
     (
@@ -204,7 +229,11 @@ export function DateRangePicker(props: DateRangePickerProps) {
                     }`,
                 },
               },
-              value: moment(dateRange.from).format(displayDateFormat),
+              value: dateRange.from 
+                ? moment(dateRange.from).format(displayDateFormat) 
+                : focusedInput === 'from' 
+                ? moment().format(displayDateFormat) 
+                : fromPlaceholder,
               onBlur: () => { !isOpen && setFocusedInput('none') }
             }}
             onInputClick={() => { setFocusedInput("from"); setIsOpen(true) }}
@@ -221,27 +250,28 @@ export function DateRangePicker(props: DateRangePickerProps) {
             }}
             onChangeDelay={1000}
             onInputError={props.onError}
-            validate={(value) => {
-              let message = ""
-              let isValid = true
+            validate={(value) => validateStringInput(value, 'to')}
+            // validate={(value) => {
+            //   let message = ""
+            //   let isValid = true
 
-              if (!moment(value).isValid()) {
-                isValid = false
-                message = "Wrong date format"
-              }
-              if (
-                isValid &&
-                dateRange.to &&
-                isRangeTooBig(value, "from")
-              ) {
-                isValid = false
-                message = `Max allowed date range is ${props.maxRange} days`
-              }
-              return {
-                message,
-                isValid,
-              }
-            }}
+            //   if (!moment(value).isValid()) {
+            //     isValid = false
+            //     message = "Wrong date format"
+            //   }
+            //   if (
+            //     isValid &&
+            //     dateRange.to &&
+            //     isRangeTooBig(value, "from")
+            //   ) {
+            //     isValid = false
+            //     message = `Max allowed date range is ${props.maxRange} days`
+            //   }
+            //   return {
+            //     message,
+            //     isValid,
+            //   }
+            // }}
           />
           <ArrowRightAlt style={{ margin: "0px 5px", color: '#808084' }} />
           <StringInput
@@ -259,7 +289,11 @@ export function DateRangePicker(props: DateRangePickerProps) {
                     }`,
                 }
               },
-              value: moment(dateRange.to).format(displayDateFormat),
+              value: dateRange.to
+                ? moment(dateRange.to).format(displayDateFormat) 
+                : focusedInput === 'to' 
+                ? moment().format(displayDateFormat) 
+                : toPlaceholder,
               onBlur: () => { !isOpen && setFocusedInput('none') }
             }}
 
@@ -277,26 +311,7 @@ export function DateRangePicker(props: DateRangePickerProps) {
             }}
             onChangeDelay={1000}
             onInputError={props.onError}
-            validate={(value) => {
-              let message = ""
-              let isValid = true
-              if (!moment(value).isValid()) {
-                isValid = false
-                message = "Wrong date format"
-              }
-              if (
-                isValid &&
-                dateRange.from &&
-                isRangeTooBig(value, "to")
-              ) {
-                isValid = false
-                message = `Max allowed date range is ${props.maxRange} days`
-              }
-              return {
-                message,
-                isValid,
-              }
-            }}
+            validate={(value) => validateStringInput(value, 'to')}
           />
         </DateRangePickerInputsWrapper>
       </div>
