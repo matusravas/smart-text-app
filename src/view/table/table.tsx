@@ -3,7 +3,7 @@ import { FileCopy } from "@material-ui/icons";
 import MaterialTable, { MTableBody, MTableBodyRow } from "material-table";
 import React from "react";
 import { TableProps } from "../../model/table/types";
-import { useTable } from "../../viewmodel/TableViewModel";
+import { useTable } from "../../viewmodel/table/TableViewModel";
 import { tableIcons } from "./styles/icons";
 import { TableLastTimestamp, TableTopbar, TableWrapper } from "./styles/table.styles";
 

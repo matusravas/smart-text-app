@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-import { drawerConfig } from '../../hooks/commons/router';
+import { drawerConfig } from '../../router/router';
 import Sidebar from './components/Sidebar';
 
 const Wrapper = styled.div`

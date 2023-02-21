@@ -1,7 +1,7 @@
 import { List, ListItem, ListItemIcon } from '@material-ui/core';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DrawerItem } from '../../../hooks/commons/router';
+import { DrawerItem } from '../../../router/router';
 import { SidebarWrapper } from './styles/sidebar.styles';
 
 

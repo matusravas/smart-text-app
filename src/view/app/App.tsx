@@ -1,5 +1,5 @@
-import { BrowserRouter, RouterProvider, useRoutes } from 'react-router-dom';
-import { routesConfig, browserRouter } from '../../hooks/commons/router';
+import { RouterProvider, useRoutes } from 'react-router-dom';
+import { browserRouter, routesConfig } from '../../router/router';
 
 export const CustomRouter = () => {
   const routes = useRoutes(routesConfig)

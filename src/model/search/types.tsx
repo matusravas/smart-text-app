@@ -2,7 +2,7 @@ export type SearchData = {
     search: Search
     dateRange: DateRange
     source: Source
-    isKeywords: boolean
+    hasKeywords: boolean
     pagination: Pagination,
     // lastTimestamp: number | null //! Todo put it elsewhere
 }
@@ -12,7 +12,7 @@ export type Operator = 'OR' | 'AND'
 export type Search = {
     phrase: string
     // field?: string
-    // isKeywords: boolean
+    // hasKeywords: boolean
     operator: Operator
 }
 
@@ -30,18 +30,12 @@ export type DateRange = {
     to?: Date
 }
 
-export const SearchPaginationDefault = {
-    currentPage: 0,
-    pageSize: 10,
-}
-
-
 export const SearchDataDefault = {
     search: { phrase: '', operator: 'OR' as Operator }
     // search: { phrase: '', operator: 'OR' as Operator, field: 'Kr_text' }
     , source: {index: '', indexAlias: ''}
-    , isKeywords: false
-    , pagination: SearchPaginationDefault
+    , hasKeywords: false
+    , pagination: {currentPage: 0, pageSize: 10}
     , dateRange: { from: undefined, to: undefined }
     // , lastTimestamp: null
 }
@@ -51,24 +45,10 @@ export type Pagination = {
     pageSize: number,
 }
 
-export type PaginationRaw = {
-    current_page: number,
-    page_size: number,
-    total_hits: number,
-    total_pages: number
-}
-
 export type Column = {
     field: string
     title: string
     type: 'string' | 'numeric' | 'date' | 'boolean'
-}
-
-
-export type SourceOptionRaw = {
-    index: string,
-    index_alias: string,
-    timestamp: number
 }
 
 export type SourceOption = {

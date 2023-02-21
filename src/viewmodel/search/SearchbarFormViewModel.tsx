@@ -1,14 +1,14 @@
 import { useState, useEffect, FormEvent } from "react"
-import { DateRange, Operator, SearchDataDefault } from "../model/search/types"
-import { SearchbarFormProps } from "../view/search/components/SearchbarForm"
+import { DateRange, Operator, SearchDataDefault } from "../../model/search/types"
+import { SearchbarFormProps } from "../../view/search/components/SearchbarForm"
 
 
 function useSearchbarForm(props: SearchbarFormProps) {
-    const [operatorDisabled, setOperatorDisabled] = useState(props.operatorDisabled)
+    const [operatorDisabled, setOperatorDisabled] = useState(!props.searchData.hasKeywords)
     
     useEffect(() => {
-        setOperatorDisabled(props.operatorDisabled)
-    }, [props.operatorDisabled])
+        setOperatorDisabled(!props.searchData.hasKeywords)
+    }, [props.searchData.hasKeywords])
 
     const selectOperatorOptions = [
         { label: 'OR', value: 'OR' }
@@ -23,13 +23,14 @@ function useSearchbarForm(props: SearchbarFormProps) {
         props.onSubmit()
     }
 
-    function hasSearchMultiplePhrases(searchQuery: string) {
-        const queryPhrases = searchQuery.split(' ').filter(q => q.length > 2)
-        return queryPhrases.length > 1
-    }
+    // function hasSearchMultiplePhrases(searchQuery: string) {
+    //     const queryPhrases = searchQuery.split(' ').filter(q => q.length > 2)
+    //     return queryPhrases.length > 1
+    // }
 
     function handleSearchQueryChange(searchQuery: string) {
-        setOperatorDisabled(!hasSearchMultiplePhrases(searchQuery))
+        // setOperatorDisabled(!hasSearchMultiplePhrases(searchQuery))
+        setOperatorDisabled(searchQuery.split(' ').filter(q => q.length > 2).length === 1)
         props.onSearchDataChange({ search: { ...props.searchData.search, phrase: searchQuery } })
     }
 

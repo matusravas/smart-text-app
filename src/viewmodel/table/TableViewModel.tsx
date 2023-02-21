@@ -1,8 +1,8 @@
 import { Options } from "material-table";
 import { useEffect, useMemo, useState } from "react";
-import { Column, Data } from "../model/search/types";
-import { TablePagination, TablePaginationDefault, UseTableProps } from "../model/table/types";
-import SearchRepository from "../repository/search/SearchRepository";
+import { Column, Data } from "../../model/search/types";
+import { TablePagination, TablePaginationDefault, UseTableProps } from "../../model/table/types";
+import SearchRepository from "../../repository/search/SearchRepository";
 
 
 export function useTable({ searchData, onDictionary, onSource, onError, onSuccess }: UseTableProps) {
@@ -33,7 +33,7 @@ export function useTable({ searchData, onDictionary, onSource, onError, onSucces
                 onError && onError(err.message);
             });
     }, [searchData.search, searchData.dateRange,
-         searchData.pagination, searchData.isKeywords, 
+         searchData.pagination, searchData.hasKeywords, 
          searchData.source.index])
 
     function prepareColumns(columns: Column[]) {

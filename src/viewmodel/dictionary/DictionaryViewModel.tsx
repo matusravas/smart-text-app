@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { ActionType, Dictionary, Dictionary as DictionaryResult, RequestType } from '../model/dictionary/types'
-import { Status, StatusDefalt } from '../model/types'
-import DictionaryRepository from '../repository/dictionary/DictionaryRepository'
+import { ActionType, Dictionary, Dictionary as DictionaryResult, RequestType } from '../../model/dictionary/types'
+import { Status, StatusDefalt } from '../../model/types'
+import DictionaryRepository from '../../repository/dictionary/DictionaryRepository'
 
 
 export const useDictionaryViewModel = () => {

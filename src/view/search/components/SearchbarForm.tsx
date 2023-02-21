@@ -1,13 +1,14 @@
 import { SearchData, SourceOption } from "../../../model/search/types"
-import useSearchbarForm from "../../../viewmodel/SearchbarFormViewModel"
+import useSearchbarForm from "../../../viewmodel/search/SearchbarFormViewModel"
 import { DateRangePicker } from "../../app/components/DatePicker/DateRangePicker"
-import { SearchbarFormWrapper, SearchButton, SearchInput } from '../styles/searchbar.styles'
+import { SearchbarFormWrapper, SearchButton, SearchInputIconWrapper, SearchInputWrapper } from '../styles/searchbar.styles'
 import { SearchToolbar } from "../styles/searchbar.toolbar.styles"
 import { MenuButton } from "./MenuButton"
+import { SearchInput } from "./SearchInput"
 
 export interface SearchbarFormProps {
     searchData: SearchData
-    operatorDisabled: boolean
+    // operatorDisabled: boolean
     sources: SourceOption[]
     onSearchDataChange: (requestData: Partial<SearchData>) => void
     onSubmit: () => void
@@ -26,39 +27,43 @@ function SearchbarForm(props: SearchbarFormProps) {
         handleSearchOperatorChange } = useSearchbarForm(props)
     return (
         <SearchbarFormWrapper autoComplete="off" onSubmit={handleSubmit}>
-            <SearchInput value={searchData.search.phrase} onChange={(e) => handleSearchQueryChange(e.target.value)} />
-            <SearchToolbar>
-                {/* <SearchToolbarInputs> */}
-
-                {/* <SelectButton
-                        label="Source"
+            <SearchInput
+                value={searchData.search.phrase}
+                onChange={handleSearchQueryChange}
+                endAdornment={(styles) =>
+                    <MenuButton
+                        visible={operatorDisabled}
                         titleItem
+                        title="Operator"
+                        buttonStyles={{
+                            ...styles, height: '50px',
+                            minWidth: '60px', fontWeight: '300',
+                        }}
+                        value={searchData.search.operator}
+                        options={selectOperatorOptions}
+                        onSelected={handleSearchOperatorChange} />}
+
+            />
+            {props.sources.length > 0 ?
+                <SearchToolbar>
+                    <MenuButton
+                        titleItem
+                        title="Source"
+                        buttonStyles={{ minWidth: '125px', backgroundColor: '#f7f7f7' }}
+                        value={searchData.source.indexAlias}
                         options={selectSourceOptions}
-                        value={searchData.source.index} onSelected={handleSourceChange} /> */}
+                        onSelected={handleSourceChange} />
 
-                <MenuButton
-                    titleItem
-                    title="Source"
-                    value={searchData.source.indexAlias}
-                    options={selectSourceOptions}
-                    onSelected={handleSourceChange} />
+                    <DateRangePicker
+                        selectedDateRange={searchData.dateRange}
+                        onChange={handleDateChange}
+                        onSubmit={(e, dateRange) => {
+                            handleSubmit(e)
+                        }}
+                    />
 
-                <DateRangePicker
-                    selectedDateRange={searchData.dateRange}
-                    onChange={handleDateChange}
-                    onSubmit={(e, dateRange) => {
-                        handleSubmit(e)
-                    }}
-                />
-
-                {/* <SelectButton
-                        disabled={operatorDisabled} titleItem
-                        label="Operator" options={selectOperatorOptions}
-                        value={searchData.search.operator} onSelected={handleSearchOperatorChange} /> */}
-                {/* </SearchToolbarInputs> */}
-
-                <SearchButton />
-            </SearchToolbar>
+                    <SearchButton />
+                </SearchToolbar> : null}
         </SearchbarFormWrapper>
     )
 }

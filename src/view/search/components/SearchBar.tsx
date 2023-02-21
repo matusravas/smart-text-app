@@ -15,7 +15,7 @@ interface SearchbarProps {
 
 function Searchbar(props: SearchbarProps) {
     const [searchData, setSearchData] = useState(props.searchData)
-    const [synonymsPanelVisible, setSynonymsPanelVisible] = useState(props.searchData.isKeywords)
+    const [synonymsPanelVisible, setSynonymsPanelVisible] = useState(false)
 
     useEffect(() => {
         setSearchData(props.searchData)
@@ -23,10 +23,10 @@ function Searchbar(props: SearchbarProps) {
     }, [props.searchData, props.dictionaryData])
 
 
-    function toggleSynonyms(searchPhrase: string) {
-        if (props.searchData.search.phrase !== searchPhrase) setSynonymsPanelVisible(false)
-        else setSynonymsPanelVisible(true)
-    }
+    // function toggleSynonyms(searchPhrase: string) {
+    //     if (props.searchData.search.phrase !== searchPhrase) setSynonymsPanelVisible(false)
+    //     else setSynonymsPanelVisible(true)
+    // }
 
     function handleSearchDataChange(newSearchData: Partial<SearchData>) {
         if(newSearchData.source?.index && newSearchData.source.index !== searchData.source.index) {
@@ -35,7 +35,9 @@ function Searchbar(props: SearchbarProps) {
             })
         }
         else {
-            newSearchData.search?.phrase && toggleSynonyms(newSearchData.search.phrase)
+            // newSearchData.search?.phrase && toggleSynonyms(newSearchData.search.phrase)
+            if (newSearchData.search && newSearchData.search.phrase !== props.searchData.search.phrase) setSynonymsPanelVisible(false)
+            else setSynonymsPanelVisible(true)
             setSearchData(prev => ({ ...prev, ...newSearchData }))
         }
     }
@@ -43,17 +45,17 @@ function Searchbar(props: SearchbarProps) {
     function handleSubmit() {
         props.submitSearchData({
             ...searchData, pagination: {...TablePaginationDefault, pageSize: searchData.pagination.pageSize},
-            ...(searchData.search.phrase.length === 0 
-                ? {isKeywords: false}
-                : props.searchData.search.phrase !== searchData.search.phrase 
-                ? {isKeywords: true}
-                : {}
-            )
+            // ...(searchData.search.phrase.length === 0 
+            //     ? {hasKeywords: false}
+            //     : props.searchData.search.phrase !== searchData.search.phrase //&& props.searchData.hasKeywords === searchData.hasKeywords
+            //     ? {hasKeywords: true}
+            //     : {hasKeywords: searchData.hasKeywords}
+            // )
         })
     }
 
     function handleReset() {
-        props.submitSearchData({ ...SearchDataDefault, source: {index: searchData.source.index, indexAlias: searchData.source.indexAlias} })
+        props.submitSearchData({ ...SearchDataDefault, source: searchData.source })
     }
 
     return (
@@ -65,14 +67,14 @@ function Searchbar(props: SearchbarProps) {
 
             <SearchbarForm
                 searchData={searchData}
-                operatorDisabled={!searchData.isKeywords}
+                // operatorDisabled={!searchData.hasKeywords && !props.dictionaryData}
                 sources={props.sources}
                 onSearchDataChange={handleSearchDataChange}
                 onSubmit={handleSubmit} />
                 
             <SearchbarSynonyms
                 visible={synonymsPanelVisible}
-                isKeywords={searchData.isKeywords}
+                hasKeywords={searchData.hasKeywords}
                 dictionary={props.dictionaryData}
                 onSearchDataChange={handleSearchDataChange} />
 

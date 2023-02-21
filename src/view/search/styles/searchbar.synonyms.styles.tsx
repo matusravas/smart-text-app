@@ -3,9 +3,9 @@ import styled from "styled-components"
 export const SearchBarSynonymsWrapper = styled.div`
   display: flex;
   height: 55px;
-  width: 100%;
+  width: 40%;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   flex-direction: row;
   gap: 5px;
   .p {
@@ -33,11 +33,11 @@ export const SynonymParagraph = styled.p<SynonymParagraphProps>`
 `
 
 export const SwitchWrapper = styled.div`
-  display: flex;
+  /* display: flex;
   flex: 1;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-end; */
 `
 
 export const SynonymsWrapper = styled.div`

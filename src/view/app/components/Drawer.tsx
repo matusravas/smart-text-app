@@ -6,7 +6,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import { useNavigate } from 'react-router-dom';
-import { DrawerItem } from '../../../hooks/commons/router';
+import { DrawerItem } from '../../../router/router';
 
 type DrawerProps = {
   items: DrawerItem[],

@@ -2,7 +2,6 @@ import { Action, Column, DetailPanel, Filter, Icons, Localization, Options, Quer
 import { Dictionary } from "../dictionary/types";
 import { SearchData, Source } from "../search/types";
 
-type UseCases = 'bekaert'
 
 export type UseTableProps = {
     searchData: SearchData;

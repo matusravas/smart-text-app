@@ -1,11 +1,11 @@
-import styled from "styled-components"
+import styled, {css} from "styled-components"
 
 export const SearchToolbar = styled.div`
   display: flex;
-  width: 90%;
+  width: 100%;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   gap: 20px;
   background-color: #fdfdfd;
@@ -14,16 +14,16 @@ export const SearchToolbar = styled.div`
 `
 
 export const MenuButtonWrapper = styled.button`
-  min-width: 125px;
   padding: 10px;
   outline: none;
   border: 0px ;
   border-radius: 10px;
-  background-color: #f7f7f7;
+  background-color: white;
   :hover {
-    cursor: pointer;
-    /* background-color: #f2f2f2; */
-    filter: brightness(90%);
-    /* filter: brightness(75%); */
+    ${props => !props.disabled && css`
+      cursor: pointer;
+      filter: brightness(90%);
+    `
+    }
   }
 `

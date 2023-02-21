@@ -49,9 +49,9 @@ export const SearchbarFormWrapper = styled.form`
   justify-content: right;
   align-items: center;
   #searchInput, #submitButton {
-    outline: none;
+    /* outline: none; */
     /* border: 2px solid #fafafa; */
-    border-radius: 10px;
+    /* border-radius: 10px; */
   }
 `;
 
@@ -61,24 +61,41 @@ export const SearchImage = styled.img`
   }
 `
 
+export const SearchInputWrapper = styled.div`
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 70px;
+  background-color: #fdfdfd;
+  padding: 6px;
+  padding-left: 20px;
+  box-shadow: 2px 2px 10px #30303033;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid #fafafa; 
+  border-radius: 10px;
+  :hover, :focus-within {
+    border: 2px solid #004ba033 !important;
+    box-shadow: 2px 2px 10px #004ba033;
+    /* transform: scale(1.01); */
+  }
+
+`
+
+export const SearchInputIconWrapper = styled.div`
+  position: absolute;
+`
+
 export const SearchInput = styled.input.attrs({
   id: 'searchInput',
   type: 'text',
   placeholder: 'Search...'
 })`
   width: 100%;
-  height: 55px;
-  padding-left: 20px;
+  height: 100%;
   font-size: 20px;
-  background-color: #fdfdfd;
-  box-shadow: 2px 2px 10px #30303033;
-  transition: all 0.2s ease-in-out;
-  border: 2px solid #fafafa; 
-  :hover, :focus {
-    border: 2px solid #004ba033 !important;
-    box-shadow: 0 0 15px 1px #004ba033;
-    transform: scale(1.01);
-  }
+  outline: none;
+  padding: 0px;
+  border: 0px;
   ::placeholder {
     color: rgba(0,0,0,0.54)
   }
@@ -89,7 +106,7 @@ export const SearchButton = styled.input.attrs({
   type: 'submit',
   value: 'Search'
 })`
-  @keyframes pulse {
+  /* @keyframes pulse {
     0% {
      transform: scale(1, 1);
     }
@@ -101,7 +118,7 @@ export const SearchButton = styled.input.attrs({
     100% {
     transform: scale(1, 1);
     }
-  };
+  }; */
   width: 30%;
   height: 50px;
   background-color: #303030;
@@ -111,9 +128,11 @@ export const SearchButton = styled.input.attrs({
   border: none !important;
   transition: all 0.3s ease-in-out;
   box-shadow: 2px 2px 10px #30303033;
+  outline: none;
+  border-radius: 10px;
   :hover {
     cursor: pointer;
-    border: none !important;
-    animation: pulse 0.5s linear 2;
+    transform: scale(1.01)
+    /* animation: pulse 0.5s linear 2; */
   };
 `;

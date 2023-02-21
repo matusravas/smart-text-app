@@ -1,8 +1,8 @@
 import moment from 'moment'
 import { useEffect, useState } from 'react'
-import { Dictionary } from '../model/dictionary/types'
-import { SourceOption, SearchData, SearchDataDefault, Source } from '../model/search/types'
-import SearchRepository from '../repository/search/SearchRepository'
+import { Dictionary } from '../../model/dictionary/types'
+import { SourceOption, SearchData, SearchDataDefault, Source } from '../../model/search/types'
+import SearchRepository from '../../repository/search/SearchRepository'
 
 
 export const useSearchViewModel = () => {
