@@ -1,5 +1,5 @@
-import { useState, useEffect, FormEvent, useCallback } from "react"
-import { DateRange, Operator, SearchDataDefault, Source } from "../../model/search/types"
+import { FormEvent, useCallback, useEffect, useState } from "react"
+import { DateRange, Operator, SearchDataDefault } from "../../model/search/types"
 import { SearchbarFormProps } from "../../view/search/components/SearchbarForm"
 
 export type FormChangeData = {
@@ -42,29 +42,6 @@ function useSearchbarForm(props: SearchbarFormProps) {
         props.onSubmit(formData)
     }
 
-    // function checkIfOperatorVisible(searchQuery: string | null) {
-    //     // console.log(searchQuery)
-    //     // console.log(props.searchData.search.phrase)
-    //     // console.log(props.dictionary)
-    //     // console.log(props.searchData.hasKeywords)
-    //     return (!searchQuery && props.dictionary && props.searchData.keywords)
-    //         || (searchQuery && searchQuery.split(' ').filter(q => q.length > 2).length > 1)
-    //         ? true : false
-    // }
-
-    // function hasSearchMultiplePhrases(searchQuery: string) {
-    //     const queryPhrases = searchQuery.split(' ').filter(q => q.length > 2)
-    //     return queryPhrases.length > 1
-    // }
-
-    // function handleSearchQueryChange(searchQuery: string) {
-    //     // setOperatorDisabled(!hasSearchMultiplePhrases(searchQuery))
-    //     setOperatorVisible(searchQuery.split(' ').filter(q => q.length > 2).length > 1)
-    //     // searchQuery !==props.onSynonyms()
-    //     // setOperatorVisible(checkIfOperatorVisible(searchQuery))
-    //     setFormData({...formData, search: { ...props.searchData.search, phrase: searchQuery } })
-    // }
-
     const handleFormDataChange = useCallback((it: FormChangeData) => {
         it.dateRange && setFormData({ ...formData, dateRange: it.dateRange })
         it.index && setFormData({ ...SearchDataDefault, source: { index: it.index, indexAlias: '' } })
@@ -88,52 +65,15 @@ function useSearchbarForm(props: SearchbarFormProps) {
             )
             setFormData({ ...formData, keywords, search: { ...props.searchData.search, phrase: it.phrase } })
         }
-    }, [formData, props.searchData, props.keywords])
-
-    // function handleSearchDataChange(newSearchData: Partial<SearchData>) {
-    //     if(newSearchData.source?.index && newSearchData.source.index !== searchData.source.index) {
-    //         props.submitSearchData({
-    //             ...SearchDataDefault, ...newSearchData
-    //         })
-    //     }
-    //     else {
-    //         // newSearchData.search?.phrase && toggleSynonyms(newSearchData.search.phrase)
-    //         if (newSearchData.search && newSearchData.search.phrase !== props.searchData.search.phrase) setSynonymsPanelVisible(false)
-    //         else setSynonymsPanelVisible(true)
-    //         setSearchData(prev => ({ ...prev, ...newSearchData }))
-    //     }
-    // }
-
-    // function allowSubmit() {
-    //     if (search.phrase.toLocaleLowerCase() !== query.trim().toLowerCase() ||
-    //         search.operator !== operator || useKeywords !== dictionaryData?.useKeywords ||
-    //         date.from !== dateRange.from || date.to !== dateRange.to) return true
-    //     return false
-    // }
-
-    // function handleSearchOperatorChange(value: Operator) {
-    //     props.onSearchDataChange({ search: { ...props.searchData.search, operator: value } })
-    // }
-
-    // function handleSourceChange(value: string) {
-    //     props.onSearchDataChange({ ...SearchDataDefault, source: { index: value, indexAlias: props.searchData.source.indexAlias } })
-    // }
-
-    // function handleDateChange(dateRange: DateRange) {
-    //     props.onSearchDataChange({ dateRange: dateRange })
-    // }
+    }, [formData, props.searchData.search, props.keywords])
 
     return {
         searchData: formData,
         operatorVisible,
         selectSourceOptions,
         selectOperatorOptions,
-        // handleSearchQueryChange,
         handleFormDataChange,
         handleSubmit
-        // handleSourceChange,
-        // handleSearchOperatorChange,
-        // handleDateChange
     }
 }
 

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { Dictionary } from "../../../model/dictionary/types"
-import { SourceOption, SearchData, SearchDataDefault } from "../../../model/search/types"
-import { TablePaginationDefault } from "../../../model/table/types"
+import { SearchData, SearchDataDefault, SourceOption } from "../../../model/search/types"
 import { SearchbarWrapper, SearchImage } from '../styles/searchbar.styles'
 import SearchbarForm from "./SearchbarForm"
 import SearchbarSynonyms from "./SearchbarSynonyms"
@@ -14,7 +13,6 @@ interface SearchbarProps {
 }
 
 function Searchbar(props: SearchbarProps) {
-    // const [searchData, setSearchData] = useState(props.searchData)
     const [keywords, setKeywords] = useState(props.searchData.keywords)
     const [synonymsVisible, setSynonymsVisible] = useState(false)
 
@@ -22,51 +20,18 @@ function Searchbar(props: SearchbarProps) {
         setKeywords(props.searchData.keywords)
     }, [props.searchData.keywords])
 
-
-    // function toggleSynonyms(searchPhrase: string) {
-    //     if (props.searchData.search.phrase !== searchPhrase) setSynonymsPanelVisible(false)
-    //     else setSynonymsPanelVisible(true)
-    // }
-
     function handleKeywordsChange(value: boolean) {
-        // setSearchData(prev => ({ ...prev, hasKeywords: value }))
         setKeywords(value)
     }
 
-    function handleSynonymsPanel(visible: boolean) {
+    function handleSynonymsChange(visible: boolean) {
         setSynonymsVisible(visible)
     }
-
-    // function handleSearchDataChange(newSearchData: Partial<SearchData>) {
-    //     if(newSearchData.source?.index && newSearchData.source.index !== searchData.source.index) {
-    //         props.submitSearchData({
-    //             ...SearchDataDefault, ...newSearchData
-    //         })
-    //     }
-    //     else {
-    //         // newSearchData.search?.phrase && toggleSynonyms(newSearchData.search.phrase)
-    //         if (newSearchData.search && newSearchData.search.phrase !== props.searchData.search.phrase) setSynonymsPanelVisible(false)
-    //         else setSynonymsPanelVisible(true)
-    //         setSearchData(prev => ({ ...prev, ...newSearchData }))
-    //     }
-    // }
-
-    // function handleSubmit() {
-    //     props.submitSearchData({
-    //         ...searchData, pagination: {...TablePaginationDefault, pageSize: searchData.pagination.pageSize},
-    //         ...(searchData.search.phrase.length === 0 
-    //             ? {hasKeywords: false}
-    //             : props.searchData.search.phrase !== searchData.search.phrase //&& props.searchData.hasKeywords === searchData.hasKeywords
-    //             ? {hasKeywords: true}
-    //             : {hasKeywords: searchData.hasKeywords}
-    //         )
-    //     })
-    // }
 
     function handleReset() {
         props.submitSearchData({ ...SearchDataDefault, source: props.searchData.source })
     }
-
+    
     return (
         <SearchbarWrapper>
             <SearchImage
@@ -78,10 +43,8 @@ function Searchbar(props: SearchbarProps) {
                 searchData={props.searchData}
                 keywords={keywords}
                 dictionary={props.dictionaryData}
-                // operatorDisabled={!searchData.hasKeywords && !props.dictionaryData}
                 sources={props.sources}
-                // onSearchDataChange={handleSearchDataChange}
-                onSynonyms={handleSynonymsPanel}
+                onSynonyms={handleSynonymsChange}
                 onSubmit={props.submitSearchData} />
                 
             <SearchbarSynonyms
