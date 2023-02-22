@@ -7,9 +7,9 @@ export interface MenuButtonOption {
     value: string,
 }
 
-type MenuButtonProps<T> = {
+type MenuButtonProps = {
     options: MenuButtonOption[]
-    onSelected: (value: T) => void
+    onSelected: (value: string) => void
     title?: string
     value?: string
     disabled?: boolean
@@ -20,7 +20,7 @@ type MenuButtonProps<T> = {
 }
 
 
-export const MenuButton = <T,>({ options, onSelected, ...props }: MenuButtonProps<T>) => {
+export const MenuButton = ({ options, onSelected, ...props }: MenuButtonProps) => {
     const title = props.title ? props.title.toString().toLowerCase() : 'item'
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -35,13 +35,13 @@ export const MenuButton = <T,>({ options, onSelected, ...props }: MenuButtonProp
 
     const handleMenuItemClick = (value: MenuButtonOption) => {
         setAnchorEl(null);
-        onSelected(value.value as T)
+        onSelected(value.value)
     };
     return (
         <>
             <MenuButtonWrapper 
                 disabled={props.disabled} 
-                style={{...props.buttonStyles, ...(props.visible && {display: 'none'})}}
+                style={{...props.buttonStyles, ...(props.visible === false && {display: 'none'})}}
                 aria-controls={`${title}-menu`} 
                 aria-haspopup="true" 
                 onClick={handleClick}

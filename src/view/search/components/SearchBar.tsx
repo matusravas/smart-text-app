@@ -10,17 +10,17 @@ interface SearchbarProps {
     searchData: SearchData
     sources: SourceOption[]
     dictionaryData: Dictionary | null
-    submitSearchData: (requestData: Partial<SearchData>) => void
+    submitSearchData: (requestData: SearchData) => void
 }
 
 function Searchbar(props: SearchbarProps) {
-    const [searchData, setSearchData] = useState(props.searchData)
-    const [synonymsPanelVisible, setSynonymsPanelVisible] = useState(false)
+    // const [searchData, setSearchData] = useState(props.searchData)
+    const [keywords, setKeywords] = useState(props.searchData.keywords)
+    const [synonymsVisible, setSynonymsVisible] = useState(false)
 
     useEffect(() => {
-        setSearchData(props.searchData)
-        props.dictionaryData && setSynonymsPanelVisible(true)
-    }, [props.searchData, props.dictionaryData])
+        setKeywords(props.searchData.keywords)
+    }, [props.searchData.keywords])
 
 
     // function toggleSynonyms(searchPhrase: string) {
@@ -28,34 +28,43 @@ function Searchbar(props: SearchbarProps) {
     //     else setSynonymsPanelVisible(true)
     // }
 
-    function handleSearchDataChange(newSearchData: Partial<SearchData>) {
-        if(newSearchData.source?.index && newSearchData.source.index !== searchData.source.index) {
-            props.submitSearchData({
-                ...SearchDataDefault, ...newSearchData
-            })
-        }
-        else {
-            // newSearchData.search?.phrase && toggleSynonyms(newSearchData.search.phrase)
-            if (newSearchData.search && newSearchData.search.phrase !== props.searchData.search.phrase) setSynonymsPanelVisible(false)
-            else setSynonymsPanelVisible(true)
-            setSearchData(prev => ({ ...prev, ...newSearchData }))
-        }
+    function handleKeywordsChange(value: boolean) {
+        // setSearchData(prev => ({ ...prev, hasKeywords: value }))
+        setKeywords(value)
     }
 
-    function handleSubmit() {
-        props.submitSearchData({
-            ...searchData, pagination: {...TablePaginationDefault, pageSize: searchData.pagination.pageSize},
-            // ...(searchData.search.phrase.length === 0 
-            //     ? {hasKeywords: false}
-            //     : props.searchData.search.phrase !== searchData.search.phrase //&& props.searchData.hasKeywords === searchData.hasKeywords
-            //     ? {hasKeywords: true}
-            //     : {hasKeywords: searchData.hasKeywords}
-            // )
-        })
+    function handleSynonymsPanel(visible: boolean) {
+        setSynonymsVisible(visible)
     }
+
+    // function handleSearchDataChange(newSearchData: Partial<SearchData>) {
+    //     if(newSearchData.source?.index && newSearchData.source.index !== searchData.source.index) {
+    //         props.submitSearchData({
+    //             ...SearchDataDefault, ...newSearchData
+    //         })
+    //     }
+    //     else {
+    //         // newSearchData.search?.phrase && toggleSynonyms(newSearchData.search.phrase)
+    //         if (newSearchData.search && newSearchData.search.phrase !== props.searchData.search.phrase) setSynonymsPanelVisible(false)
+    //         else setSynonymsPanelVisible(true)
+    //         setSearchData(prev => ({ ...prev, ...newSearchData }))
+    //     }
+    // }
+
+    // function handleSubmit() {
+    //     props.submitSearchData({
+    //         ...searchData, pagination: {...TablePaginationDefault, pageSize: searchData.pagination.pageSize},
+    //         ...(searchData.search.phrase.length === 0 
+    //             ? {hasKeywords: false}
+    //             : props.searchData.search.phrase !== searchData.search.phrase //&& props.searchData.hasKeywords === searchData.hasKeywords
+    //             ? {hasKeywords: true}
+    //             : {hasKeywords: searchData.hasKeywords}
+    //         )
+    //     })
+    // }
 
     function handleReset() {
-        props.submitSearchData({ ...SearchDataDefault, source: searchData.source })
+        props.submitSearchData({ ...SearchDataDefault, source: props.searchData.source })
     }
 
     return (
@@ -66,17 +75,20 @@ function Searchbar(props: SearchbarProps) {
                 src='/img/bekaert-logo.svg' alt='PDS' />
 
             <SearchbarForm
-                searchData={searchData}
+                searchData={props.searchData}
+                keywords={keywords}
+                dictionary={props.dictionaryData}
                 // operatorDisabled={!searchData.hasKeywords && !props.dictionaryData}
                 sources={props.sources}
-                onSearchDataChange={handleSearchDataChange}
-                onSubmit={handleSubmit} />
+                // onSearchDataChange={handleSearchDataChange}
+                onSynonyms={handleSynonymsPanel}
+                onSubmit={props.submitSearchData} />
                 
             <SearchbarSynonyms
-                visible={synonymsPanelVisible}
-                hasKeywords={searchData.hasKeywords}
+                visible={synonymsVisible}
+                keywords={keywords}
                 dictionary={props.dictionaryData}
-                onSearchDataChange={handleSearchDataChange} />
+                onKeywordsChange={handleKeywordsChange} />
 
         </SearchbarWrapper>
     )

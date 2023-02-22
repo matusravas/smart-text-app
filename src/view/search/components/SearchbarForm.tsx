@@ -1,38 +1,38 @@
-import { SearchData, SourceOption } from "../../../model/search/types"
+import { Dictionary } from "../../../model/dictionary/types"
+import { Operator, SearchData, SourceOption } from "../../../model/search/types"
 import useSearchbarForm from "../../../viewmodel/search/SearchbarFormViewModel"
 import { DateRangePicker } from "../../app/components/DatePicker/DateRangePicker"
-import { SearchbarFormWrapper, SearchButton, SearchInputIconWrapper, SearchInputWrapper } from '../styles/searchbar.styles'
+import { SearchbarFormWrapper, SearchButton } from '../styles/searchbar.styles'
 import { SearchToolbar } from "../styles/searchbar.toolbar.styles"
 import { MenuButton } from "./MenuButton"
 import { SearchInput } from "./SearchInput"
 
 export interface SearchbarFormProps {
     searchData: SearchData
-    // operatorDisabled: boolean
+    dictionary: Dictionary | null
+    keywords: boolean
     sources: SourceOption[]
-    onSearchDataChange: (requestData: Partial<SearchData>) => void
-    onSubmit: () => void
+    onSynonyms: (value: boolean) => void
+    onSubmit: (searchData: SearchData) => void
 }
 
 function SearchbarForm(props: SearchbarFormProps) {
     const {
         searchData,
-        operatorDisabled,
+        operatorVisible,
         selectSourceOptions,
         selectOperatorOptions,
-        handleSubmit,
-        handleSearchQueryChange,
-        handleDateChange,
-        handleSourceChange,
-        handleSearchOperatorChange } = useSearchbarForm(props)
+        handleFormDataChange,
+        handleSubmit
+    } = useSearchbarForm(props)
     return (
         <SearchbarFormWrapper autoComplete="off" onSubmit={handleSubmit}>
             <SearchInput
                 value={searchData.search.phrase}
-                onChange={handleSearchQueryChange}
+                onChange={handleFormDataChange}
                 endAdornment={(styles) =>
                     <MenuButton
-                        visible={operatorDisabled}
+                        visible={operatorVisible}
                         titleItem
                         title="Operator"
                         buttonStyles={{
@@ -41,8 +41,8 @@ function SearchbarForm(props: SearchbarFormProps) {
                         }}
                         value={searchData.search.operator}
                         options={selectOperatorOptions}
-                        onSelected={handleSearchOperatorChange} />}
-
+                        onSelected={(it) => handleFormDataChange({operator: it as Operator})} 
+                    />}
             />
             {props.sources.length > 0 ?
                 <SearchToolbar>
@@ -52,11 +52,12 @@ function SearchbarForm(props: SearchbarFormProps) {
                         buttonStyles={{ minWidth: '125px', backgroundColor: '#f7f7f7' }}
                         value={searchData.source.indexAlias}
                         options={selectSourceOptions}
-                        onSelected={handleSourceChange} />
+                        onSelected={(it) => handleFormDataChange({index: it})}
+                    />
 
                     <DateRangePicker
                         selectedDateRange={searchData.dateRange}
-                        onChange={handleDateChange}
+                        onChange={(it) => handleFormDataChange({dateRange: it})}
                         onSubmit={(e, dateRange) => {
                             handleSubmit(e)
                         }}

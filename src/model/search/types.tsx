@@ -2,7 +2,7 @@ export type SearchData = {
     search: Search
     dateRange: DateRange
     source: Source
-    hasKeywords: boolean
+    keywords: boolean
     pagination: Pagination,
     // lastTimestamp: number | null //! Todo put it elsewhere
 }
@@ -34,7 +34,7 @@ export const SearchDataDefault = {
     search: { phrase: '', operator: 'OR' as Operator }
     // search: { phrase: '', operator: 'OR' as Operator, field: 'Kr_text' }
     , source: {index: '', indexAlias: ''}
-    , hasKeywords: false
+    , keywords: true
     , pagination: {currentPage: 0, pageSize: 10}
     , dateRange: { from: undefined, to: undefined }
     // , lastTimestamp: null

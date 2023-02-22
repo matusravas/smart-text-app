@@ -1,9 +1,10 @@
-import React, { CSSProperties, useRef } from "react";
-import { SearchInputWrapper, SearchInput as SearchInputStyled } from "../styles/searchbar.styles";
+import React, { CSSProperties } from "react";
+import { FormChangeData } from "../../../viewmodel/search/SearchbarFormViewModel";
+import { SearchInput as SearchInputStyled, SearchInputWrapper } from "../styles/searchbar.styles";
 
 interface SearchInputProps {
     value: string
-    onChange: (value: string) => void
+    onChange: (it: FormChangeData) => void
     startAdornment?: (styles: CSSProperties) => React.ReactNode
     endAdornment?: (styles: CSSProperties) => React.ReactNode
 }
@@ -34,7 +35,7 @@ export function SearchInput(props: SearchInputProps) {
 
     return (
         <SearchInputWrapper id="search-input-wrapper">
-            <SearchInputStyled value={props.value} onChange={(e) => props.onChange(e.target.value)} />
+            <SearchInputStyled spellCheck={false} value={props.value} onChange={(e) => props.onChange({phrase: e.target.value})} />
             {renderStartAdornment}
             {renderEndAdornment}
         </SearchInputWrapper>

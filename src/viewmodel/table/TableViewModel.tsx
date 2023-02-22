@@ -33,7 +33,7 @@ export function useTable({ searchData, onDictionary, onSource, onError, onSucces
                 onError && onError(err.message);
             });
     }, [searchData.search, searchData.dateRange,
-         searchData.pagination, searchData.hasKeywords, 
+         searchData.pagination, searchData.keywords, 
          searchData.source.index])
 
     function prepareColumns(columns: Column[]) {

@@ -12,10 +12,10 @@ class SearchApiService extends ApiService implements ISearchApiService {
         this.ucPrefix = 'search'
     }
 
-    search({ source, search, hasKeywords, dateRange: date, pagination }: SearchData): Promise<Response<SearchResponseRaw>> {
+    search({ source, search, keywords, dateRange: date, pagination }: SearchData): Promise<Response<SearchResponseRaw>> {
         const sourceQueryString = `source=${source.index}`
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
-        const keywordQueryString = `use-keywords=${hasKeywords}`
+        const keywordQueryString = `use-keywords=${keywords}`
         const dateQueryString = `date-from=${date.from?.getTime()}&date-to=${date.to?.getTime()}${source.dateField ? `&date-field=${source.dateField}` : ''}`
         const paginationQueryString = `page=${pagination.currentPage}&pageSize=${pagination.pageSize}`
         const queryString = `${sourceQueryString}&${searchQueryString}&${dateQueryString}&${paginationQueryString}&${keywordQueryString}`
@@ -36,10 +36,10 @@ class SearchApiService extends ApiService implements ISearchApiService {
         })
         )
     }
-    searchExport({ source, search, hasKeywords, dateRange: date }: SearchData): Promise<boolean> {
+    searchExport({ source, search, keywords, dateRange: date }: SearchData): Promise<boolean> {
         const sourceQueryString = `source=${source.index}`
         const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
-        const keywordQueryString = `use-keywords=${hasKeywords}`
+        const keywordQueryString = `use-keywords=${keywords}`
         const dateQueryString = `date-from=${date.from?.getTime()}&date-to=${date.to?.getTime()}${source.dateField ? `&date-field=${source.dateField}` : ''}`
         const queryString = `${sourceQueryString}&${searchQueryString}&${dateQueryString}&${keywordQueryString}`
         return new Promise<boolean>((resolve, reject) => axios({
