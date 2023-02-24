@@ -1,24 +1,28 @@
 import styled from "styled-components";
 
-interface DictionaryWrapperProps {
-    size: number;
-}
 
-export const DictionaryWrapper = styled.div<DictionaryWrapperProps>`
+
+export const DictionaryDashboardWrapper = styled.div`
     display: flex;
-    width: 100%;
-    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    scrollbar-width: none;
+    ::-webkit-scrollbar { 
+        display: none;
+    }
+`
+
+export const DictionaryCardsWrapper = styled.div`
+    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 30px;
-    justify-content: center; //${props => props.size < 4 ? 'start' : 'center'};
+    padding: 30px;
+    justify-content: center;
     scrollbar-width: none;
     ::-webkit-scrollbar { 
-    display: none;  /* Safari and Chrome */
-}
-    /* &::-webkit-scrollbar {
         display: none;
-    } */
+    }
 `
 
 export const FAB = styled.button`

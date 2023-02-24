@@ -1,3 +1,4 @@
+import { InputHTMLAttributes } from "react";
 import styled from "styled-components";
 
 export const SearchDashboardWrapper = styled.div`
@@ -48,11 +49,6 @@ export const SearchbarFormWrapper = styled.form`
   flex-direction: column;
   justify-content: right;
   align-items: center;
-  #searchInput, #submitButton {
-    /* outline: none; */
-    /* border: 2px solid #fafafa; */
-    /* border-radius: 10px; */
-  }
 `;
 
 export const SearchImage = styled.img`
@@ -64,7 +60,8 @@ export const SearchImage = styled.img`
 export const SearchInputWrapper = styled.div`
   position: relative;
   box-sizing: border-box;
-  width: 100%;
+  /* width: 100%; */
+  width: auto;
   height: 70px;
   background-color: #fdfdfd;
   padding: 6px;
@@ -85,11 +82,16 @@ export const SearchInputIconWrapper = styled.div`
   position: absolute;
 `
 
+export interface StyledInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'autocomplete' | 'placeholder'> {
+
+}
+
 export const SearchInput = styled.input.attrs({
-  id: 'searchInput',
   type: 'text',
-  placeholder: 'Search...'
-})`
+  autocomplete: false,
+  placeholder: 'Search...',
+})<StyledInputProps>
+`
   width: 100%;
   height: 100%;
   font-size: 20px;

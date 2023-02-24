@@ -3,7 +3,7 @@ import { Snackbar } from "../app/components/Snackbar"
 import { Card } from "./components/Card"
 import { Dialog } from "./components/Dialog"
 import SearchBar from "./components/SearchBar"
-import { DictionaryWrapper, FAB } from "./components/styles/dictionary.dashboard.styles"
+import { DictionaryCardsWrapper, DictionaryDashboardWrapper, FAB } from "./components/styles/dictionary.dashboard.styles"
 
 function DictionaryDashboard() {
     const { dictionaries, dictionary, searchQuery, status,
@@ -11,11 +11,14 @@ function DictionaryDashboard() {
         handleClick, handleSearchQueryChange, resetStatus } = useDictionaryViewModel()
 
     return (
-        <DictionaryWrapper size={dictionaries.length}>
+        <DictionaryDashboardWrapper>
             <SearchBar searchQuery={searchQuery} handleSearchQueryChange={handleSearchQueryChange} />
-            {dictionaries.map((item, idx) => (
-                <Card key={idx} value={item} searchQuery={searchQuery} onClick={() => handleClick('update', item)} />
-            ))}
+
+            <DictionaryCardsWrapper>
+                {dictionaries.map((item, idx) => (
+                    <Card key={idx} value={item} searchQuery={searchQuery} onClick={() => handleClick('update', item)} />
+                ))}
+            </DictionaryCardsWrapper>
 
             {dialogOpen && actionType && <Dialog
                 ationType={actionType}
@@ -25,14 +28,14 @@ function DictionaryDashboard() {
             />
             }
             <FAB onClick={() => handleClick('create')} />
-            {console.log('message', status.message , status.message ? true : false)}
+            {console.log('message', status.message, status.message ? true : false)}
             <Snackbar
                 open={status.message ? true : false}
                 type={status.type}
                 text={status.message}
                 onClose={resetStatus}
             />
-        </DictionaryWrapper>
+        </DictionaryDashboardWrapper>
     )
 }
 

@@ -29,7 +29,7 @@ function SearchbarForm(props: SearchbarFormProps) {
         <SearchbarFormWrapper autoComplete="off" onSubmit={handleSubmit}>
             <SearchInput
                 value={searchData.search.phrase}
-                onChange={handleFormDataChange}
+                onChange={(e) => handleFormDataChange({phrase: e.target.value})}
                 endAdornment={(styles) =>
                     <MenuButton
                         visible={operatorVisible}
