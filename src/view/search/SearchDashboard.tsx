@@ -1,37 +1,51 @@
 import { useSearchViewModel } from "../../viewmodel/search/SearchViewModel";
+import { Snackbar } from "../app/components/Snackbar";
 import { Table } from "../table/table";
 import Searchbar from "./components/SearchBar";
 
 import { SearchDashboardWrapper } from "./styles/searchbar.styles";
 
 function SearchDashboard() {
-    const { 
-        searchData, 
+    const {
+        status,
+        searchData,
         sources,
         lastTimestamp,
-        dictionaryData, 
+        dictionaryData,
         onSourceObtained,
-        onDictionaryObtained, 
-        submitSearchData, 
-        } = useSearchViewModel()
+        onDictionaryObtained,
+        submitSearchData,
+        handleError,
+        handleSuccess,
+        resetStatus
+
+    } = useSearchViewModel()
     return (
         <SearchDashboardWrapper>
-            <Searchbar 
+            <Searchbar
                 searchData={searchData}
                 sources={sources}
                 dictionaryData={dictionaryData}
                 submitSearchData={submitSearchData}
-                 />
+            />
             {sources.length > 0 ?
-                <Table 
+                <Table
                     searchData={searchData}
                     lastTimestamp={lastTimestamp}
                     onDictionary={onDictionaryObtained}
                     onSource={onSourceObtained}
                     submitSearchData={submitSearchData}
-                    />
-                 : null
+                    handleError={handleError}
+                    handleSuccess={handleSuccess}
+                />
+                : null
             }
+            <Snackbar
+                open={status.message ? true : false}
+                type={status.type}
+                text={status.message}
+                onClose={resetStatus}
+            />
         </SearchDashboardWrapper>
     )
 }

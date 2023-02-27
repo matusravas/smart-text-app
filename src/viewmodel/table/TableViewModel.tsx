@@ -16,25 +16,32 @@ export function useTable({ searchData, onDictionary, onSource, onError, onSucces
         setIsLoading(true)
         repository
             .search(searchData)
-            .then((data) => {
-                console.log(data)
+            .then((res) => {
+                console.log(res)
+                if (!res.success) {
+                    onError && onError(res.message)
+                    return
+                }
                 // if (isMounted.current) return;
-                setPagination(data.pagination);
-                setRows([...data.results]);
-                (data.results && data.results.length > 0)
-                    && setColumns(prepareColumns(data.columns))
+                setPagination(res.data.pagination);
+                setRows([...res.data.results]);
+                (res.data.results && res.data.results.length > 0)
+                    && setColumns(prepareColumns(res.data.columns))
                 setIsLoading(false)
-                onDictionary(data.dictionary)
-                onSource(data.source)
+                onDictionary(res.data.dictionary)
+                onSource(res.data.source)
             })
-            .catch((err: Error) => {
+            .catch(err => {
+                console.error(err)
                 // if (isMounted.current) return;
-                setIsLoading(false);
                 onError && onError(err.message);
-            });
+            })
+            .finally(() => {
+                setIsLoading(false);
+            })
     }, [searchData.search, searchData.dateRange,
-         searchData.pagination, searchData.keywords, 
-         searchData.source.index])
+    searchData.pagination, searchData.keywords,
+    searchData.source.index])
 
     function prepareColumns(columns: Column[]) {
         let centeredColumns = columns.map(col => {
@@ -69,10 +76,13 @@ export function useTable({ searchData, onDictionary, onSource, onError, onSucces
         repository
             .searchExport(searchData)
             .then((res) => {
-                //
+                if (!res.success) {
+                    onError && onError(res.message);
+                    return
+                }
+                onSuccess && onSuccess('Data successfully exported')
             })
             .catch((err: Error) => {
-                // if (isMounted.current) return;
                 onError && onError(err.message);
             });
     }

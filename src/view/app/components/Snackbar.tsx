@@ -13,14 +13,14 @@ interface SnackbarProps {
 
 export function Snackbar(props: SnackbarProps) {
     const [open, setOpen] = useState(props.open)
-    
+
     useEffect(() => {
         if (props.open) {
             setOpen(props.open)
             setTimeout(() => {
                 setOpen(false)
                 props.onClose && props.onClose()
-            }, props.autoHideDuration? props.autoHideDuration : 5000)
+            }, props.autoHideDuration ? props.autoHideDuration : 5000)
         }
         // return () => {
         //     props.autoHideDuration && setTimeout(() => {
@@ -32,7 +32,7 @@ export function Snackbar(props: SnackbarProps) {
 
     if (!open) {
         return null;
-      }
+    }
 
     return (
         // <SnackbarWrapper open={open} position={props.position} type={props.type ? props.type : 'info'}>

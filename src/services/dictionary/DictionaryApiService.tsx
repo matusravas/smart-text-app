@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { Dictionary } from "../../model/dictionary/types";
-import { Response, ResponseDelete, ResponseUpsert } from "../../model/types";
+import { ApiResponse, ResponseDelete, ResponseUpsert } from "../../model/types";
 import ApiService from "../ApiService";
 import IDictionaryApiService from "./IDictionaryApiService";
 
@@ -9,8 +9,8 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
         super()
         this.ucPrefix = 'dictionary'
     }
-    getAllKeywordsWithSynonyms(): Promise<Response<Dictionary[]>> {
-        return new Promise<Response<Dictionary[]>>((resolve, reject) => axios({
+    getAllKeywordsWithSynonyms(): Promise<ApiResponse<Dictionary[]>> {
+        return new Promise<ApiResponse<Dictionary[]>>((resolve, reject) => axios({
             method: 'GET',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/`,
             responseType: 'json',
@@ -19,16 +19,15 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             }
-            }).then(res => {
-                resolve({ ok: res.data.ok, data: res.data.data })
-            }).catch(err => {
-                console.error(err)
-                reject({ok: false , message: 'Unable to fetch data'})
+            }).then((res: AxiosResponse<Dictionary[]>) => {
+                resolve(this.onResponse(res))
+            }).catch((err: AxiosError) => {
+                reject(this.onError(err))
             })
         )
     }
-    upsert(dictionary: Dictionary): Promise<ResponseUpsert<Dictionary>> {
-        return new Promise<ResponseUpsert<Dictionary>>((resolve, reject) => axios({
+    upsert(dictionary: Dictionary): Promise<ApiResponse<ResponseUpsert<Dictionary>>> {
+        return new Promise<ApiResponse<ResponseUpsert<Dictionary>>>((resolve, reject) => axios({
             method: 'POST',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/upsert`,
             responseType: 'json',
@@ -38,19 +37,17 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
                 'Content-Type': 'application/json',
             },
             data: dictionary
-            }).then(res => {
-                console.log(res)
-                const data = res.data
-                resolve({ ok: data.ok, id: data.id, result: data.result,
-                     data: data.data, version: data.version })
-            }).catch(err => {
-                console.error(err)
-                reject({ok: false, result: 'Unable upsert data'})
+            }).then((res: AxiosResponse) => {
+                // resolve({ ok: data.ok, id: data.id, result: data.result,
+                //      data: data.data, version: data.version })
+                resolve(this.onResponse(res))
+            }).catch((err: AxiosError) => {
+                reject(this.onError(err))
             })
         )
     }
-    removeKeyword(keyword: string): Promise<ResponseDelete> {
-        return new Promise<ResponseDelete>((resolve, reject) => axios({
+    removeKeyword(keyword: string): Promise<ApiResponse<ResponseDelete>> {
+        return new Promise<ApiResponse<ResponseDelete>>((resolve, reject) => axios({
             method: 'DELETE',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/${keyword}`,
             responseType: 'json',
@@ -59,12 +56,12 @@ class DictionaryApiService extends ApiService implements IDictionaryApiService {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             }
-            }).then(res => {
-                const data = res.data
-                resolve({ ok: data.ok, id: data.id, result: data.result });
-            }).catch(err => {
-                console.error(err)
-                reject({ok: false, result: 'Unable to remove data'})
+            }).then((res: AxiosResponse) => {
+                // const data = res.data
+                // resolve({ ok: data.ok, id: data.id, result: data.result });
+                resolve(this.onResponse(res))
+            }).catch((err: AxiosError) => {
+                reject(this.onError(err))
             })
         )
     }

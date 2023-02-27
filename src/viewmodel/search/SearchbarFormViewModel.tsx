@@ -19,12 +19,16 @@ function useSearchbarForm(props: SearchbarFormProps) {
     }, [formData.source.index])
 
     useEffect(() => {
-        setFormData({...props.searchData, keywords: props.keywords})
+        setFormData({...props.searchData, 
+            keywords: props.keywords, 
+            // ...(props.keywords && {search: {...formData.search, operator: 'OR'}})
+        })
         props.dictionary && props.onSynonyms(true)
     }, [props.searchData, props.dictionary, props.keywords])
 
     useEffect(() => {
         setOperatorVisible(props.dictionary && props.keywords ? true : false)
+        setFormData({...formData, search: {...formData.search, operator: 'OR'}})
     }, [props.keywords, props.dictionary])
 
     const selectOperatorOptions = [

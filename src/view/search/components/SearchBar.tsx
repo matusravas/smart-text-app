@@ -21,6 +21,12 @@ function Searchbar(props: SearchbarProps) {
     }, [props.searchData.keywords])
 
     function handleKeywordsChange(value: boolean) {
+        //!!! Todo here set operator to OR
+        //!!! Todo here set operator to OR
+        //!!! Todo here set operator to OR
+        //!!! Todo here set operator to OR
+        //!!! Todo here set operator to OR
+        //!!! Todo here set operator to OR
         setKeywords(value)
     }
 

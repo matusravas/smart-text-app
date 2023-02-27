@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ActionType, Dictionary, Dictionary as DictionaryResult, RequestType } from '../../model/dictionary/types'
-import { Status, StatusDefalt } from '../../model/types'
+import { DashboardFail, Status, StatusDefalt } from '../../model/types'
 import DictionaryRepository from '../../repository/dictionary/DictionaryRepository'
 
 
@@ -18,17 +18,16 @@ export const useDictionaryViewModel = () => {
     useEffect(() => {
         fetch && repository.getSynonyms()
             .then(res => {
-                console.log(res.data)
-                if (res.ok) {
-                    setDictionaries(res.data)
-                    setDictionariesFiltered(res.data)
-                } else {
-                    setStatus({type: 'error', message: res.message!})
+                if (!res.success) {
+                    setStatus({type: 'error', message: res.message})
+                    return 
                 }
+                setDictionaries(res.data)
+                setDictionariesFiltered(res.data)
             })
-            .catch(err => {
+            .catch((err: DashboardFail) => {
                 console.error(err)
-                setStatus({type: 'error', message: 'Unable to fetch'})
+                setStatus({type: 'error', message: err.message})
             }).finally(() => {
                 setFetch(false)
             })
@@ -68,12 +67,18 @@ export const useDictionaryViewModel = () => {
                 const status = actionType === 'create' ? 'created' : 'updated'
                 repository.upsert(dict)
                     .then(res => {
+                        if (!res.success) {
+                            setStatus({ type: 'error', message: res.message })
+                            return
+                        }
                         setActionType('update') // in order to make delete button visible
-                        setStatus({ type: 'success', message: `Resource ${status}` })
+                        // setStatus({ type: 'success', message: `Resource ${status}` })
+                        setStatus({ type: 'success', message: `Resource ${res.data.result}` })
                     })
                     .catch(err => {
-                        console.error(err)
+                        // console.error(err)
                         setStatus({ type: 'error', message: `Resource could not be ${status}` })
+                        // setStatus({ type: 'error', message: `Resource could not be ${status}` })
                     })
                     .finally(() => {
                         setFetch(true)
@@ -83,7 +88,11 @@ export const useDictionaryViewModel = () => {
             case 'delete': {
                 repository.removeKeyword(dict.keyword)
                     .then(res => {
-                        setStatus({ type: 'success', message: 'Resource deleted' })
+                        if (!res.success) {
+                            setStatus({ type: 'error', message: res.message })
+                            return
+                        }
+                        setStatus({ type: 'success', message: `Resource ${res.data.result}` })
                     })
                     .catch(err => {
                         console.error(err)
