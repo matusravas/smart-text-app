@@ -12,6 +12,19 @@ interface SearchInputProps {
 
 
 export function SearchInput(props: SearchInputProps) {
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            event.currentTarget.blur();
+            const form = event.currentTarget.closest('form');
+            if (form) {
+                const submitEvent = new Event('submit', { bubbles: true });
+                form.dispatchEvent(submitEvent);
+              }
+        }
+    };
+
     function renderAdornment(position: 'start' | 'end', renderCallback: (styles: CSSProperties) => React.ReactNode) {
         switch (position) {
             case 'start': {
@@ -24,7 +37,7 @@ export function SearchInput(props: SearchInputProps) {
             case 'end': {
                 return (
                     <>
-                        {renderCallback({ position: 'absolute', top: `9px` , right: '8px' })}
+                        {renderCallback({ position: 'absolute', top: `9px`, right: '8px' })}
                     </>
                 )
             }
@@ -35,8 +48,8 @@ export function SearchInput(props: SearchInputProps) {
     const renderEndAdornment = props.endAdornment ? renderAdornment('end', props.endAdornment) : null
 
     return (
-        <SearchInputWrapper id="search-input-wrapper" style={{width: '100%', ...props.style}}>
-            <SearchInputStyled {...props.inputProps} spellCheck={false} value={props.value} onChange={props.onChange} />
+        <SearchInputWrapper id="search-input-wrapper" style={{ width: '100%', ...props.style }}>
+            <SearchInputStyled {...props.inputProps} spellCheck={false} value={props.value} onChange={props.onChange} onKeyDown={handleKeyDown} />
             {renderStartAdornment}
             {renderEndAdornment}
         </SearchInputWrapper>
