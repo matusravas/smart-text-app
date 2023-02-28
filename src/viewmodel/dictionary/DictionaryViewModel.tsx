@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ActionType, Dictionary, Dictionary as DictionaryResult, RequestType } from '../../model/dictionary/types'
+import { ActionType, Dictionary, RequestType } from '../../model/dictionary/types'
 import { DashboardFail, Status, StatusDefalt } from '../../model/types'
 import DictionaryRepository from '../../repository/dictionary/DictionaryRepository'
 
@@ -72,13 +72,11 @@ export const useDictionaryViewModel = () => {
                             return
                         }
                         setActionType('update') // in order to make delete button visible
-                        // setStatus({ type: 'success', message: `Resource ${status}` })
-                        setStatus({ type: 'success', message: `Resource ${res.data.result}` })
+                        setStatus({ type: 'success', message: `${dict.keyword} item ${res.data.result}` })
                     })
                     .catch(err => {
                         // console.error(err)
-                        setStatus({ type: 'error', message: `Resource could not be ${status}` })
-                        // setStatus({ type: 'error', message: `Resource could not be ${status}` })
+                        setStatus({ type: 'error', message: `${dict.keyword} item could not be ${status}` })
                     })
                     .finally(() => {
                         setFetch(true)
@@ -92,11 +90,11 @@ export const useDictionaryViewModel = () => {
                             setStatus({ type: 'error', message: res.message })
                             return
                         }
-                        setStatus({ type: 'success', message: `Resource ${res.data.result}` })
+                        setStatus({ type: 'success', message: `${dict.keyword} item ${res.data.result}` })
                     })
                     .catch(err => {
                         console.error(err)
-                        setStatus({ type: 'error', message: 'Resource could not be deleted' })
+                        setStatus({ type: 'error', message: `${dict.keyword} item could not be deleted` })
                     })
                     .finally(() => {
                         setDialogOpen(false)
