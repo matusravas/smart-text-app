@@ -84,7 +84,9 @@ export function DateRangePicker(props: DateRangePickerProps) {
   function validateStringInput(value: string, datePart: 'from' | 'to') {
     let message = ""
     let isValid = true
-    if (![fromPlaceholder, toPlaceholder].includes(value) && !moment(value).isValid()) {
+    const date = new Date(value)
+    // checking if selected date is before unix epoch || isValid
+    if (![fromPlaceholder, toPlaceholder].includes(value) && (date < new Date(0) || !moment(date).isValid())) {
       isValid = false
       message = "Wrong date format"
     }

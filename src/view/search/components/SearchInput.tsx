@@ -1,4 +1,4 @@
-import React, { ChangeEvent, CSSProperties, InputHTMLAttributes } from "react";
+import React, { ChangeEvent, CSSProperties } from "react";
 import { SearchInput as SearchInputStyled, SearchInputWrapper, StyledInputProps } from "../styles/searchbar.styles";
 
 interface SearchInputProps {
@@ -27,20 +27,8 @@ export function SearchInput(props: SearchInputProps) {
 
     function renderAdornment(position: 'start' | 'end', renderCallback: (styles: CSSProperties) => React.ReactNode) {
         switch (position) {
-            case 'start': {
-                return (
-                    <>
-                        {renderCallback({ position: 'absolute', top: `9px`, left: '16px' })}
-                    </>
-                )
-            }
-            case 'end': {
-                return (
-                    <>
-                        {renderCallback({ position: 'absolute', top: `9px`, right: '8px' })}
-                    </>
-                )
-            }
+            case 'start': return (<>{renderCallback({ position: 'absolute', top: `9px`, left: '16px' })}</>)
+            case 'end': return (<>{renderCallback({ position: 'absolute', top: `9px`, right: '8px' })}</>)
         }
     }
 
