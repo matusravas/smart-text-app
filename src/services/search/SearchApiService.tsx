@@ -12,9 +12,9 @@ class SearchApiService extends ApiService implements ISearchApiService {
         this.ucPrefix = 'search'
     }
 
-    async search({ source, search, keywords, dateRange: date, pagination }: SearchData) {
+    async search({ source, searchPhrase, searchOperator, keywords, dateRange: date, pagination }: SearchData) {
         const sourceQueryString = `source=${source.index}`
-        const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
+        const searchQueryString = `phrase=${searchPhrase}&operator=${searchOperator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
         const keywordQueryString = `use-keywords=${keywords}`
         const dateQueryString = `date-from=${date.from?.getTime()}&date-to=${date.to?.getTime()}${source.dateField ? `&date-field=${source.dateField}` : ''}`
         const paginationQueryString = `page=${pagination.currentPage}&pageSize=${pagination.pageSize}`
@@ -35,9 +35,9 @@ class SearchApiService extends ApiService implements ISearchApiService {
         })
         )
     }
-    searchExport({ source, search, keywords, dateRange: date }: SearchData): Promise<ApiResponse<boolean>> {
+    searchExport({ source, searchPhrase, searchOperator, keywords, dateRange: date }: SearchData): Promise<ApiResponse<boolean>> {
         const sourceQueryString = `source=${source.index}`
-        const searchQueryString = `phrase=${search.phrase}&operator=${search.operator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
+        const searchQueryString = `phrase=${searchPhrase}&operator=${searchOperator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
         const keywordQueryString = `use-keywords=${keywords}`
         const dateQueryString = `date-from=${date.from?.getTime()}&date-to=${date.to?.getTime()}${source.dateField ? `&date-field=${source.dateField}` : ''}`
         const queryString = `${sourceQueryString}&${searchQueryString}&${dateQueryString}&${keywordQueryString}`
@@ -51,7 +51,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
                 'Content-Type': 'application/json',
             }
         }).then((res: AxiosResponse) => {
-            const filename = `${search.phrase ? `${search.phrase}_` : ''}${source.indexAlias}_${moment().format('YYYY-MM-DDTHH-mm')}.xlsx`
+            const filename = `${searchPhrase ? `${searchPhrase}_` : ''}${source.indexAlias}_${moment().format('YYYY-MM-DDTHH-mm')}.xlsx`
             const url = window.URL.createObjectURL(new Blob([res.data], { type: 'text/xlsx;' }));
             const link = document.createElement('a');
             link.href = url;

@@ -1,20 +1,22 @@
 export type SearchData = {
-    search: Search
+    // search: Search
+    searchPhrase: string
+    searchOperator: Operator
     dateRange: DateRange
     source: Source
     keywords: boolean
-    pagination: Pagination,
+    pagination: Pagination
     // lastTimestamp: number | null //! Todo put it elsewhere
 }
 
 export type Operator = 'OR' | 'AND'
 
-export type Search = {
-    phrase: string
-    // field?: string
-    // hasKeywords: boolean
-    operator: Operator
-}
+// export type Search = {
+//     phrase: string
+//     // field?: string
+//     // hasKeywords: boolean
+//     operator: Operator
+// }
 
 export type Source = {
     index: string
@@ -31,7 +33,9 @@ export type DateRange = {
 }
 
 export const SearchDataDefault = {
-    search: { phrase: '', operator: 'OR' as Operator }
+    // search: { phrase: '', operator: 'OR' as Operator }
+    searchPhrase: ''
+    ,searchOperator: 'OR' as Operator
     // search: { phrase: '', operator: 'OR' as Operator, field: 'Kr_text' }
     , source: {index: '', indexAlias: ''}
     , keywords: true

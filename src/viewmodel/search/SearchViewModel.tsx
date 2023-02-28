@@ -39,7 +39,7 @@ export const useSearchViewModel = () => {
     function submitSearchData(newSearchData: Partial<SearchData>) {
         console.log(newSearchData)
         setSearchData(prev => ({ ...prev, ...newSearchData }))
-        searchData.search.phrase !== newSearchData.search?.phrase && setDictionaryData(null)
+        searchData.searchPhrase !== newSearchData.searchPhrase && setDictionaryData(null)
     }
 
     function onDictionaryObtained(dictionary: Dictionary | null) {
@@ -47,6 +47,7 @@ export const useSearchViewModel = () => {
     }
 
     function onSourceObtained(source: Source) {
+        console.log(source)
         setSearchData(prev => (
             {
                 ...prev

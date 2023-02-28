@@ -28,7 +28,7 @@ function SearchbarForm(props: SearchbarFormProps) {
     return (
         <SearchbarFormWrapper autoComplete="off" onSubmit={handleSubmit}>
             <SearchInput
-                value={searchData.search.phrase}
+                value={searchData.searchPhrase}
                 onChange={(e) => handleFormDataChange({phrase: e.target.value})}
                 endAdornment={(styles) =>
                     <MenuButton
@@ -39,7 +39,7 @@ function SearchbarForm(props: SearchbarFormProps) {
                             ...styles, height: '50px',
                             minWidth: '60px', fontWeight: '300',
                         }}
-                        value={searchData.search.operator}
+                        value={searchData.searchOperator}
                         options={selectOperatorOptions}
                         onSelected={(it) => handleFormDataChange({operator: it as Operator})} 
                     />}

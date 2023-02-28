@@ -25,9 +25,10 @@ export function useTable({ searchData, onDictionary, onSource, onError, onSucces
                 // if (isMounted.current) return;
                 setPagination(res.data.pagination);
                 setRows([...res.data.results]);
+                //! on index change first obtain source from backend and then fetch data,
+                //! bcs, res.data.source.searchField is lost in prepareColumns
                 (res.data.results && res.data.results.length > 0)
-                    && setColumns(prepareColumns(res.data.columns))
-                setIsLoading(false)
+                    && setColumns(prepareColumns(res.data.columns, res.data.source.searchField))
                 onDictionary(res.data.dictionary)
                 onSource(res.data.source)
             })
@@ -39,11 +40,10 @@ export function useTable({ searchData, onDictionary, onSource, onError, onSucces
             .finally(() => {
                 setIsLoading(false);
             })
-    }, [searchData.search, searchData.dateRange,
-    searchData.pagination, searchData.keywords,
-    searchData.source.index])
+    }, [searchData.searchPhrase, searchData.searchOperator, searchData.dateRange,
+    searchData.pagination, searchData.keywords, searchData.source.index])
 
-    function prepareColumns(columns: Column[]) {
+    function prepareColumns(columns: Column[], searchField: string | undefined) {
         let centeredColumns = columns.map(col => {
             return {
                 ...col, cellStyle: {
@@ -56,8 +56,8 @@ export function useTable({ searchData, onDictionary, onSource, onError, onSucces
                 }
             }
         })
-        if (!searchData.search.phrase) return centeredColumns
-        const columnIndex = centeredColumns.findIndex(column => column.field === searchData.source.searchField)
+        if (!searchData.searchPhrase) return centeredColumns
+        const columnIndex = centeredColumns.findIndex(column => column.field === searchField)
         return centeredColumns.map((col, idx) => {
             if (!(idx === columnIndex || idx === columnIndex + 1)) return col
             const color = idx === columnIndex ? '#9a0007' : '#00600f'

@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useState } from "react"
-import { DateRange, Operator, SearchDataDefault } from "../../model/search/types"
+import { DateRange, Operator, SearchData } from "../../model/search/types"
 import { SearchbarFormProps } from "../../view/search/components/SearchbarForm"
 
 export type FormChangeData = {
@@ -9,9 +9,19 @@ export type FormChangeData = {
     phrase?: string
 }
 
+function useFormData(searchData: SearchData) {
+    const [data, setData] = useState(searchData)
+
+    function setFormData(...it: Partial<SearchData>[]) {
+        setData({...data, ...Object.assign({}, ...it) })
+        // setData({...data, ...it})
+    }
+    
+    return {formData: data, setFormData}
+}
 
 function useSearchbarForm(props: SearchbarFormProps) {
-    const [formData, setFormData] = useState(props.searchData)
+    const {formData, setFormData} = useFormData(props.searchData)
     const [operatorVisible, setOperatorVisible] = useState(false)
 
     useEffect(() => {
@@ -19,17 +29,12 @@ function useSearchbarForm(props: SearchbarFormProps) {
     }, [formData.source.index])
 
     useEffect(() => {
-        setFormData({...props.searchData, 
-            keywords: props.keywords, 
-            // ...(props.keywords && {search: {...formData.search, operator: 'OR'}})
+        setFormData({...props.searchData, keywords: props.keywords 
+            ,searchOperator: props.keywords !== formData.keywords ? 'OR' : formData.searchOperator
         })
+        setOperatorVisible(props.dictionary && props.keywords ? true : false)
         props.dictionary && props.onSynonyms(true)
     }, [props.searchData, props.dictionary, props.keywords])
-
-    useEffect(() => {
-        setOperatorVisible(props.dictionary && props.keywords ? true : false)
-        setFormData({...formData, search: {...formData.search, operator: 'OR'}})
-    }, [props.keywords, props.dictionary])
 
     const selectOperatorOptions = [
         { label: 'OR', value: 'OR' }
@@ -47,13 +52,13 @@ function useSearchbarForm(props: SearchbarFormProps) {
     }
 
     const handleFormDataChange = useCallback((it: FormChangeData) => {
-        it.dateRange && setFormData({ ...formData, dateRange: it.dateRange })
-        it.index && setFormData({ ...formData, source: { index: it.index, indexAlias: '' } })
-        it.operator && setFormData({ ...formData, search: { ...props.searchData.search, operator: it.operator } })
+        it.dateRange && setFormData({dateRange: it.dateRange })
+        it.index && setFormData({ source: { index: it.index, indexAlias: '' } })
+        it.operator && setFormData({ searchOperator: it.operator } )
         
         if (it.phrase !== undefined) {
             let keywords = props.keywords
-            if (it.phrase !== props.searchData.search.phrase) { 
+            if (it.phrase !== props.searchData.searchPhrase) { 
                 props.onSynonyms(false)
                 keywords = true
             }
@@ -61,15 +66,15 @@ function useSearchbarForm(props: SearchbarFormProps) {
             
             setOperatorVisible(
                 (
-                    (it.phrase === props.searchData.search.phrase && props.dictionary && props.keywords)
+                    (it.phrase === props.searchData.searchPhrase && props.dictionary && props.keywords)
                     || it.phrase.split(' ').filter(q => q.length > 2).length > 1
                 )
                 ? true
                 : false
             )
-            setFormData({ ...formData, keywords, search: { ...props.searchData.search, phrase: it.phrase } })
+            setFormData({ keywords, searchPhrase: it.phrase } )
         }
-    }, [formData, props.searchData.search, props.keywords])
+    }, [formData, props.searchData.searchPhrase, props.searchData.searchOperator, props.keywords])
 
     return {
         searchData: formData,
