@@ -48,7 +48,7 @@ function useSearchbarForm(props: SearchbarFormProps) {
 
     const handleFormDataChange = useCallback((it: FormChangeData) => {
         it.dateRange && setFormData({ ...formData, dateRange: it.dateRange })
-        it.index && setFormData({ ...SearchDataDefault, source: { index: it.index, indexAlias: '' } })
+        it.index && setFormData({ ...formData, source: { index: it.index, indexAlias: '' } })
         it.operator && setFormData({ ...formData, search: { ...props.searchData.search, operator: it.operator } })
         
         if (it.phrase !== undefined) {
