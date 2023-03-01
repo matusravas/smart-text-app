@@ -50,7 +50,8 @@ function SearchbarForm(props: SearchbarFormProps) {
                         titleItem
                         title="Source"
                         buttonStyles={{ minWidth: '125px', backgroundColor: '#f7f7f7' }}
-                        value={searchData.source.indexAlias}
+                        value={searchData.source.index}
+                        label={searchData.source.indexAlias}
                         options={selectSourceOptions}
                         onSelected={(it) => handleFormDataChange({index: it})}
                     />

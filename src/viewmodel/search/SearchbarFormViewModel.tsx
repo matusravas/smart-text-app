@@ -1,5 +1,6 @@
 import { FormEvent, useCallback, useEffect, useState } from "react"
 import { DateRange, Operator, SearchData } from "../../model/search/types"
+import { TablePaginationDefault } from "../../model/table/types"
 import { SearchbarFormProps } from "../../view/search/components/SearchbarForm"
 
 export type FormChangeData = {
@@ -53,7 +54,7 @@ function useSearchbarForm(props: SearchbarFormProps) {
 
     const handleFormDataChange = useCallback((it: FormChangeData) => {
         it.dateRange && setFormData({dateRange: it.dateRange })
-        it.index && setFormData({ source: { index: it.index, indexAlias: '' } })
+        it.index && setFormData({ source: { index: it.index, indexAlias: '' }, pagination: TablePaginationDefault })
         it.operator && setFormData({ searchOperator: it.operator } )
         
         if (it.phrase !== undefined) {
