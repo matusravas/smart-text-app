@@ -11,7 +11,7 @@ class ApiService {
 
     onResponse<T= any>(res: AxiosResponse): ApiResponse<T> {
         let msg = ''
-        const success = [200, 201].includes(res.status) || res.data.ok === true || false
+        const success = res.data.ok === true || [200, 201].includes(res.status) || false
         if (res.status === 400) msg = res.data?.message || "Unknown service error" // bad request parameters
         else if (res.status === 401) msg = 'Not authorized to access resource'
         else if (res.status === 403) msg = res.data?.message || "Unknown service error" //Forbidden or Unauthorized

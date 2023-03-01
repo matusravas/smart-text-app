@@ -1,10 +1,12 @@
 import ReactDOM from 'react-dom';
 import './index.css';
-import dotenv from 'dotenv'
 import { Root } from './view/Root';
 
-dotenv.config({path: `./config/.env.${process.env.NODE_ENV}`})
-if (process.env.NODE_ENV === 'production') console.log = ()=>{}
+if (process.env.REACT_APP_ENV && ['production'].includes(process.env.REACT_APP_ENV)) {
+  console.log = () => {}
+  console.warn = () => {}
+  console.error = () => {}
+}
 
 ReactDOM.render(
   // <React.StrictMode>
