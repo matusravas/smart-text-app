@@ -5,7 +5,7 @@ import { TablePagination, TablePaginationDefault, UseTableProps } from "../../mo
 import SearchRepository from "../../repository/search/SearchRepository";
 
 
-export function useTable({ searchData, onDictionary, onSource, onError, onSuccess }: UseTableProps) {
+export function useTable({ searchData, onDictionary, onError, onSuccess }: UseTableProps) {
     const [rows, setRows] = useState<Data[]>(() => []);
     const [columns, setColumns] = useState<Column[]>(() => []);
     const [pagination, setPagination] = useState<TablePagination>(() => TablePaginationDefault);
@@ -27,10 +27,11 @@ export function useTable({ searchData, onDictionary, onSource, onError, onSucces
                 setRows([...res.data.results]);
                 //! on index change first obtain source from backend and then fetch data,
                 //! bcs, res.data.source.searchField is lost in prepareColumns
-                (res.data.results && res.data.results.length > 0)
-                    && setColumns(prepareColumns(res.data.columns, res.data.source.searchField))
+                // (res.data.results && res.data.results.length > 0)
+                //     && setColumns(prepareColumns(res.data.columns, res.data.source.searchField))
+                setColumns(prepareColumns(res.data.columns, res.data.source.searchField))
                 onDictionary(res.data.dictionary)
-                onSource(res.data.source)
+                // onSource(res.data.source)
             })
             .catch(err => {
                 console.error(err)
@@ -40,8 +41,13 @@ export function useTable({ searchData, onDictionary, onSource, onError, onSucces
             .finally(() => {
                 setIsLoading(false);
             })
-    }, [searchData.searchPhrase, searchData.searchOperator, searchData.dateRange,
-    searchData.pagination, searchData.keywords, searchData.source.index])
+    }, [ 
+        searchData.source.index
+        , searchData.searchPhrase
+        , searchData.searchOperator
+        , searchData.dateRange
+        , searchData.pagination
+        , searchData.keywords ])
 
     function prepareColumns(columns: Column[], searchField: string | undefined) {
         let centeredColumns = columns.map(col => {

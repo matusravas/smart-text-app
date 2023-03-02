@@ -6,7 +6,7 @@ import { SearchData, Source } from "../search/types";
 export type UseTableProps = {
     searchData: SearchData;
     onDictionary: (dictionary: Dictionary | null) => void,
-    onSource: (source: Source) => void,
+    // onSource: (source: Source) => void,
     // getRowsRequest: any;
     // updateRowRequest: any;
     // deleteRowRequest: any;
@@ -59,10 +59,10 @@ export interface MaterialTableProps<RowData extends object> {
 
 export type TableProps = {
     searchData: SearchData
-    lastTimestamp: string
-    submitSearchData: (searchData: Partial<SearchData>) => void
+    submitSearch: (searchData: Partial<SearchData>) => void
     onDictionary: (dictionary: Dictionary | null) => void
-    onSource: (source: Source) => void
+    // onSource: (source: Source) => void
+    lastTimestamp?: string
     handleTableObj?: (tableObj: any) => void
     handleError?: (errorMessage: string) => void
     handleSuccess?: (successMessage: string) => void

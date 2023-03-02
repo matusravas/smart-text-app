@@ -9,7 +9,7 @@ interface SearchbarProps {
     searchData: SearchData
     sources: SourceOption[]
     dictionaryData: Dictionary | null
-    submitSearchData: (requestData: SearchData) => void
+    submitSearch: (requestData: SearchData) => void
 }
 
 function Searchbar(props: SearchbarProps) {
@@ -35,7 +35,7 @@ function Searchbar(props: SearchbarProps) {
     }
 
     function handleReset() {
-        props.submitSearchData({ ...SearchDataDefault, source: props.searchData.source })
+        props.submitSearch({ ...SearchDataDefault, source: props.searchData.source })
     }
     
     return (
@@ -51,7 +51,7 @@ function Searchbar(props: SearchbarProps) {
                 dictionary={props.dictionaryData}
                 sources={props.sources}
                 onSynonyms={handleSynonymsChange}
-                onSubmit={props.submitSearchData} />
+                onSubmit={props.submitSearch} />
                 
             <SearchbarSynonyms
                 visible={synonymsVisible}

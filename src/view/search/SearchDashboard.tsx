@@ -10,11 +10,11 @@ function SearchDashboard() {
         status,
         searchData,
         sources,
-        lastTimestamp,
+        // lastTimestamp,
         dictionaryData,
-        onSourceObtained,
+        // onSourceObtained,
         onDictionaryObtained,
-        submitSearchData,
+        submitSearch,
         handleError,
         handleSuccess,
         resetStatus
@@ -26,15 +26,15 @@ function SearchDashboard() {
                 searchData={searchData}
                 sources={sources}
                 dictionaryData={dictionaryData}
-                submitSearchData={submitSearchData}
+                submitSearch={submitSearch}
             />
             {sources.length > 0 ?
                 <Table
                     searchData={searchData}
-                    lastTimestamp={lastTimestamp}
+                    // lastTimestamp={lastTimestamp}
                     onDictionary={onDictionaryObtained}
-                    onSource={onSourceObtained}
-                    submitSearchData={submitSearchData}
+                    // onSource={onSourceObtained}
+                    submitSearch={submitSearch}
                     handleError={handleError}
                     handleSuccess={handleSuccess}
                 />

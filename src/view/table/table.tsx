@@ -1,6 +1,7 @@
 import { IconButton, TablePagination, Tooltip } from "@material-ui/core";
 import { FileCopy } from "@material-ui/icons";
 import MaterialTable, { MTableBody, MTableBodyRow } from "material-table";
+import moment from "moment";
 import React from "react";
 import { TableProps } from "../../model/table/types";
 import { useTable } from "../../viewmodel/table/TableViewModel";
@@ -19,23 +20,28 @@ export const Table = (props: TableProps) => {
     } = useTable({
         searchData: props.searchData,
         onDictionary: props.onDictionary,
-        onSource: props.onSource,
+        // onSource: props.onSource,
         onError: props.handleError,
         onSuccess: props.handleSuccess
     })
-
+    const timestamp = props.lastTimestamp 
+        ? props.lastTimestamp 
+        : props.searchData.source.timestamp 
+        ? moment(props.searchData.source.timestamp).format('MMM Do YYYY, HH:mm') 
+        : 'N/A'
+    
     const materialTableRef = React.createRef<any>();
     let renderingGroupRows: boolean = false;
 
     const onPageChange = (gotoPage: number) => {
-        props.submitSearchData({ pagination: { ...pagination, currentPage: gotoPage } })
+        props.submitSearch({ pagination: { ...pagination, currentPage: gotoPage } })
         // handlePagination({ currentPage: gotoPage })
     }
 
     const onPageSizeChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const rowsPerPage = +event.target.value
         const currentPage = rowsPerPage >= pagination.totalHits ? 0 : pagination.currentPage
-        props.submitSearchData({ pagination: { ...pagination, currentPage: currentPage, pageSize: +rowsPerPage } })
+        props.submitSearch({ pagination: { ...pagination, currentPage: currentPage, pageSize: +rowsPerPage } })
         // handlePagination({ currentPage: currentPage, pageSize: +rowsPerPage })
     }
 
@@ -44,7 +50,7 @@ export const Table = (props: TableProps) => {
         return (
             <TableWrapper>
                 <TableTopbar>
-                    <TableLastTimestamp>Last update: {props.lastTimestamp}</TableLastTimestamp>
+                    <TableLastTimestamp>Last update: {timestamp}</TableLastTimestamp>
                     <IconButton onClick={handleExport} style={{ alignSelf: 'flex-end' }}>
                         <Tooltip title='Export' placement="top">
                             <FileCopy style={{ color: '#DCDCDC' }} />

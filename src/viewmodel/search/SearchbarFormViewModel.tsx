@@ -14,26 +14,28 @@ function useFormData(searchData: SearchData) {
     const [data, setData] = useState(searchData)
 
     function setFormData(...it: Partial<SearchData>[]) {
-        setData({...data, ...Object.assign({}, ...it) })
-        // setData({...data, ...it})
+        setData({ ...data, ...Object.assign({}, ...it) })
     }
-    
-    return {formData: data, setFormData}
+
+    return { formData: data, setFormData }
 }
 
 function useSearchbarForm(props: SearchbarFormProps) {
-    const {formData, setFormData} = useFormData(props.searchData)
+    const { formData, setFormData } = useFormData(props.searchData)
     const [operatorVisible, setOperatorVisible] = useState(false)
 
     useEffect(() => {
-        props.onSubmit(formData)
+        formData.source.index && props.onSubmit(formData)
     }, [formData.source.index])
 
     useEffect(() => {
-        setFormData({...props.searchData, keywords: props.keywords 
-            ,searchOperator: props.keywords !== formData.keywords ? 'OR' : formData.searchOperator
+        setFormData({
+            ...props.searchData, keywords: props.keywords
+            , searchOperator: props.keywords !== formData.keywords ? 'OR' : formData.searchOperator
         })
-        setOperatorVisible(props.dictionary && props.keywords ? true : false)
+        setOperatorVisible(
+            searchPhraseLongEnough(props.searchData.searchPhrase) 
+            || (props.dictionary && props.keywords) ? true : false)
         props.dictionary && props.onSynonyms(true)
     }, [props.searchData, props.dictionary, props.keywords])
 
@@ -51,31 +53,39 @@ function useSearchbarForm(props: SearchbarFormProps) {
         console.log(formData)
         props.onSubmit(formData)
     }
+    function searchPhraseLongEnough(phrase: string) {
+        return phrase.split(' ').filter(q => q.length > 2).length > 1
+    }
 
     const handleFormDataChange = useCallback((it: FormChangeData) => {
-        it.dateRange && setFormData({dateRange: it.dateRange })
-        it.index && setFormData({ source: { index: it.index, indexAlias: '' }, pagination: TablePaginationDefault })
-        it.operator && setFormData({ searchOperator: it.operator } )
-        
+        it.dateRange && setFormData({ dateRange: it.dateRange })
+        if (it.index) {
+            const found = props.sources.filter(s => s.index === it.index)
+            const selectedSource = found.length === 1 ? found[0] : null
+            selectedSource && setFormData({ source: selectedSource, pagination: TablePaginationDefault })
+        }
+        it.operator && setFormData({ searchOperator: it.operator })
+
         if (it.phrase !== undefined) {
             let keywords = props.keywords
-            if (it.phrase !== props.searchData.searchPhrase) { 
+            if (it.phrase !== props.searchData.searchPhrase) {
                 props.onSynonyms(false)
                 keywords = true
             }
             else props.onSynonyms(true)
-            
+
             setOperatorVisible(
                 (
                     (it.phrase === props.searchData.searchPhrase && props.dictionary && props.keywords)
-                    || it.phrase.split(' ').filter(q => q.length > 2).length > 1
+                    // || it.phrase.split(' ').filter(q => q.length > 2).length > 1
+                    || searchPhraseLongEnough(it.phrase)
                 )
-                ? true
-                : false
+                    ? true
+                    : false
             )
-            setFormData({ keywords, searchPhrase: it.phrase } )
+            setFormData({ keywords, searchPhrase: it.phrase })
         }
-    }, [formData, props.searchData.searchPhrase, props.searchData.searchOperator, props.keywords])
+    }, [formData, props.searchData.searchPhrase, props.searchData.searchOperator, props.keywords, props.sources])
 
     return {
         searchData: formData,
