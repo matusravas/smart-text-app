@@ -11,22 +11,23 @@ type AppBarProps = {
 
 export default function Sidebar({ drawerItems, ...props }: AppBarProps) {
     const navigate = useNavigate()
-    const [toggleDrawer, setToggleDrawer] = useState(false)
+    // const [toggleDrawer, setToggleDrawer] = useState(false)
     return (
-        <SidebarWrapper onMouseEnter={() => setToggleDrawer(true)} onMouseLeave={() => setToggleDrawer(false)}>
-            <List style={{ display: toggleDrawer ? 'flex' : 'none', alignItems: 'center', flexDirection: 'column' }}>
+        // <SidebarWrapper onMouseEnter={() => setToggleDrawer(true)} onMouseLeave={() => setToggleDrawer(false)}>
+        <SidebarWrapper>
+            <List>
                 {drawerItems.map(item => (
                     // <Tooltip key={item.label} style={{ width: '60px' }} title={<h3>{item.label}</h3>} placement="right">
-                        <ListItem key={item.path} button onClick={() => {
-                            navigate(item.path)
-                        }} >
-                            <ListItemIcon>
-                                {item.icon}
-                            </ListItemIcon>
-                            {/* <ListItemText style={{fontSize: '8px'}}>
+                    <ListItem key={item.path} button onClick={() => {
+                        navigate(item.path)
+                    }} >
+                        <ListItemIcon>
+                            {item.icon}
+                        </ListItemIcon>
+                        {/* <ListItemText style={{fontSize: '8px'}}>
                                 {item.label}
                             </ListItemText> */}
-                        </ListItem>
+                    </ListItem>
                     // </Tooltip>
                 ))}
             </List>
