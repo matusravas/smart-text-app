@@ -5,7 +5,7 @@ import { SearchbarFormProps } from "../../view/search/components/SearchbarForm"
 
 export type FormChangeData = {
     dateRange?: DateRange
-    index?: string
+    source?: {index: string, alias: string}
     operator?: Operator
     phrase?: string
 }
@@ -23,31 +23,15 @@ function useFormData(searchData: SearchData) {
 function useSearchbarForm(props: SearchbarFormProps) {
     const { formData, setFormData } = useFormData(props.searchData)
     const [operatorVisible, setOperatorVisible] = useState(false)
-    // const [selectSourceOptions, setSelectSourceOptions] = useState(() => {
-    //     return props.sources.map(it => {
-    //         return { 'label': it.indexAlias, 'value': it.index }
-    //     })
-    // })
 
     const selectOperatorOptions = [
         { label: 'OR', value: 'OR' }
         , { label: 'AND', value: 'AND' }
     ]
 
-    const selectSourceOptions = props.sources.map(it => {
-        return { 'label': it.indexAlias, 'value': it.index }
-    })
-
     useEffect(() => {
         formData.source.index && props.onSubmit(formData)
     }, [formData.source.index])
-
-    // useEffect(() => {
-    //     const options = props.sources.map(it => {
-    //         return { 'label': it.indexAlias, 'value': it.index }
-    //     })
-    //     setSelectSourceOptions(options)
-    // }, [props.sources])
 
     useEffect(() => {
         setFormData({
@@ -72,10 +56,8 @@ function useSearchbarForm(props: SearchbarFormProps) {
 
     const handleFormDataChange = useCallback((it: FormChangeData) => {
         it.dateRange && setFormData({ dateRange: it.dateRange })
-        if (it.index) {
-            const found = props.sources.filter(s => s.index === it.index)
-            const selectedSource = found.length === 1 ? found[0] : null
-            selectedSource && setFormData({ source: selectedSource, pagination: TablePaginationDefault })
+        if (it.source) {
+            setFormData({ source: {index: it.source.index, indexAlias: it.source.alias}, pagination: TablePaginationDefault })
         }
         it.operator && setFormData({ searchOperator: it.operator })
 
@@ -97,12 +79,11 @@ function useSearchbarForm(props: SearchbarFormProps) {
             )
             setFormData({ keywords, searchPhrase: it.phrase })
         }
-    }, [formData, props.searchData.searchPhrase, props.searchData.searchOperator, props.keywords, props.sources])
+    }, [formData, props.searchData.searchPhrase, props.searchData.searchOperator, props.keywords])
 
     return {
         searchData: formData,
         operatorVisible,
-        selectSourceOptions,
         selectOperatorOptions,
         handleFormDataChange,
         handleSubmit

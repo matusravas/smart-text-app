@@ -1,19 +1,18 @@
 import { Dictionary } from "../../../model/dictionary/types"
-import { Operator, SearchData, SourceOption } from "../../../model/search/types"
+import { Operator, SearchData } from "../../../model/search/types"
 import useSearchbarForm from "../../../viewmodel/search/SearchbarFormViewModel"
 import { DateRangePicker } from "../../app/components/DatePicker/DateRangePicker"
 import { SearchbarFormWrapper, SearchButton } from '../styles/searchbar.styles'
 import { SearchToolbar } from "../styles/searchbar.toolbar.styles"
-import { MenuButton, MenuButtonOption } from "./MenuButton"
+import { MenuButton, MenuOption } from "./MenuButton"
 import { SearchInput } from "./SearchInput"
 
 export interface SearchbarFormProps {
     searchData: SearchData
     dictionary: Dictionary | null
     keywords: boolean
-    sources: SourceOption[]
     onSynonyms: (value: boolean) => void
-    fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuButtonOption[]>
+    fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
     onSubmit: (searchData: SearchData) => void
 }
 
@@ -21,7 +20,6 @@ function SearchbarForm(props: SearchbarFormProps) {
     const {
         searchData,
         operatorVisible,
-        selectSourceOptions,
         selectOperatorOptions,
         handleFormDataChange,
         handleSubmit,
@@ -42,10 +40,10 @@ function SearchbarForm(props: SearchbarFormProps) {
                         }}
                         value={searchData.searchOperator}
                         options={selectOperatorOptions}
-                        onSelected={(it) => handleFormDataChange({operator: it as Operator})} 
+                        onSelected={(it) => handleFormDataChange({operator: it.value as Operator})} 
                     />}
             />
-            {props.sources.length > 0 ?
+            {props.searchData.source.index ?
                 <SearchToolbar>
                     <MenuButton
                         titleItem
@@ -53,9 +51,9 @@ function SearchbarForm(props: SearchbarFormProps) {
                         buttonStyles={{ width: '150px', height: '40px', backgroundColor: '#f7f7f7' }}
                         value={searchData.source.index}
                         label={searchData.source.indexAlias}
-                        options={selectSourceOptions}
+                        // options={selectSourceOptions}
                         onReload={props.fetchSources}
-                        onSelected={(it) => handleFormDataChange({index: it})}
+                        onSelected={(it) => handleFormDataChange({source: {index: it.value, alias: it.label}})}
                     />
 
                     <DateRangePicker

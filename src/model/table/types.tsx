@@ -5,21 +5,9 @@ import { SearchData, Source } from "../search/types";
 
 export type UseTableProps = {
     searchData: SearchData;
-    onDictionary: (dictionary: Dictionary | null) => void,
-    // onSource: (source: Source) => void,
-    // getRowsRequest: any;
-    // updateRowRequest: any;
-    // deleteRowRequest: any;
-    // addRowRequest: any;
-    // currentTableState: 'add' | 'group' | 'groupData' | 'data',
-    // useCase: UseCases;
-    // config: any;
-    // setGetRowsRequest: Function;
-    // setUpdateRowRequest: Function;
-    // setDeleteRowRequest: Function;
+    onSearchDataObtained: (dictionary: Dictionary | null, source: Source) => void
     onError: ((errorMessage: string) => void) | undefined
     onSuccess: ((successMessage: string) => void) | undefined
-    // setAddRowRequest: Function;
 };
 
 export interface MaterialTableProps<RowData extends object> {
@@ -60,8 +48,7 @@ export interface MaterialTableProps<RowData extends object> {
 export type TableProps = {
     searchData: SearchData
     submitSearch: (searchData: Partial<SearchData>) => void
-    onDictionary: (dictionary: Dictionary | null) => void
-    // onSource: (source: Source) => void
+    onSearchDataObtained: (dictionary: Dictionary | null, source: Source) => void
     lastTimestamp?: string
     handleTableObj?: (tableObj: any) => void
     handleError?: (errorMessage: string) => void

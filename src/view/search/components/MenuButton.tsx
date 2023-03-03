@@ -2,16 +2,16 @@ import { CircularProgress, Menu, MenuItem } from '@material-ui/core';
 import { CSSProperties, useState } from "react";
 import { MenuButtonWrapper } from '../styles/searchbar.toolbar.styles';
 
-export interface MenuButtonOption {
+export interface MenuOption {
     label: string,
     value: string,
 }
 
 type MenuButtonProps = {
-    options: MenuButtonOption[]
-    onSelected: (value: string) => void
+    options?: MenuOption[]
+    onSelected: (value: MenuOption) => void
     value: string
-    onReload?: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuButtonOption[]>
+    onReload?: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
     onError?: (errMsg: string) => void
     title?: string
     label?: string
@@ -28,7 +28,7 @@ export const MenuButton = ({ onSelected, onReload, onError, ...props }: MenuButt
     const label = props.label !== undefined ? props.label : props.value
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [loading, setLoading] = useState(false);
-    const [options, setOptions] = useState(props.options);
+    const [options, setOptions] = useState(props.options || []);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
@@ -55,10 +55,11 @@ export const MenuButton = ({ onSelected, onReload, onError, ...props }: MenuButt
         setAnchorEl(null);
     };
 
-    const handleMenuItemClick = (value: MenuButtonOption) => {
+    const handleMenuItemClick = (option: MenuOption) => {
         setAnchorEl(null);
-        props.value !== value.value && onSelected(value.value)
+        props.value !== option.value && onSelected(option)
     };
+
     return (
         <>
             <MenuButtonWrapper

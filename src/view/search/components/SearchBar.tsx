@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react"
 import { Dictionary } from "../../../model/dictionary/types"
-import { SearchData, SearchDataDefault, SourceOption } from "../../../model/search/types"
+import { SearchData, SearchDataDefault } from "../../../model/search/types"
 import { SearchbarWrapper, SearchImage } from '../styles/searchbar.styles'
-import { MenuButtonOption } from "./MenuButton"
+import { MenuOption } from "./MenuButton"
 import SearchbarForm from "./SearchbarForm"
 import SearchbarSynonyms from "./SearchbarSynonyms"
 
 interface SearchbarProps {
     searchData: SearchData
-    sources: SourceOption[]
     dictionaryData: Dictionary | null
     submitSearch: (requestData: SearchData) => void
-    fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuButtonOption[]>
+    fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
 }
 
 function Searchbar(props: SearchbarProps) {
@@ -45,7 +44,6 @@ function Searchbar(props: SearchbarProps) {
                 searchData={props.searchData}
                 keywords={keywords}
                 dictionary={props.dictionaryData}
-                sources={props.sources}
                 fetchSources={props.fetchSources}
                 onSynonyms={handleSynonymsChange}
                 onSubmit={props.submitSearch} />

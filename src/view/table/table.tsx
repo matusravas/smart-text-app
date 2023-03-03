@@ -19,8 +19,7 @@ export const Table = (props: TableProps) => {
         handleExport,
     } = useTable({
         searchData: props.searchData,
-        onDictionary: props.onDictionary,
-        // onSource: props.onSource,
+        onSearchDataObtained: props.onSearchDataObtained,
         onError: props.handleError,
         onSuccess: props.handleSuccess
     })
@@ -35,7 +34,6 @@ export const Table = (props: TableProps) => {
 
     const onPageChange = (gotoPage: number) => {
         props.submitSearch({ pagination: { ...pagination, currentPage: gotoPage } })
-        // handlePagination({ currentPage: gotoPage })
     }
 
     const onPageSizeChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -50,7 +48,7 @@ export const Table = (props: TableProps) => {
         return (
             <TableWrapper>
                 <TableTopbar>
-                    <TableLastTimestamp>Last update: {timestamp}</TableLastTimestamp>
+                    {!isLoading ? <TableLastTimestamp>Last update: {timestamp}</TableLastTimestamp> : null}
                     <IconButton onClick={handleExport} style={{ alignSelf: 'flex-end' }}>
                         <Tooltip title='Export' placement="top">
                             <FileCopy style={{ color: '#DCDCDC' }} />

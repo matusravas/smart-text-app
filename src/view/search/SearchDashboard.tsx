@@ -9,9 +9,8 @@ function SearchDashboard() {
     const {
         status,
         searchData,
-        sources,
         dictionaryData,
-        onDictionaryObtained,
+        onSearchDataObtained,
         fetchSources,
         submitSearch,
         handleError,
@@ -23,15 +22,14 @@ function SearchDashboard() {
         <SearchDashboardWrapper>
             <Searchbar
                 searchData={searchData}
-                sources={sources}
                 fetchSources={fetchSources}
                 dictionaryData={dictionaryData}
                 submitSearch={submitSearch}
             />
-            {sources.length > 0 ?
+            {searchData.source.index ?
                 <Table
                     searchData={searchData}
-                    onDictionary={onDictionaryObtained}
+                    onSearchDataObtained={onSearchDataObtained}
                     submitSearch={submitSearch}
                     handleError={handleError}
                     handleSuccess={handleSuccess}

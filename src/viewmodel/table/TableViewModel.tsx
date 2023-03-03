@@ -5,13 +5,12 @@ import { TablePagination, TablePaginationDefault, UseTableProps } from "../../mo
 import SearchRepository from "../../repository/search/SearchRepository";
 
 
-export function useTable({ searchData, onDictionary, onError, onSuccess }: UseTableProps) {
+export function useTable({ searchData, onSearchDataObtained, onError, onSuccess }: UseTableProps) {
     const [rows, setRows] = useState<Data[]>(() => []);
     const [columns, setColumns] = useState<Column[]>(() => []);
     const [pagination, setPagination] = useState<TablePagination>(() => TablePaginationDefault);
     const [isLoading, setIsLoading] = useState<boolean>(() => false);
     const repository = SearchRepository.getInstance()
-    // const isMounted = useRef(false);
     useEffect(() => {
         setIsLoading(true)
         repository
@@ -22,7 +21,6 @@ export function useTable({ searchData, onDictionary, onError, onSuccess }: UseTa
                     onError && onError(res.message)
                     return
                 }
-                // if (isMounted.current) return;
                 setPagination(res.data.pagination);
                 setRows([...res.data.results]);
                 //! on index change first obtain source from backend and then fetch data,
@@ -30,12 +28,10 @@ export function useTable({ searchData, onDictionary, onError, onSuccess }: UseTa
                 // (res.data.results && res.data.results.length > 0)
                 //     && setColumns(prepareColumns(res.data.columns, res.data.source.searchField))
                 setColumns(prepareColumns(res.data.columns, res.data.source.searchField))
-                onDictionary(res.data.dictionary)
-                // onSource(res.data.source)
+                onSearchDataObtained(res.data.dictionary, res.data.source)
             })
             .catch(err => {
                 console.error(err)
-                // if (isMounted.current) return;
                 onError && onError(err.message);
             })
             .finally(() => {
