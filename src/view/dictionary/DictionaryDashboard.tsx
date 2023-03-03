@@ -28,7 +28,6 @@ function DictionaryDashboard() {
             />
             }
             <FAB onClick={() => handleClick('create')} />
-            {console.log('message', status.message, status.message ? true : false)}
             <Snackbar
                 open={status.message ? true : false}
                 type={status.type}

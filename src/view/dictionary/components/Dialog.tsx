@@ -1,7 +1,7 @@
 import { IconButton } from "@material-ui/core"
 import Close from "@material-ui/icons/Close"
 import DeleteOutline from "@material-ui/icons/DeleteOutline"
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { ActionType, Dictionary, FormErrors, RequestType } from "../../../model/dictionary/types"
 import { ConfirmDialog } from "../../app/components/ConfirmDialog"
 import { ActionButton, ActionButtonsWrapper } from "../../app/components/styles/action-button.styles"
@@ -23,9 +23,9 @@ type ConfirmPrompt = {
 }
 
 export function Dialog(props: DialogProps) {
-    const dictionaryOriginal = props.dictionary !== undefined ?
-        { ...props.dictionary } : { keyword: '', definition: '', synonyms: [] }
-    const [dictionary, setDictionary] = useState(dictionaryOriginal)
+    const dictionaryOriginal = useRef(props.dictionary !== undefined ?
+        { ...props.dictionary } : { keyword: '', definition: '', synonyms: [] })
+    const [dictionary, setDictionary] = useState(dictionaryOriginal.current)
     const [isChanged, setIsChanged] = useState(false)
     const [formErrors, setFormErrors] = useState<FormErrors>({ keyword: '', synonyms: '' })
     const [confirmation, setConfirmation] = useState<ConfirmPrompt>({})
@@ -35,7 +35,7 @@ export function Dialog(props: DialogProps) {
         let changeFlag = false
         for (key in dictionary) {
             if (key !== 'synonyms') {
-                if (dictionary[key] !== dictionaryOriginal[key]) {
+                if (dictionary[key] !== dictionaryOriginal.current[key]) {
                     changeFlag = true
                     setFormErrors({ ...formErrors, keyword: '' })
                 }
@@ -43,11 +43,12 @@ export function Dialog(props: DialogProps) {
             if (!dictionary.synonyms.length) changeFlag = true // ! this makes create dialog saveable without any change
             else {
                 for (let synonym of dictionary.synonyms) {
-                    if (dictionaryOriginal.synonyms.indexOf(synonym) === -1) {
+                    if (dictionaryOriginal.current.synonyms.indexOf(synonym) === -1) {
                         changeFlag = true
                         setFormErrors({ ...formErrors, synonyms: '' })
                     }
                 }
+                if (dictionary.synonyms.length < dictionaryOriginal.current.synonyms.length) changeFlag = true
             }
         }
         setIsChanged(changeFlag)
@@ -86,6 +87,7 @@ export function Dialog(props: DialogProps) {
             setFormErrors({ synonyms: 'At least one synonym must be set...' })
             return
         }
+        dictionaryOriginal.current = {...dictionary}
         setIsChanged(false)
         props.onUpsertOrDelete('upsert', dictionary)
     }
