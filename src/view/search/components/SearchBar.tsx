@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Dictionary } from "../../../model/dictionary/types"
 import { SearchData, SearchDataDefault, SourceOption } from "../../../model/search/types"
 import { SearchbarWrapper, SearchImage } from '../styles/searchbar.styles'
+import { MenuButtonOption } from "./MenuButton"
 import SearchbarForm from "./SearchbarForm"
 import SearchbarSynonyms from "./SearchbarSynonyms"
 
@@ -10,26 +11,18 @@ interface SearchbarProps {
     sources: SourceOption[]
     dictionaryData: Dictionary | null
     submitSearch: (requestData: SearchData) => void
-    onSources: (sources: SourceOption[]) => void
-    handleError?: (errorMessage: string) => void
-    handleSuccess?: (successMessage: string) => void
+    fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuButtonOption[]>
 }
 
 function Searchbar(props: SearchbarProps) {
     const [keywords, setKeywords] = useState(props.searchData.keywords)
     const [synonymsVisible, setSynonymsVisible] = useState(false)
-        
+
     useEffect(() => {
         setKeywords(props.searchData.keywords)
     }, [props.searchData.keywords])
 
     function handleKeywordsChange(value: boolean) {
-        //!!! Todo here set operator to OR
-        //!!! Todo here set operator to OR
-        //!!! Todo here set operator to OR
-        //!!! Todo here set operator to OR
-        //!!! Todo here set operator to OR
-        //!!! Todo here set operator to OR
         setKeywords(value)
     }
 
@@ -53,11 +46,9 @@ function Searchbar(props: SearchbarProps) {
                 keywords={keywords}
                 dictionary={props.dictionaryData}
                 sources={props.sources}
-                onSources={props.onSources}
+                fetchSources={props.fetchSources}
                 onSynonyms={handleSynonymsChange}
-                onSubmit={props.submitSearch}
-                handleError={props.handleError}
-                handleSuccess={props.handleSuccess} />
+                onSubmit={props.submitSearch} />
                 
             <SearchbarSynonyms
                 visible={synonymsVisible}

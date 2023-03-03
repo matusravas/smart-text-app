@@ -11,7 +11,7 @@ type MenuButtonProps = {
     options: MenuButtonOption[]
     onSelected: (value: string) => void
     value: string
-    onReload?: (target: any) => Promise<MenuButtonOption[]>
+    onReload?: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuButtonOption[]>
     onError?: (errMsg: string) => void
     title?: string
     label?: string
@@ -32,26 +32,23 @@ export const MenuButton = ({ onSelected, onReload, onError, ...props }: MenuButt
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
-        const { currentTarget } = event
+        const e = {...event}
         if (onReload) {
             setLoading(true)
-            onReload(currentTarget)
+            onReload(e)
                 .then(res => {
-                    console.log(res)
                     setOptions(res)
                 })
                 .catch(err => {
-                    console.error(err)
+                    setOptions([])
                     onError && onError('Failed obtaining menu items')
                 })
                 .finally(() => {
                     setLoading(false)
-                    console.log('finally')
-                    console.log(currentTarget)
-                    setAnchorEl(currentTarget);
+                    setAnchorEl(e.currentTarget);
                 })
         }
-        else setAnchorEl(currentTarget)
+        else setAnchorEl(event.currentTarget)
     };
 
     const handleClose = () => {
@@ -65,13 +62,12 @@ export const MenuButton = ({ onSelected, onReload, onError, ...props }: MenuButt
     return (
         <>
             <MenuButtonWrapper
-                disabled={props.disabled}
+                disabled={loading || props.disabled}
                 style={{ ...props.buttonStyles, ...(props.visible === false && { display: 'none' }) }}
                 aria-controls={`${title}-menu`}
                 aria-haspopup="true"
                 onClick={handleClick}
             >
-
                 {loading 
                     ? <CircularProgress size={22} style={{ color: '#1AB5F1' }} /> 
                     : <span style={{ fontWeight: 'bolder' }}>{label}</span>

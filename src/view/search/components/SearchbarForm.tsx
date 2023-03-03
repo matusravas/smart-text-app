@@ -4,7 +4,7 @@ import useSearchbarForm from "../../../viewmodel/search/SearchbarFormViewModel"
 import { DateRangePicker } from "../../app/components/DatePicker/DateRangePicker"
 import { SearchbarFormWrapper, SearchButton } from '../styles/searchbar.styles'
 import { SearchToolbar } from "../styles/searchbar.toolbar.styles"
-import { MenuButton } from "./MenuButton"
+import { MenuButton, MenuButtonOption } from "./MenuButton"
 import { SearchInput } from "./SearchInput"
 
 export interface SearchbarFormProps {
@@ -13,10 +13,8 @@ export interface SearchbarFormProps {
     keywords: boolean
     sources: SourceOption[]
     onSynonyms: (value: boolean) => void
-    onSources: (sources: SourceOption[]) => void
+    fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuButtonOption[]>
     onSubmit: (searchData: SearchData) => void
-    handleError?: (errorMessage: string) => void
-    handleSuccess?: (successMessage: string) => void
 }
 
 function SearchbarForm(props: SearchbarFormProps) {
@@ -25,10 +23,8 @@ function SearchbarForm(props: SearchbarFormProps) {
         operatorVisible,
         selectSourceOptions,
         selectOperatorOptions,
-        fetchSources,
         handleFormDataChange,
         handleSubmit,
-        onError
     } = useSearchbarForm(props)
     return (
         <SearchbarFormWrapper autoComplete="off" onSubmit={handleSubmit}>
@@ -58,8 +54,7 @@ function SearchbarForm(props: SearchbarFormProps) {
                         value={searchData.source.index}
                         label={searchData.source.indexAlias}
                         options={selectSourceOptions}
-                        onReload={fetchSources}
-                        onError={onError}
+                        onReload={props.fetchSources}
                         onSelected={(it) => handleFormDataChange({index: it})}
                     />
 

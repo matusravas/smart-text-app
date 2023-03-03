@@ -4,6 +4,7 @@ import { SearchData, SearchDataDefault, Source, SourceOption } from '../../model
 import { TablePaginationDefault } from '../../model/table/types'
 import { DashboardFail, Status, StatusDefalt } from '../../model/types'
 import SearchRepository from '../../repository/search/SearchRepository'
+import { MenuButtonOption } from '../../view/search/components/MenuButton'
 
 
 export const useSearchViewModel = () => {
@@ -12,7 +13,7 @@ export const useSearchViewModel = () => {
     const [status, setStatus] = useState<Status>(StatusDefalt)
     const [searchData, setSearchData] = useState<SearchData>(SearchDataDefault)
     const repository = SearchRepository.getInstance()
-    
+
     useEffect(() => {
         repository
             .sourcesWithTimestamps()
@@ -42,24 +43,42 @@ export const useSearchViewModel = () => {
         searchData.searchPhrase !== newSearchData.searchPhrase && setDictionaryData(null)
     }
 
-    function onSources(sources: SourceOption[]) {
-        if (!sources.length) {
-            setSearchData(SearchDataDefault)
-            setDictionaryData(null)
-            return
-        }
-        const filtered = sources.filter(it => it.index === searchData.source.index)
-        const source: Source = filtered.length === 1 
-            ? filtered[0] 
-            : sources.length > 0 
-            ? sources[0] 
-            : { index: '', indexAlias: '' }
-        source.index !== searchData.source.index && setSearchData({
-            ...searchData
-            , source: source
-            ,pagination: TablePaginationDefault
+    function fetchSources(_event: React.MouseEvent<HTMLButtonElement>) {
+        return new Promise<MenuButtonOption[]>((resolve, reject) => {
+            repository
+                .sourcesWithTimestamps()
+                .then((it) => {
+                    if (!it.success) {
+                        setSearchData(SearchDataDefault)
+                        setDictionaryData(null)
+                        setSources([])
+                        setStatus({ type: 'error', message: 'Unable to obtain sources' })
+                        return
+                    }
+                    const filtered = it.data.filter(it => it.index === searchData.source.index)
+                    const source: Source = filtered.length === 1
+                        ? filtered[0]
+                        : it.data.length > 0
+                            ? it.data[0]
+                            : { index: '', indexAlias: '' }
+                    source.index !== searchData.source.index && setSearchData({
+                        ...searchData
+                        , source: source
+                        , pagination: TablePaginationDefault
+                    })
+                    setSources(it.data)
+                    resolve(it.data.map(it => {
+                        return { 'label': it.indexAlias, 'value': it.index }
+                    }))
+                })
+                .catch((err: DashboardFail) => {
+                    setSearchData(SearchDataDefault)
+                    setDictionaryData(null)
+                    setSources([])
+                    setStatus({ type: 'error', message: 'Unable to obtain sources' })
+                    resolve([])
+                });
         })
-        setSources(sources)
     }
 
     function onDictionaryObtained(dictionary: Dictionary | null) {
@@ -83,7 +102,7 @@ export const useSearchViewModel = () => {
         dictionaryData,
         onDictionaryObtained,
         submitSearch,
-        onSources,
+        fetchSources,
         handleError,
         handleSuccess,
         resetStatus

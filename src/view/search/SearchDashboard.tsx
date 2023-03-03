@@ -12,7 +12,7 @@ function SearchDashboard() {
         sources,
         dictionaryData,
         onDictionaryObtained,
-        onSources,
+        fetchSources,
         submitSearch,
         handleError,
         handleSuccess,
@@ -24,11 +24,9 @@ function SearchDashboard() {
             <Searchbar
                 searchData={searchData}
                 sources={sources}
-                onSources={onSources}
+                fetchSources={fetchSources}
                 dictionaryData={dictionaryData}
                 submitSearch={submitSearch}
-                handleError={handleError}
-                handleSuccess={handleSuccess}
             />
             {sources.length > 0 ?
                 <Table
