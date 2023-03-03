@@ -1,5 +1,5 @@
-import { Menu, MenuItem } from '@material-ui/core';
-import { ButtonHTMLAttributes, CSSProperties, HTMLAttributes, useState } from "react";
+import { CircularProgress, Menu, MenuItem } from '@material-ui/core';
+import { CSSProperties, useState } from "react";
 import { MenuButtonWrapper } from '../styles/searchbar.toolbar.styles';
 
 export interface MenuButtonOption {
@@ -10,9 +10,11 @@ export interface MenuButtonOption {
 type MenuButtonProps = {
     options: MenuButtonOption[]
     onSelected: (value: string) => void
+    value: string
+    onReload?: (target: any) => Promise<MenuButtonOption[]>
+    onError?: (errMsg: string) => void
     title?: string
     label?: string
-    value: string
     disabled?: boolean
     visible?: boolean
     titleItem?: boolean
@@ -21,14 +23,35 @@ type MenuButtonProps = {
 }
 
 
-export const MenuButton = ({ options, onSelected, ...props }: MenuButtonProps) => {
+export const MenuButton = ({ onSelected, onReload, onError, ...props }: MenuButtonProps) => {
     const title = props.title ? props.title.toString().toLowerCase() : 'item'
     const label = props.label !== undefined ? props.label : props.value
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [loading, setLoading] = useState(false);
+    const [options, setOptions] = useState(props.options);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
-        setAnchorEl(event.currentTarget);
+        const { currentTarget } = event
+        if (onReload) {
+            setLoading(true)
+            onReload(currentTarget)
+                .then(res => {
+                    console.log(res)
+                    setOptions(res)
+                })
+                .catch(err => {
+                    console.error(err)
+                    onError && onError('Failed obtaining menu items')
+                })
+                .finally(() => {
+                    setLoading(false)
+                    console.log('finally')
+                    console.log(currentTarget)
+                    setAnchorEl(currentTarget);
+                })
+        }
+        else setAnchorEl(currentTarget)
     };
 
     const handleClose = () => {
@@ -48,7 +71,11 @@ export const MenuButton = ({ options, onSelected, ...props }: MenuButtonProps) =
                 aria-haspopup="true"
                 onClick={handleClick}
             >
-                <span style={{ fontWeight: 'bolder' }}> {label}</span>
+
+                {loading 
+                    ? <CircularProgress size={22} style={{ color: '#1AB5F1' }} /> 
+                    : <span style={{ fontWeight: 'bolder' }}>{label}</span>
+                }
             </MenuButtonWrapper>
             <Menu
                 id={`${title}-menu`}

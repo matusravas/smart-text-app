@@ -13,7 +13,10 @@ export interface SearchbarFormProps {
     keywords: boolean
     sources: SourceOption[]
     onSynonyms: (value: boolean) => void
+    onSources: (sources: SourceOption[]) => void
     onSubmit: (searchData: SearchData) => void
+    handleError?: (errorMessage: string) => void
+    handleSuccess?: (successMessage: string) => void
 }
 
 function SearchbarForm(props: SearchbarFormProps) {
@@ -22,8 +25,10 @@ function SearchbarForm(props: SearchbarFormProps) {
         operatorVisible,
         selectSourceOptions,
         selectOperatorOptions,
+        fetchSources,
         handleFormDataChange,
-        handleSubmit
+        handleSubmit,
+        onError
     } = useSearchbarForm(props)
     return (
         <SearchbarFormWrapper autoComplete="off" onSubmit={handleSubmit}>
@@ -49,10 +54,12 @@ function SearchbarForm(props: SearchbarFormProps) {
                     <MenuButton
                         titleItem
                         title="Source"
-                        buttonStyles={{ minWidth: '125px', backgroundColor: '#f7f7f7' }}
+                        buttonStyles={{ width: '150px', height: '40px', backgroundColor: '#f7f7f7' }}
                         value={searchData.source.index}
                         label={searchData.source.indexAlias}
                         options={selectSourceOptions}
+                        onReload={fetchSources}
+                        onError={onError}
                         onSelected={(it) => handleFormDataChange({index: it})}
                     />
 

@@ -1,7 +1,7 @@
-import moment from 'moment'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Dictionary } from '../../model/dictionary/types'
 import { SearchData, SearchDataDefault, Source, SourceOption } from '../../model/search/types'
+import { TablePaginationDefault } from '../../model/table/types'
 import { DashboardFail, Status, StatusDefalt } from '../../model/types'
 import SearchRepository from '../../repository/search/SearchRepository'
 
@@ -34,58 +34,37 @@ export const useSearchViewModel = () => {
                 console.error(err)
                 setStatus({ type: 'error', message: err.message })
             });
-
-        // return () => {
-        //     fetchSources.current = false
-        // }
     }, [])
 
     function submitSearch(newSearchData: Partial<SearchData>) {
-        // if (!fetchSources) {
-        //     setSearchData(prev => ({ ...prev, ...newSearchData }))
-        //     searchData.searchPhrase !== newSearchData.searchPhrase && setDictionaryData(null)
-        //     return
-        // }
-        repository
-            .sourcesWithTimestamps()
-            .then((it) => {
-                if (!it.success) {
-                    setStatus({ type: 'error', message: it.message })
-                    return
-                }
-                console.log(it.data)
-                setSources(it.data)
-            })
-            .catch((err: DashboardFail) => {
-                console.error(err)
-                setStatus({ type: 'error', message: err.message })
-            })
-            .finally(() => {
-                console.log(newSearchData)
-                setSearchData(prev => ({ ...prev, ...newSearchData }))
-                searchData.searchPhrase !== newSearchData.searchPhrase && setDictionaryData(null)
-            })
+        console.log(newSearchData)
+        setSearchData(prev => ({ ...prev, ...newSearchData }))
+        searchData.searchPhrase !== newSearchData.searchPhrase && setDictionaryData(null)
+    }
+
+    function onSources(sources: SourceOption[]) {
+        if (!sources.length) {
+            setSearchData(SearchDataDefault)
+            setDictionaryData(null)
+            return
+        }
+        const filtered = sources.filter(it => it.index === searchData.source.index)
+        const source: Source = filtered.length === 1 
+            ? filtered[0] 
+            : sources.length > 0 
+            ? sources[0] 
+            : { index: '', indexAlias: '' }
+        source.index !== searchData.source.index && setSearchData({
+            ...searchData
+            , source: source
+            ,pagination: TablePaginationDefault
+        })
+        setSources(sources)
     }
 
     function onDictionaryObtained(dictionary: Dictionary | null) {
         setDictionaryData(dictionary)
     }
-
-    // function onSourceObtained(source: Source) {
-    //     console.log(source)
-    //     setSearchData(prev => (
-    //         {
-    //             ...prev
-    //             , source: {
-    //                 index: source.index,
-    //                 indexAlias: source.indexAlias,
-    //                 searchField: source.searchField,
-    //                 dateField: source.dateField
-    //             }
-    //         })
-    //     )
-    //     setLastTimestamp(source.timestamp ? moment(source.timestamp).format('MMM Do YYYY, HH:mm') : 'N/A')// .format('MMM Do YYYY, HH:mm'): 'N/A')
-    // }
 
     function handleError(errMsg: string) {
         setStatus({ type: 'error', message: errMsg })
@@ -101,11 +80,10 @@ export const useSearchViewModel = () => {
         status,
         searchData,
         sources,
-        // lastTimestamp,
         dictionaryData,
         onDictionaryObtained,
-        // onSourceObtained,
         submitSearch,
+        onSources,
         handleError,
         handleSuccess,
         resetStatus

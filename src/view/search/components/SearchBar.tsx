@@ -10,12 +10,15 @@ interface SearchbarProps {
     sources: SourceOption[]
     dictionaryData: Dictionary | null
     submitSearch: (requestData: SearchData) => void
+    onSources: (sources: SourceOption[]) => void
+    handleError?: (errorMessage: string) => void
+    handleSuccess?: (successMessage: string) => void
 }
 
 function Searchbar(props: SearchbarProps) {
     const [keywords, setKeywords] = useState(props.searchData.keywords)
     const [synonymsVisible, setSynonymsVisible] = useState(false)
-
+        
     useEffect(() => {
         setKeywords(props.searchData.keywords)
     }, [props.searchData.keywords])
@@ -50,8 +53,11 @@ function Searchbar(props: SearchbarProps) {
                 keywords={keywords}
                 dictionary={props.dictionaryData}
                 sources={props.sources}
+                onSources={props.onSources}
                 onSynonyms={handleSynonymsChange}
-                onSubmit={props.submitSearch} />
+                onSubmit={props.submitSearch}
+                handleError={props.handleError}
+                handleSuccess={props.handleSuccess} />
                 
             <SearchbarSynonyms
                 visible={synonymsVisible}
