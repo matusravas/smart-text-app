@@ -53,6 +53,7 @@ export const TableWrapper = styled.div`
   & div::-webkit-scrollbar {
     background-color: #fafbfd;
     min-width: 10px;
+    min-height: 10px;
     border-radius: 10px;
   }
   & div::-webkit-scrollbar-track {
@@ -62,6 +63,7 @@ export const TableWrapper = styled.div`
   & div::-webkit-scrollbar-thumb {
     background-color: #babac0;
     min-width: 20px;
+    min-height: 10px;
     border-radius: 16px;
     border: 4px solid #fafbfd;
   }

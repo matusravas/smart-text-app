@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
 import { Dictionary } from "../../../model/dictionary/types"
-import { SearchData, SearchDataDefault } from "../../../model/search/types"
+import { SearchData } from "../../../model/search/types"
+import useSearchbarViewModel from "../../../viewmodel/search/SearchbarViewModel"
 import { SearchbarWrapper, SearchImage } from '../styles/searchbar.styles'
 import { MenuOption } from "./MenuButton"
 import SearchbarForm from "./SearchbarForm"
@@ -14,25 +14,18 @@ interface SearchbarProps {
 }
 
 function Searchbar(props: SearchbarProps) {
-    const [keywords, setKeywords] = useState(props.searchData.keywords)
-    const [synonymsVisible, setSynonymsVisible] = useState(false)
-
-    useEffect(() => {
-        setKeywords(props.searchData.keywords)
-    }, [props.searchData.keywords])
-
-    function handleKeywordsChange(value: boolean) {
-        setKeywords(value)
-    }
-
-    function handleSynonymsChange(visible: boolean) {
-        setSynonymsVisible(visible)
-    }
-
-    function handleReset() {
-        props.submitSearch({ ...SearchDataDefault, source: props.searchData.source })
-    }
-    
+    const {
+        searchData,
+        operatorVisible,
+        // keywords,
+        synonymsVisible,
+        fetchSources,
+        selectOperatorOptions,
+        handleKeywordsChange,
+        handleFormDataChange,
+        handleSubmit,
+        handleReset
+    } = useSearchbarViewModel(props)
     return (
         <SearchbarWrapper>
             <SearchImage
@@ -41,16 +34,16 @@ function Searchbar(props: SearchbarProps) {
                 src='/img/bekaert-logo.svg' alt='PDS' />
 
             <SearchbarForm
-                searchData={props.searchData}
-                keywords={keywords}
-                dictionary={props.dictionaryData}
-                fetchSources={props.fetchSources}
-                onSynonyms={handleSynonymsChange}
-                onSubmit={props.submitSearch} />
+                searchData={searchData}
+                operatorVisible={operatorVisible}
+                operatorOptions={selectOperatorOptions}
+                onFormDataChange={handleFormDataChange}
+                fetchSources={fetchSources}
+                submitSearch={handleSubmit} />
                 
             <SearchbarSynonyms
                 visible={synonymsVisible}
-                keywords={keywords}
+                keywords={searchData.keywords}
                 dictionary={props.dictionaryData}
                 onKeywordsChange={handleKeywordsChange} />
 

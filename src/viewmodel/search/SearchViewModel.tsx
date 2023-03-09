@@ -36,9 +36,8 @@ export const useSearchViewModel = () => {
     }, [])
 
     function submitSearch(newSearchData: Partial<SearchData>) {
-        console.log(newSearchData)
         setSearchData(prev => ({ ...prev, ...newSearchData }))
-        searchData.searchPhrase !== newSearchData.searchPhrase && setDictionaryData(null)
+        newSearchData.searchPhrase !== undefined && searchData.searchPhrase !== newSearchData.searchPhrase && setDictionaryData(null)
     }
 
     function onNoSources() {
@@ -54,7 +53,7 @@ export const useSearchViewModel = () => {
                 .then((it) => {
                     if (!it.success) {
                         onNoSources()
-                        return
+                        return reject('No available sources')
                     }
                     const filtered = it.data.filter(it => it.index === searchData.source.index)
                     const source: Source = filtered.length === 1
@@ -72,9 +71,8 @@ export const useSearchViewModel = () => {
                     }))
                 })
                 .catch((err: DashboardFail) => {
-                    setSearchData(SearchDataDefault)
                     onNoSources()
-                    resolve([])
+                    return reject('No available sources')
                 });
         })
     }

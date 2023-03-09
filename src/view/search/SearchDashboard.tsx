@@ -1,6 +1,6 @@
 import { useSearchViewModel } from "../../viewmodel/search/SearchViewModel";
 import { Snackbar } from "../app/components/Snackbar";
-import { Table } from "../table/table";
+import { Table } from "../table/Table";
 import Searchbar from "./components/SearchBar";
 
 import { SearchDashboardWrapper } from "./styles/searchbar.styles";

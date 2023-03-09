@@ -11,7 +11,7 @@ type MenuButtonProps = {
     options?: MenuOption[]
     onSelected: (value: MenuOption) => void
     value: string
-    onReload?: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
+    optionsFetcher?: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
     onError?: (errMsg: string) => void
     title?: string
     label?: string
@@ -23,7 +23,7 @@ type MenuButtonProps = {
 }
 
 
-export const MenuButton = ({ onSelected, onReload, onError, ...props }: MenuButtonProps) => {
+export const MenuButton = ({ onSelected, optionsFetcher, onError, ...props }: MenuButtonProps) => {
     const title = props.title ? props.title.toString().toLowerCase() : 'item'
     const label = props.label !== undefined ? props.label : props.value
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -33,9 +33,9 @@ export const MenuButton = ({ onSelected, onReload, onError, ...props }: MenuButt
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
         const e = {...event}
-        if (onReload) {
+        if (optionsFetcher) {
             setLoading(true)
-            onReload(e)
+            optionsFetcher(e)
                 .then(res => {
                     setOptions(res)
                 })

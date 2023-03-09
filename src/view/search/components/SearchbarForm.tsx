@@ -1,6 +1,5 @@
-import { Dictionary } from "../../../model/dictionary/types"
 import { Operator, SearchData } from "../../../model/search/types"
-import useSearchbarForm from "../../../viewmodel/search/SearchbarFormViewModel"
+import { FormChangeData } from "../../../viewmodel/search/SearchbarViewModel"
 import { DateRangePicker } from "../../app/components/DatePicker/DateRangePicker"
 import { SearchbarFormWrapper, SearchButton } from '../styles/searchbar.styles'
 import { SearchToolbar } from "../styles/searchbar.toolbar.styles"
@@ -9,26 +8,28 @@ import { SearchInput } from "./SearchInput"
 
 export interface SearchbarFormProps {
     searchData: SearchData
-    dictionary: Dictionary | null
-    keywords: boolean
-    onSynonyms: (value: boolean) => void
+    operatorVisible: boolean
+    operatorOptions: MenuOption[]
     fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
-    onSubmit: (searchData: SearchData) => void
+    onFormDataChange: (it: FormChangeData) => void
+    submitSearch: (event: any) => void
 }
 
-function SearchbarForm(props: SearchbarFormProps) {
-    const {
-        searchData,
-        operatorVisible,
-        selectOperatorOptions,
-        handleFormDataChange,
-        handleSubmit,
-    } = useSearchbarForm(props)
+function SearchbarForm(
+    {  
+        searchData
+        , onFormDataChange
+        , fetchSources
+        , submitSearch
+        , operatorVisible
+        , operatorOptions
+    }: SearchbarFormProps) {
+
     return (
-        <SearchbarFormWrapper autoComplete="off" onSubmit={handleSubmit}>
+        <SearchbarFormWrapper autoComplete="off" onSubmit={submitSearch}>
             <SearchInput
                 value={searchData.searchPhrase}
-                onChange={(e) => handleFormDataChange({phrase: e.target.value})}
+                onChange={(e) => onFormDataChange({phrase: e.target.value})}
                 endAdornment={(styles) =>
                     <MenuButton
                         visible={operatorVisible}
@@ -39,11 +40,11 @@ function SearchbarForm(props: SearchbarFormProps) {
                             minWidth: '60px', fontWeight: '300',
                         }}
                         value={searchData.searchOperator}
-                        options={selectOperatorOptions}
-                        onSelected={(it) => handleFormDataChange({operator: it.value as Operator})} 
+                        options={operatorOptions}
+                        onSelected={(it) => onFormDataChange({operator: it.value as Operator})} 
                     />}
             />
-            {props.searchData.source.index ?
+            {searchData.source.index ?
                 <SearchToolbar>
                     <MenuButton
                         titleItem
@@ -52,15 +53,15 @@ function SearchbarForm(props: SearchbarFormProps) {
                         value={searchData.source.index}
                         label={searchData.source.indexAlias}
                         // options={selectSourceOptions}
-                        onReload={props.fetchSources}
-                        onSelected={(it) => handleFormDataChange({source: {index: it.value, alias: it.label}})}
+                        optionsFetcher={fetchSources}
+                        onSelected={(it) => onFormDataChange({source: {index: it.value, alias: it.label}})}
                     />
 
                     <DateRangePicker
                         selectedDateRange={searchData.dateRange}
-                        onChange={(it) => handleFormDataChange({dateRange: it})}
+                        onChange={(it) => onFormDataChange({dateRange: it})}
                         onSubmit={(e, dateRange) => {
-                            handleSubmit(e)
+                            submitSearch(e)
                         }}
                     />
 

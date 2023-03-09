@@ -13,6 +13,7 @@ export function useTable({ searchData, onSearchDataObtained, onError, onSuccess 
     const repository = SearchRepository.getInstance()
     useEffect(() => {
         setIsLoading(true)
+        console.log(searchData)
         repository
             .search(searchData)
             .then((res) => {
