@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Dictionary } from '../../model/dictionary/types'
 import { SearchData, SearchDataDefault, Source } from '../../model/search/types'
-import { TablePaginationDefault } from '../../model/table/types'
 import { DashboardFail, Status, StatusDefalt } from '../../model/types'
 import SearchRepository from '../../repository/search/SearchRepository'
 import { MenuOption } from '../../view/search/components/MenuButton'
@@ -64,7 +63,7 @@ export const useSearchViewModel = () => {
                     source.index !== searchData.source.index && setSearchData({
                         ...searchData
                         , source: source
-                        , pagination: TablePaginationDefault
+                        , pagination: {currentPage: 0, pageSize: searchData.pagination.pageSize}
                     })
                     resolve(it.data.map(it => {
                         return { 'label': it.indexAlias, 'value': it.index }

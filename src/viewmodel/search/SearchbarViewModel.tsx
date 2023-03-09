@@ -1,7 +1,6 @@
 import { FormEvent, useCallback, useEffect, useState } from "react"
 import { Dictionary } from "../../model/dictionary/types"
 import { DateRange, Operator, SearchData, SearchDataDefault } from "../../model/search/types"
-import { TablePaginationDefault } from "../../model/table/types"
 import { MenuOption } from "../../view/search/components/MenuButton"
 
 export type FormChangeData = {
@@ -22,7 +21,7 @@ function useFormData(searchData: SearchData) {
     const [data, setData] = useState(searchData)
 
     function setFormData(...it: Partial<SearchData>[]) {
-        setData({ ...data, pagination: TablePaginationDefault, ...Object.assign({}, ...it) })
+        setData({ ...data, pagination: {currentPage: 0, pageSize: data.pagination.pageSize}, ...Object.assign({}, ...it) })
     }
 
     return { formData: data, setFormData }
@@ -84,24 +83,22 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
         if (it.phrase !== undefined) {
             const searchPhrase = it.phrase.trim()
             let keywords = formData.keywords
-            let pagination = { ...props.searchData.pagination }
             
-            if (!searchPhrase.includes(props.searchData.searchPhrase)) {
+            if (searchPhrase !== props.searchData.searchPhrase) {
                 setSynonymsVisible(false)
                 keywords = true
-                pagination = { ...TablePaginationDefault }
             }
             else setSynonymsVisible(true)
 
             setOperatorVisible(
                 (
-                    (searchPhrase.includes(props.searchData.searchPhrase) && props.dictionaryData && formData.keywords)
+                    (searchPhrase === props.searchData.searchPhrase && props.dictionaryData && formData.keywords)
                     || searchPhraseLongEnough(searchPhrase)
                 )
                     ? true
                     : false
             )
-            setFormData({ keywords, searchPhrase: searchPhrase, pagination })
+            setFormData({ keywords, searchPhrase: searchPhrase })
         }
     }, [formData, props.searchData.searchPhrase, props.searchData.searchOperator])
 
