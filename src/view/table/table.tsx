@@ -37,10 +37,14 @@ export const Table = (props: TableProps) => {
     }
 
     const onPageSizeChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        let currentPage = pagination.currentPage
+        const nRemainingItems = pagination.totalHits - (currentPage * pagination.pageSize)
         const rowsPerPage = +event.target.value
-        const currentPage = rowsPerPage >= pagination.totalHits ? 0 : pagination.currentPage
-        props.submitSearch({ pagination: { ...pagination, currentPage: currentPage, pageSize: +rowsPerPage } })
-        // handlePagination({ currentPage: currentPage, pageSize: +rowsPerPage })
+        currentPage = Math.floor((pagination.totalHits - nRemainingItems) / rowsPerPage) // -1 bcs page idexed from 0
+        // currentPage = rowsPerPage < pagination.pageSize ? currentPage - 1 : currentPage + 1
+        // currentPage = currentPage < 0 ? 0 : currentPage 
+        rowsPerPage >= pagination.totalHits && (currentPage = 0)
+        props.submitSearch({ pagination: { ...pagination, currentPage, pageSize: rowsPerPage } })
     }
 
     const renderTable = () => {
