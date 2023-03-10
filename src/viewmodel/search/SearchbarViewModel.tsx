@@ -81,10 +81,9 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
         it.operator && setFormData({ searchOperator: it.operator })
 
         if (it.phrase !== undefined) {
-            const searchPhrase = it.phrase.trim()
             let keywords = formData.keywords
             
-            if (searchPhrase !== props.searchData.searchPhrase) {
+            if (it.phrase !== props.searchData.searchPhrase) {
                 setSynonymsVisible(false)
                 keywords = true
             }
@@ -92,13 +91,13 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
 
             setOperatorVisible(
                 (
-                    (searchPhrase === props.searchData.searchPhrase && props.dictionaryData && formData.keywords)
-                    || searchPhraseLongEnough(searchPhrase)
+                    (it.phrase === props.searchData.searchPhrase && props.dictionaryData && formData.keywords)
+                    || searchPhraseLongEnough(it.phrase)
                 )
                     ? true
                     : false
             )
-            setFormData({ keywords, searchPhrase: searchPhrase })
+            setFormData({ keywords, searchPhrase: it.phrase })
         }
     }, [formData, props.searchData.searchPhrase, props.searchData.searchOperator])
 
