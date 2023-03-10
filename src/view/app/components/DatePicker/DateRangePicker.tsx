@@ -315,9 +315,10 @@ export function DateRangePicker(props: DateRangePickerProps) {
                 mode="range"
                 style={{ marginTop: 0 }}
                 selected={dateRange}
-                disabled={[{after: new Date()}]} // Todo restrict max date
+                disabled={[{after: new Date()}]}
                 onSelect={handleDateRangeChange}
                 weekStartsOn={1}
+                today={dateRange.to}
                 locale={en}
                 modifiersClassNames={{
                   selected: classes.selectedDates,
