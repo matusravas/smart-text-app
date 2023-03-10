@@ -85,13 +85,16 @@ export const Table = (props: TableProps) => {
                         Pagination: (props: any) => {
                             return <TablePagination
                                 {...props}
+                                
                                 count={pagination.totalHits}
                                 page={pagination.currentPage}
                                 rowsPerPage={pagination.pageSize}
-                                onChangePage={(_: any, gotoPage: number) => onPageChange(gotoPage)}
+                                onChangePage={(_: any, gotoPage: number) => !isLoading && onPageChange(gotoPage)}
                                 onChangeRowsPerPage={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                    onPageSizeChange(e)
-                                    props.onChangeRowsPerPage(e)
+                                    if(!isLoading) {
+                                        onPageSizeChange(e)
+                                        props.onChangeRowsPerPage(e)
+                                    }
                                 }} />
                         }
                     }}
