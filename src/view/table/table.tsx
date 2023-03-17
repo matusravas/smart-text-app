@@ -27,7 +27,7 @@ export const Table = (props: TableProps) => {
         ? props.lastTimestamp 
         : props.searchData.source.timestamp 
         ? moment(props.searchData.source.timestamp).format('MMM Do YYYY, HH:mm') 
-        : undefined
+        : null
     
     const materialTableRef = React.createRef<any>();
     let renderingGroupRows: boolean = false;
