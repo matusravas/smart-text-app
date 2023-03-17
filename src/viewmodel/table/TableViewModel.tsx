@@ -76,6 +76,7 @@ export function useTable({ searchData, onSearchDataObtained, onError, onSuccess 
 
     function handleExport() {
         if (!searchData) return
+        setIsLoading(true)
         repository
             .searchExport(searchData)
             .then((res) => {
@@ -87,6 +88,9 @@ export function useTable({ searchData, onSearchDataObtained, onError, onSuccess 
             })
             .catch((err: Error) => {
                 onError && onError(err.message);
+            })
+            .finally(() => {
+                setIsLoading(false)
             });
     }
 

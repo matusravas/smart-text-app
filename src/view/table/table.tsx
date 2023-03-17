@@ -27,7 +27,7 @@ export const Table = (props: TableProps) => {
         ? props.lastTimestamp 
         : props.searchData.source.timestamp 
         ? moment(props.searchData.source.timestamp).format('MMM Do YYYY, HH:mm') 
-        : 'N/A'
+        : undefined
     
     const materialTableRef = React.createRef<any>();
     let renderingGroupRows: boolean = false;
@@ -52,7 +52,10 @@ export const Table = (props: TableProps) => {
         return (
             <TableWrapper>
                 <TableTopbar>
-                    {!isLoading ? <TableLastTimestamp>Last update: {timestamp}</TableLastTimestamp> : null}
+                    {timestamp 
+                        ? <TableLastTimestamp>Last update: {timestamp}</TableLastTimestamp> 
+                        : null
+                    }
                     <IconButton onClick={handleExport} style={{ alignSelf: 'flex-end' }}>
                         <Tooltip title='Export' placement="top">
                             <FileCopy style={{ color: '#DCDCDC' }} />
