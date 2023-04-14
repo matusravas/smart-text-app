@@ -10,7 +10,7 @@ export const TableTopbar = styled.div`
 
 export const TableWrapper = styled.div`
   max-height: 100%;
-  max-width: 90%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   /* & .MuiTableRow-head th:hover { */
