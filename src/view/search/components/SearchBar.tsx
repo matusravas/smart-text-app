@@ -9,7 +9,7 @@ import SearchbarSynonyms from "./SearchbarSynonyms"
 interface SearchbarProps {
     searchData: SearchData
     dictionaryData: Dictionary | null
-    submitSearch: (requestData: SearchData) => void
+    submitSearch: (requestData: SearchData, reset?: boolean) => void
     fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
 }
 

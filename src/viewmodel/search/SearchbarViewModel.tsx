@@ -14,7 +14,7 @@ export interface SearchbarViewModelProps {
     searchData: SearchData
     dictionaryData: Dictionary | null
     fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
-    submitSearch: (searchData: SearchData) => void
+    submitSearch: (searchData: SearchData, reset?: boolean) => void
 }
 
 function useFormData(searchData: SearchData) {
@@ -66,7 +66,7 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
     }
 
     function handleReset() {
-        props.submitSearch({ ...SearchDataDefault, source: props.searchData.source })
+        props.submitSearch({ ...SearchDataDefault, source: props.searchData.source }, true)
     }
 
     function searchPhraseLongEnough(phrase: string) {

@@ -8,12 +8,13 @@ import { MenuOption } from '../../view/search/components/MenuButton'
 
 export const useSearchViewModel = () => {
     const [dictionaryData, setDictionaryData] = useState<Dictionary | null>(null)
+    const [shouldFetchSources, setShouldFetchSources] = useState(true)
     const [status, setStatus] = useState<Status>(StatusDefalt)
     const [searchData, setSearchData] = useState<SearchData>(SearchDataDefault)
     const repository = SearchRepository.getInstance()
 
     useEffect(() => {
-        repository
+        shouldFetchSources && repository
             .sourcesWithTimestamps()
             .then((it) => {
                 if (!it.success) {
@@ -31,10 +32,16 @@ export const useSearchViewModel = () => {
             .catch((err: DashboardFail) => {
                 console.error(err)
                 setStatus({ type: 'error', message: err.message })
+            })
+            .finally(() => {
+                setShouldFetchSources(false)
             });
-    }, [])
+    }, [shouldFetchSources])
 
-    function submitSearch(newSearchData: Partial<SearchData>) {
+    function submitSearch(newSearchData: Partial<SearchData>, reset?: boolean) {
+        // Todo can only re-fetch sources if newSearchData !== current state of searchData
+        reset && setShouldFetchSources(true)
+        console.log(reset, shouldFetchSources)
         setSearchData(prev => ({ ...prev, ...newSearchData }))
         newSearchData.searchPhrase !== undefined && searchData.searchPhrase !== newSearchData.searchPhrase && setDictionaryData(null)
     }
