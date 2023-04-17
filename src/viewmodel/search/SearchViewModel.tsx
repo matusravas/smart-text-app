@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Dictionary } from '../../model/dictionary/types'
 import { SearchData, SearchDataDefault, Source } from '../../model/search/types'
-import { DashboardFail, Status, StatusDefalt } from '../../model/types'
+import { DashboardFail, Status, StatusDefault } from '../../model/types'
 import SearchRepository from '../../repository/search/SearchRepository'
 import { MenuOption } from '../../view/search/components/MenuButton'
 
@@ -9,12 +9,12 @@ import { MenuOption } from '../../view/search/components/MenuButton'
 export const useSearchViewModel = () => {
     const [dictionaryData, setDictionaryData] = useState<Dictionary | null>(null)
     const [shouldFetchSources, setShouldFetchSources] = useState(true)
-    const [status, setStatus] = useState<Status>(StatusDefalt)
+    const [status, setStatus] = useState<Status>(StatusDefault)
     const [searchData, setSearchData] = useState<SearchData>(SearchDataDefault)
     const repository = SearchRepository.getInstance()
 
     useEffect(() => {
-        shouldFetchSources && repository
+        shouldFetchSources && !searchData.source.index && repository
             .sourcesWithTimestamps()
             .then((it) => {
                 if (!it.success) {
@@ -95,7 +95,7 @@ export const useSearchViewModel = () => {
         setStatus({ type: 'success', message: msg })
     }
     function resetStatus() {
-        setStatus(StatusDefalt)
+        setStatus(StatusDefault)
     }
 
     return {

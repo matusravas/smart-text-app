@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { ActionType, Dictionary, RequestType } from '../../model/dictionary/types'
-import { DashboardFail, Status, StatusDefalt } from '../../model/types'
+import { DashboardFail, Status, StatusDefault } from '../../model/types'
 import DictionaryRepository from '../../repository/dictionary/DictionaryRepository'
 
 
 export const useDictionaryViewModel = () => {
     const repository = DictionaryRepository.getInstance()
     const [fetch, setFetch] = useState(true)
-    const [status, setStatus] = useState<Status>(StatusDefalt)
+    const [status, setStatus] = useState<Status>(StatusDefault)
     const [actionType, setActionType] = useState<ActionType>()
     const [searchQuery, setSearchQuery] = useState<string>('')
     const [dialogOpen, setDialogOpen] = useState(false)
@@ -111,7 +111,7 @@ export const useDictionaryViewModel = () => {
     }
 
     function resetStatus() {
-        setStatus(StatusDefalt)
+        setStatus(StatusDefault)
         // setFetch(true)
     }
 

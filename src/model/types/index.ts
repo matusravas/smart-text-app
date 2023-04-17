@@ -55,4 +55,4 @@ export type Status = {
     message: string
 }
 
-export const StatusDefalt: Status = {type: 'info', message: ''}
+export const StatusDefault: Status = {type: 'info', message: ''}

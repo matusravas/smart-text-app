@@ -47,16 +47,17 @@ export function useTable({ searchData, onSearchDataObtained, onError, onSuccess 
         , searchData.keywords ])
 
     function prepareColumns(columns: Column[], searchField: string | undefined) {
+        const cellStyle = {
+            textAlign: 'center',
+            width: '20%',
+            padding: 12,
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+        }
         let centeredColumns = columns.map(col => {
             return {
-                ...col, cellStyle: {
-                    textAlign: 'center',
-                    width: '20%',
-                    padding: 12,
-                    textOverflow: 'ellipsis',
-                    'overflow': 'hidden',
-                    'whiteSpace': 'nowrap',
-                }
+                ...col, cellStyle
             }
         })
         if (!searchData.searchPhrase) return centeredColumns
@@ -68,7 +69,7 @@ export function useTable({ searchData, onSearchDataObtained, onError, onSuccess 
                 ...col,
                 // headerStyle: {color: color, fontWeight: 'bold'},
                 headerStyle: { fontWeight: 'bold' },
-                cellStyle: { color: color, fontWeight: 'bold' }
+                cellStyle: { color: color, fontWeight: 'bold', ...cellStyle }
             }
             return newCol
         })
