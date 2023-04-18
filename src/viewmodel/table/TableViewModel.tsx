@@ -85,7 +85,7 @@ export function useTable({ searchData, onSearchDataObtained, onError, onSuccess 
                     onError && onError(res.message);
                     return
                 }
-                onSuccess && onSuccess(`${searchData.source.indexAlias} data successfully exported`)
+                onSuccess && onSuccess(`${searchData.source.alias} data successfully exported`)
             })
             .catch((err: Error) => {
                 onError && onError(err.message);

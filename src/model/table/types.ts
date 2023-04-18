@@ -53,6 +53,8 @@ export type TableProps = {
     handleTableObj?: (tableObj: any) => void
     handleError?: (errorMessage: string) => void
     handleSuccess?: (successMessage: string) => void
+    handleExport?: (type: 'excel' | 'csv') => void
+    topbar?: () => React.ReactNode
 } & MaterialTableProps<any>
 
 

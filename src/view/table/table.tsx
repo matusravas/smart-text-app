@@ -7,6 +7,7 @@ import { TableProps } from "../../model/table/types";
 import { useTable } from "../../viewmodel/table/TableViewModel";
 import { tableIcons } from "./styles/icons";
 import { TableLastTimestamp, TableTopbar, TableWrapper } from "./styles/table.styles";
+import { MenuButton } from "../search/components/MenuButton";
 
 export const Table = (props: TableProps) => {
     const {
@@ -16,19 +17,19 @@ export const Table = (props: TableProps) => {
         pagination,
         options,
         localization,
-        handleExport,
+        handleExport
     } = useTable({
         searchData: props.searchData,
         onSearchDataObtained: props.onSearchDataObtained,
         onError: props.handleError,
         onSuccess: props.handleSuccess
     })
-    const timestamp = props.lastTimestamp 
-        ? props.lastTimestamp 
-        : props.searchData.source.timestamp 
-        ? moment(props.searchData.source.timestamp).format('MMM Do YYYY, HH:mm') 
-        : null
-    
+    const timestamp = props.lastTimestamp
+        ? props.lastTimestamp
+        : props.searchData.source.timestamp
+            ? moment(props.searchData.source.timestamp).format('MMM Do YYYY, HH:mm')
+            : null
+
     const materialTableRef = React.createRef<any>();
     let renderingGroupRows: boolean = false;
 
@@ -46,22 +47,28 @@ export const Table = (props: TableProps) => {
         rowsPerPage >= pagination.totalHits && (currentPage = 0)
         props.submitSearch({ pagination: { ...pagination, currentPage, pageSize: rowsPerPage } })
     }
-
+    const renderTopbarContent = props.topbar ? props.topbar() : null
     const renderTable = () => {
         if (!columns.length) return (<React.Fragment />)
         return (
             <TableWrapper>
-                <TableTopbar>
-                    {timestamp 
-                        ? <TableLastTimestamp>Last update: {timestamp}</TableLastTimestamp> 
-                        : null
-                    }
-                    <IconButton onClick={handleExport} style={{ alignSelf: 'flex-end' }}>
-                        <Tooltip title='Export' placement="top">
-                            <FileCopy style={{ color: '#DCDCDC' }} />
-                        </Tooltip>
-                    </IconButton>
-                </TableTopbar>
+                <div>
+                    <TableTopbar>
+                        {renderTopbarContent}
+                    </TableTopbar>
+                    <TableTopbar>
+                        {timestamp
+                            ? <TableLastTimestamp>Last update: {timestamp}</TableLastTimestamp>
+                            : null
+                        }
+                        <IconButton onClick={handleExport} style={{ alignSelf: 'flex-end' }}>
+                            <Tooltip title='Export' placement="top">
+                                <FileCopy style={{ color: '#DCDCDC' }} />
+                            </Tooltip>
+                        </IconButton>
+                    </TableTopbar>
+                </div>
+
                 <MaterialTable
                     title='Table title'
                     icons={tableIcons}
@@ -88,13 +95,13 @@ export const Table = (props: TableProps) => {
                         Pagination: (props: any) => {
                             return <TablePagination
                                 {...props}
-                                
+
                                 count={pagination.totalHits}
                                 page={pagination.currentPage}
                                 rowsPerPage={pagination.pageSize}
                                 onChangePage={(_: any, gotoPage: number) => !isLoading && onPageChange(gotoPage)}
                                 onChangeRowsPerPage={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                                    if(!isLoading) {
+                                    if (!isLoading) {
                                         onPageSizeChange(e)
                                         props.onChangeRowsPerPage(e)
                                     }

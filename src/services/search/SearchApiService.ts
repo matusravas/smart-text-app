@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import moment from "moment";
-import { SearchResponseRaw, SourceOptionRaw } from "../../model/search/SearchResponse";
+import { SearchResponseRaw, SourceFileRaw, SourceOptionRaw } from "../../model/search/SearchResponse";
 import { SearchData } from "../../model/search/types";
 import { ApiResponse } from "../../model/types";
 import ApiService from "../ApiService";
@@ -24,13 +24,16 @@ class SearchApiService extends ApiService implements ISearchApiService {
         const queryParamsString = createQueryParamsString(sourceQueryString, searchQueryString, dateQueryString
             , paginationQueryString, keywordQueryString)
         return new Promise<ApiResponse<SearchResponseRaw>>((resolve, reject) => axios({
-            method: 'GET',
+            method: 'POST',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/?${queryParamsString}`,
             responseType: 'json',
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
+            },
+            data: {
+                // uids: source.uids
             }
         }).then((res: AxiosResponse) => {
             resolve(this.onResponse<SearchResponseRaw>(res))
@@ -58,7 +61,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
                 'Content-Type': 'application/json',
             }
         }).then((res: AxiosResponse) => {
-            const filename = `${searchPhrase ? `${searchPhrase}_` : ''}${source.indexAlias}_${moment().format('YYYY-MM-DDTHH-mm')}.xlsx`
+            const filename = `${searchPhrase ? `${searchPhrase}_` : ''}${source.alias}_${moment().format('YYYY-MM-DDTHH-mm')}.xlsx`
             const url = window.URL.createObjectURL(new Blob([res.data], { type: 'text/xlsx;' }));
             const link = document.createElement('a');
             link.href = url;
@@ -84,6 +87,23 @@ class SearchApiService extends ApiService implements ISearchApiService {
             }
         }).then((res: AxiosResponse) => {
             resolve(this.onResponse<SourceOptionRaw[]>(res))
+        }).catch((err: AxiosError) => {
+            reject(this.onError(err))
+        })
+        )
+    }
+    sourceFiles(index: string): Promise<ApiResponse<SourceFileRaw[]>> {
+        return new Promise<ApiResponse<SourceFileRaw[]>>((resolve, reject) => axios({
+            method: 'GET',
+            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/source-files/${index}`,
+            responseType: 'json',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then((res: AxiosResponse) => {
+            resolve(this.onResponse<SourceFileRaw[]>(res))
         }).catch((err: AxiosError) => {
             reject(this.onError(err))
         })

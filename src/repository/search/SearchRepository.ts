@@ -1,6 +1,6 @@
 import { SearchResponse } from "../../model/search/SearchResponse";
-import { SearchData, SourceOption } from "../../model/search/types";
-import { Dashboard, DashboardFail, DashboardSuccess } from "../../model/types";
+import { SearchData, SourceFile, SourceOption } from "../../model/search/types";
+import { Dashboard, DashboardFail } from "../../model/types";
 import SearchApiService from "../../services/search/SearchApiService";
 import ISearchRepository from "./ISearchRepository";
 
@@ -25,8 +25,9 @@ export default class SearchRepository implements ISearchRepository {
             const data: SearchResponse = {
                 ...response.data,
                 source: {
+                    // uids: searchData.source.uids,
                     index: response.data.source.index,
-                    indexAlias: response.data.source.alias,
+                    alias: response.data.source.alias,
                     searchField: response.data.source.search_field,
                     dateField: response.data.source.date_field,
                     timestamp: response.data.source.timestamp ? new Date(response.data.source.timestamp * 1000) : undefined
@@ -61,14 +62,37 @@ export default class SearchRepository implements ISearchRepository {
             if (!response.success) return response
 
             const sourceOptions: SourceOption[] = response.data.map(it => {
-                const source = {
+                // const uids = it.files.map(f => f.uid)
+                const source: SourceOption = {
                     index: it.index,
-                    indexAlias: it.index_alias,
-                    timestamp: new Date(it.timestamp * 1000)
+                    alias: it.alias,
+                    timestamp: new Date(it.timestamp * 1000),
+                    // uids: uids.length > 0 ? [uids[0]] : []
                 }
                 return source
             })
             return { ...response, data: sourceOptions }
+        } catch (err) {
+            console.log(err)
+            return err as DashboardFail
+        }
+    }
+
+    async sourceFiles(index: string): Promise<Dashboard<SourceFile[]>> {
+        try {
+            const response = await this.api.sourceFiles(index)
+            console.log(response)
+            if (!response.success) return response
+
+            const sourceFiles: SourceFile[] = response.data.map(it => {
+                const sourceFile: SourceFile = {
+                    ...it
+                    ,ctime: new Date(it.ctime * 1000)
+                    ,rtime: new Date(it.rtime * 1000)
+                }
+                return sourceFile
+            })
+            return { ...response, data: sourceFiles }
         } catch (err) {
             console.log(err)
             return err as DashboardFail

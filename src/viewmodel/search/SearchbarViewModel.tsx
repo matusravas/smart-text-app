@@ -13,7 +13,7 @@ export type FormChangeData = {
 export interface SearchbarViewModelProps {
     searchData: SearchData
     dictionaryData: Dictionary | null
-    fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
+    // fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
     submitSearch: (searchData: SearchData, reset?: boolean) => void
 }
 
@@ -76,7 +76,7 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
     const handleFormDataChange = useCallback((it: FormChangeData) => {
         it.dateRange && setFormData({ dateRange: it.dateRange })
         if (it.source) {
-            setFormData({ source: { index: it.source.index, indexAlias: it.source.alias } })
+            setFormData({ source: { index: it.source.index, alias: it.source.alias } })
         }
         it.operator && setFormData({ searchOperator: it.operator })
 
@@ -106,7 +106,7 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
         operatorVisible,
         selectOperatorOptions,
         synonymsVisible,
-        fetchSources: props.fetchSources,
+        // fetchSources: props.fetchSources,
         handleKeywordsChange,
         handleFormDataChange,
         handleSubmit,

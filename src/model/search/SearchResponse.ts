@@ -1,6 +1,6 @@
 import { Dictionary } from "../dictionary/types"
 import { TablePagination } from "../table/types"
-import { Column, Data, Source } from "./types"
+import { Column, Data, Source, SourceBulkStats } from "./types"
 
 export type PaginationRaw = {
     current_page: number,
@@ -9,10 +9,19 @@ export type PaginationRaw = {
     total_pages: number
 }
 
+export type SourceFileRaw = {
+    name: string
+    uid: string
+    ctime: number
+    rtime: number
+    stats: SourceBulkStats
+}
+
 export type SourceOptionRaw = {
     index: string,
-    index_alias: string,
+    alias: string,
     timestamp: number
+    files: SourceFileRaw[]
 }
 
 export type SourceRaw = {

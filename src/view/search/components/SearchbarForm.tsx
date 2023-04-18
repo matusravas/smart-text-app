@@ -1,7 +1,7 @@
 import { Operator, SearchData } from "../../../model/search/types"
 import { FormChangeData } from "../../../viewmodel/search/SearchbarViewModel"
 import { DateRangePicker } from "../../app/components/DatePicker/DateRangePicker"
-import { SearchbarFormWrapper, SearchButton } from '../styles/searchbar.styles'
+import { SearchButton, SearchbarFormWrapper } from '../styles/searchbar.styles'
 import { SearchToolbar } from "../styles/searchbar.toolbar.styles"
 import { MenuButton, MenuOption } from "./MenuButton"
 import { SearchInput } from "./SearchInput"
@@ -11,6 +11,7 @@ export interface SearchbarFormProps {
     operatorVisible: boolean
     operatorOptions: MenuOption[]
     fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
+    onSourcesObtained: (options: MenuOption[]) => void
     onFormDataChange: (it: FormChangeData) => void
     submitSearch: (event: any) => void
 }
@@ -20,6 +21,7 @@ function SearchbarForm(
         searchData
         , onFormDataChange
         , fetchSources
+        , onSourcesObtained
         , submitSearch
         , operatorVisible
         , operatorOptions
@@ -51,9 +53,10 @@ function SearchbarForm(
                         title="Source"
                         buttonStyles={{ width: '150px', height: '40px', backgroundColor: '#f7f7f7' }}
                         value={searchData.source.index}
-                        label={searchData.source.indexAlias}
+                        label={searchData.source.alias}
                         // options={selectSourceOptions}
                         optionsFetcher={fetchSources}
+                        onOptionsFetched={onSourcesObtained}
                         onSelected={(it) => onFormDataChange({source: {index: it.value, alias: it.label}})}
                     />
 

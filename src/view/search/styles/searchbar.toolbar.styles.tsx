@@ -27,3 +27,24 @@ export const MenuButtonWrapper = styled.button`
     }
   }
 `
+
+export const MenuItemCheckboxWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`
+
+export const MenuLabelWrapper = styled.div`
+`
+
+export const MenuLabel = styled.p`
+  margin: 0px;
+`
+
+export const MenuSubLabel = styled.p`
+  margin: 0px;
+  font-size: 0.7rem;
+  color: #909090;
+`

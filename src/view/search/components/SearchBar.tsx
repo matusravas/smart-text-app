@@ -1,7 +1,7 @@
 import { Dictionary } from "../../../model/dictionary/types"
 import { SearchData } from "../../../model/search/types"
 import useSearchbarViewModel from "../../../viewmodel/search/SearchbarViewModel"
-import { SearchbarWrapper, SearchImage } from '../styles/searchbar.styles'
+import { SearchImage, SearchbarWrapper } from '../styles/searchbar.styles'
 import { MenuOption } from "./MenuButton"
 import SearchbarForm from "./SearchbarForm"
 import SearchbarSynonyms from "./SearchbarSynonyms"
@@ -11,6 +11,7 @@ interface SearchbarProps {
     dictionaryData: Dictionary | null
     submitSearch: (requestData: SearchData, reset?: boolean) => void
     fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
+    onSourcesObtained: (options: MenuOption[]) => void
 }
 
 function Searchbar(props: SearchbarProps) {
@@ -19,7 +20,7 @@ function Searchbar(props: SearchbarProps) {
         operatorVisible,
         // keywords,
         synonymsVisible,
-        fetchSources,
+        // fetchSources,
         selectOperatorOptions,
         handleKeywordsChange,
         handleFormDataChange,
@@ -38,7 +39,8 @@ function Searchbar(props: SearchbarProps) {
                 operatorVisible={operatorVisible}
                 operatorOptions={selectOperatorOptions}
                 onFormDataChange={handleFormDataChange}
-                fetchSources={fetchSources}
+                fetchSources={props.fetchSources}
+                onSourcesObtained={props.onSourcesObtained}
                 submitSearch={handleSubmit} />
                 
             <SearchbarSynonyms

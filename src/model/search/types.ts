@@ -20,7 +20,8 @@ export type Operator = 'OR' | 'AND'
 
 export type Source = {
     index: string
-    indexAlias: string
+    alias: string
+    // uids?: string[]
     searchField?: string
     dateField?: string
     timestamp?: Date 
@@ -35,9 +36,10 @@ export type DateRange = {
 export const SearchDataDefault = {
     // search: { phrase: '', operator: 'OR' as Operator }
     searchPhrase: ''
+    
     ,searchOperator: 'OR' as Operator
     // search: { phrase: '', operator: 'OR' as Operator, field: 'Kr_text' }
-    , source: {index: '', indexAlias: ''}
+    , source: {index: '', alias: '', uids: []}
     , keywords: true
     , pagination: {currentPage: 0, pageSize: 10}
     , dateRange: { from: undefined, to: undefined }
@@ -55,10 +57,33 @@ export type Column = {
     type: 'string' | 'numeric' | 'date' | 'boolean'
 }
 
+export type SourceBulkStats = {
+    nitems: number
+    inserts: number
+    updates: number
+    errors: number
+}
+
+export type SourceFile = {
+    name: string
+    uid: string
+    ctime: Date
+    rtime: Date
+    stats: SourceBulkStats
+}
+
 export type SourceOption = {
     index: string
-    indexAlias: string
+    alias: string
     timestamp: Date
+    // uids: string[]
 }
+
+// export type SourceOptionFile = {
+//     index: string
+//     alias: string
+//     timestamp: Date
+//     files: SourceFile[]
+// }
 
 export type Data = Record<string, string | number>
