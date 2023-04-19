@@ -1,10 +1,11 @@
+import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Dictionary } from '../../model/dictionary/types'
 import { SearchData, SearchDataDefault, Source } from '../../model/search/types'
 import { DashboardFail, Status, StatusDefault } from '../../model/types'
 import SearchRepository from '../../repository/search/SearchRepository'
-import { MenuCheckboxOption, MenuOption } from '../../view/search/components/MenuButton'
-import moment from 'moment'
+import { MenuOption } from '../../view/search/components/MenuButton'
+import { MenuCheckboxOption } from '../../view/search/components/MenuCheckboxButton'
 
 
 export const useSearchViewModel = () => {
@@ -23,15 +24,22 @@ export const useSearchViewModel = () => {
                     setStatus({ type: 'error', message: it.message })
                     return
                 }
-                console.log(it)
+                // console.log(it.data[0].uids)
+                const sourceUIDs = it.data.length > 0
+                    ? it.data[0].uids
+                    : []
+                sourceUIDs && setUids(sourceUIDs)
+                
+                // console.log(it)
                 const source: Source = it.data.length > 0
                     ? { ...it.data[0] }
                     : { index: '', alias: '' }
-                console.log(source)
+                // console.log(source)
                 setSearchData({
                     ...searchData
                     , source: source
                 })
+                
             })
             .catch((err: DashboardFail) => {
                 console.error(err)
@@ -46,7 +54,7 @@ export const useSearchViewModel = () => {
         // Todo can only re-fetch sources if newSearchData !== current state of searchData
         reset && setShouldFetchSources(true)
         setSearchData(prev => ({ ...prev, ...newSearchData }))
-        newSearchData.source?.index !== searchData.source.index && setUids([])
+        // newSearchData.source?.index !== searchData.source.index && setUids([])
         newSearchData.searchPhrase !== undefined && searchData.searchPhrase !== newSearchData.searchPhrase && setDictionaryData(null)
     }
 
@@ -67,6 +75,7 @@ export const useSearchViewModel = () => {
                     }
                     resolve(it.data.map(it => {
                         return { label: it.alias, value: it.index }
+                        // Todo pass callback here to some object with data and in resolve where it is called, call the callback
                     }))
                 })
                 .catch((err: DashboardFail) => {
@@ -103,9 +112,10 @@ export const useSearchViewModel = () => {
         })
     }
 
-    function onSearchDataObtained(dictionary: Dictionary | null, source: Source) {
+    function onSearchDataObtained(sourceUIDs: string[], dictionary: Dictionary | null) {
+        setUids(sourceUIDs)
         setDictionaryData(dictionary)
-        setSearchData({ ...searchData, source })
+        setSearchData({ ...searchData })
     }
 
     function handleError(errMsg: string) {
@@ -118,7 +128,7 @@ export const useSearchViewModel = () => {
         setStatus(StatusDefault)
     }
 
-    function handleSourcesObtained(options: MenuOption[]) {
+    function onSourcesObtained(options: MenuOption[]) {
         const filtered = options.filter(it => it.value === searchData.source.index)
         const source: Source = filtered.length === 1
             ? { ...searchData.source }
@@ -132,29 +142,9 @@ export const useSearchViewModel = () => {
             , pagination: { currentPage: 0, pageSize: searchData.pagination.pageSize }
         })
     }
-
-    function handleSourcesFileObtained(options: MenuCheckboxOption[]) {
-        setUids(options.filter(it => it.checked).map(it => it.value))
-    }
-
-    function handleSourceFileChecked(option: MenuCheckboxOption) {
-        console.log(option)
-        let checkedItems = [...uids]
-        if (!option.checked) {
-            console.log('Checked', option.label, option.value)
-            checkedItems.push(option.value)
-            console.log(checkedItems)
-        } else {
-            const index = checkedItems.indexOf(option.value)
-            if (index !== -1) checkedItems.splice(index)
-        }
-        setUids(checkedItems)
-    }
-    
     
     function handleSubmitSourceFiles(options: MenuCheckboxOption[]) {
-        console.log(options)
-        console.log(uids)
+        setUids(options.filter(it => it.checked).map(it=>it.value))
     }
 
     return {
@@ -162,12 +152,13 @@ export const useSearchViewModel = () => {
         ,searchData
         ,dictionaryData
         ,onSearchDataObtained
+        ,uids
         ,submitSearch
         ,fetchSources
-        ,handleSourcesObtained
+        ,onSourcesObtained
         ,fetchSourceFiles
-        ,handleSourceFileChecked
-        ,handleSourcesFileObtained
+        // ,handleSourceFileChecked
+        // ,handleSourcesFileObtained
         ,handleSubmitSourceFiles
         ,handleError
         ,handleSuccess

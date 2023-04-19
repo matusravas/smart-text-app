@@ -21,7 +21,8 @@ export type SourceOptionRaw = {
     index: string,
     alias: string,
     timestamp: number
-    files: SourceFileRaw[]
+    uid: string
+    // files: SourceFileRaw[]
 }
 
 export type SourceRaw = {
@@ -38,6 +39,7 @@ export type SearchResponseRaw = {
     dictionary: Dictionary | null
     results: Data[]
     source: SourceRaw
+    uids: string[]
 }
 
 export type SearchResponse = {
@@ -46,4 +48,5 @@ export type SearchResponse = {
     dictionary: Dictionary | null
     results: Data[]
     source: Source
+    uids: string[]
 }

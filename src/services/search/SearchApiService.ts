@@ -7,13 +7,14 @@ import ApiService from "../ApiService";
 import ISearchApiService from "./ISearchApiService";
 import { createQueryParamsString } from "./helpers";
 
+
 class SearchApiService extends ApiService implements ISearchApiService {
     constructor() {
         super()
         this.ucPrefix = 'search'
     }
 
-    async search({ source, searchPhrase, searchOperator, keywords, dateRange, pagination }: SearchData) {
+    async search({ source, searchPhrase, searchOperator, keywords, dateRange, pagination }: SearchData, uids: string[]) {
         const sourceQueryString = `source=${source.index}`
         const searchQueryString = `phrase=${searchPhrase}&operator=${searchOperator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
         const keywordQueryString = `use-keywords=${keywords}`
@@ -33,7 +34,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
                 'Content-Type': 'application/json',
             },
             data: {
-                // uids: source.uids
+                uids: uids
             }
         }).then((res: AxiosResponse) => {
             resolve(this.onResponse<SearchResponseRaw>(res))

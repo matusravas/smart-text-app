@@ -16,9 +16,9 @@ export default class SearchRepository implements ISearchRepository {
     }
 
     // async search(searchData: SearchData): Promise<DashboardSuccess<SearchResponse> | DashboardFail> {
-    async search(searchData: SearchData): Promise<Dashboard<SearchResponse>> {
+    async search(searchData: SearchData, uids: string[]): Promise<Dashboard<SearchResponse>> {
         try {
-            const response = await this.api.search(searchData)
+            const response = await this.api.search(searchData, uids)
             if (!response.success) return response //{success: false, message: response.message}
 
             const paginationRaw = response.data.pagination
@@ -39,6 +39,7 @@ export default class SearchRepository implements ISearchRepository {
                     totalPages: paginationRaw.total_pages
                 }
             }
+            console.log({ ...response, data })
             return { ...response, data }
         } catch (err) {
             console.log(err)
@@ -67,6 +68,7 @@ export default class SearchRepository implements ISearchRepository {
                     index: it.index,
                     alias: it.alias,
                     timestamp: new Date(it.timestamp * 1000),
+                    uids: [it.uid]
                     // uids: uids.length > 0 ? [uids[0]] : []
                 }
                 return source

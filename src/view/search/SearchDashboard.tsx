@@ -1,7 +1,6 @@
 import { useSearchViewModel } from "../../viewmodel/search/SearchViewModel";
 import { Snackbar } from "../app/components/Snackbar";
 import { Table } from "../table/Table";
-import { MenuButton } from "./components/MenuButton";
 import { MenuButtonCheckbox } from "./components/MenuCheckboxButton";
 import Searchbar from "./components/SearchBar";
 
@@ -11,31 +10,34 @@ function SearchDashboard() {
     const {
         status
         ,searchData
+        ,uids
         ,dictionaryData
         ,onSearchDataObtained
         ,fetchSources
         ,fetchSourceFiles
-        ,handleSourcesFileObtained
-        ,handleSourcesObtained
-        ,handleSourceFileChecked
+        // ,handleSourcesFileObtained
+        ,onSourcesObtained
+        // ,handleSourceFileChecked
         ,handleSubmitSourceFiles
         ,submitSearch
         ,handleError
         ,handleSuccess
         ,resetStatus
     } = useSearchViewModel()
+
     return (
         <SearchDashboardWrapper>
             <Searchbar
                 searchData={searchData}
                 fetchSources={fetchSources}
-                onSourcesObtained={handleSourcesObtained}
+                onSourcesObtained={onSourcesObtained}
                 dictionaryData={dictionaryData}
                 submitSearch={submitSearch}
             />
             {searchData.source.index ?
                 <Table
                     searchData={searchData}
+                    uids={uids}
                     onSearchDataObtained={onSearchDataObtained}
                     submitSearch={submitSearch}
                     handleError={handleError}
@@ -49,9 +51,10 @@ function SearchDashboard() {
                             buttonStyles={{ minWidth: '60px', height: '40px', fontWeight: '300', backgroundColor: '#f7f7f7' }}
                             value={'xyz'}
                             optionsFetcher={fetchSourceFiles}
-                            onOptionsFetched={handleSourcesFileObtained}
-                            onChecked={handleSourceFileChecked}
-                            forcedIndicesOnNothingChecked={[0]}
+
+                            // onOptionsFetched={handleSourcesFileObtained}
+                            // onChecked={handleSourceFileChecked}
+                            forcedIndices={[0]}
                             onSubmit={handleSubmitSourceFiles}
                         />
                     )}

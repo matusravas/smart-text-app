@@ -76,7 +76,7 @@ export type SourceOption = {
     index: string
     alias: string
     timestamp: Date
-    // uids: string[]
+    uids: string[]
 }
 
 // export type SourceOptionFile = {

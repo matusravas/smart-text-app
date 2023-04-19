@@ -7,7 +7,6 @@ import { TableProps } from "../../model/table/types";
 import { useTable } from "../../viewmodel/table/TableViewModel";
 import { tableIcons } from "./styles/icons";
 import { TableLastTimestamp, TableTopbar, TableWrapper } from "./styles/table.styles";
-import { MenuButton } from "../search/components/MenuButton";
 
 export const Table = (props: TableProps) => {
     const {
@@ -21,6 +20,7 @@ export const Table = (props: TableProps) => {
     } = useTable({
         searchData: props.searchData,
         onSearchDataObtained: props.onSearchDataObtained,
+        uids: props.uids,
         onError: props.handleError,
         onSuccess: props.handleSuccess
     })

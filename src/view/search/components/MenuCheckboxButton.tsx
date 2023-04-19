@@ -26,9 +26,9 @@ type MenuButtonCheckboxStatic = {
 type MenuButtonCheckboxProps = {
     value: string
     onError?: (errMsg: string) => void
-    onChecked: (value: MenuCheckboxOption) => void
+    onChecked?: (value: MenuCheckboxOption) => void
     onSubmit?: (options: MenuCheckboxOption[]) => void
-    forcedIndicesOnNothingChecked?: number[]
+    forcedIndices?: number[]
     title?: string
     label?: string
     disabled?: boolean
@@ -77,16 +77,16 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
         let checkedItems = options.map(it => {
             return it.value === option.value ? { ...it, checked: !it.checked } : it
         })
-        // if (props.forcedIndicesOnNothingChecked) {
+        // if (props.forcedIndices) {
         //     const nCheckedItems = checkedItems.filter(it => it.checked).length
         //     console.log(nCheckedItems)
         //     if (!nCheckedItems) {
-        //         props.forcedIndicesOnNothingChecked.map(it => {
-        //             const item = checkedItems.at(it)
-        //             console.log(item)
-        //             console.log(option)
+        //         props.forcedIndices.map(it => {
+        //             const item = checkedItems.at(it) 
+        //             console.log(item) //false
+        //             console.log(option) //true
+        //             // item && item.checked && (props.onChecked(item))
         //             item && (item.checked = true)
-        //             item && !option.checked && props.onChecked(item)
         //             // if (item && option.checked !== !item.checked) {
         //             //     props.onChecked(item)
         //             //     item.checked = true
@@ -97,7 +97,13 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
         //     }
         // }
         setOptions(checkedItems)
-        props.onChecked(option)
+        props.onChecked && props.onChecked(option)
+    }
+
+
+    const handleSubmit = () => {
+        setAnchorEl(null);
+        props.onSubmit!(options)
     }
 
     const renderCheckboxMenuItems = () => {
@@ -149,7 +155,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                 </MenuItem>}
                 {renderCheckboxMenuItems()}
                 {props.onSubmit && <MenuButtonWrapper
-                    onClick={() => props.onSubmit!(options)}
+                    onClick={handleSubmit}
                     style={{ 
                         marginBottom: '-8px'
                         , width: '100%'

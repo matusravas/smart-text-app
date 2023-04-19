@@ -4,8 +4,9 @@ import { SearchData, Source } from "../search/types";
 
 
 export type UseTableProps = {
-    searchData: SearchData;
-    onSearchDataObtained: (dictionary: Dictionary | null, source: Source) => void
+    searchData: SearchData
+    uids: string[]
+    onSearchDataObtained: (uids: string[], dictionary: Dictionary | null) => void
     onError: ((errorMessage: string) => void) | undefined
     onSuccess: ((successMessage: string) => void) | undefined
 };
@@ -48,7 +49,8 @@ export interface MaterialTableProps<RowData extends object> {
 export type TableProps = {
     searchData: SearchData
     submitSearch: (searchData: Partial<SearchData>) => void
-    onSearchDataObtained: (dictionary: Dictionary | null, source: Source) => void
+    onSearchDataObtained: (uids: string[], dictionary: Dictionary | null) => void
+    uids: string[]
     lastTimestamp?: string
     handleTableObj?: (tableObj: any) => void
     handleError?: (errorMessage: string) => void

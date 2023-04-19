@@ -49,6 +49,7 @@ function SearchbarForm(
             {searchData.source.index ?
                 <SearchToolbar>
                     <MenuButton
+                        dynamic
                         titleItem
                         title="Source"
                         buttonStyles={{ width: '150px', height: '40px', backgroundColor: '#f7f7f7' }}

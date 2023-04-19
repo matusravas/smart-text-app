@@ -5,7 +5,7 @@ import { TablePagination, TablePaginationDefault, UseTableProps } from "../../mo
 import SearchRepository from "../../repository/search/SearchRepository";
 
 
-export function useTable({ searchData, onSearchDataObtained, onError, onSuccess }: UseTableProps) {
+export function useTable({ searchData, uids, onSearchDataObtained, onError, onSuccess }: UseTableProps) {
     const [rows, setRows] = useState<Data[]>(() => []);
     const [columns, setColumns] = useState<Column[]>(() => []);
     const [pagination, setPagination] = useState<TablePagination>(() => TablePaginationDefault);
@@ -13,9 +13,10 @@ export function useTable({ searchData, onSearchDataObtained, onError, onSuccess 
     const repository = SearchRepository.getInstance()
     useEffect(() => {
         setIsLoading(true)
+        console.log(uids)
         console.log(searchData)
         repository
-            .search(searchData)
+            .search(searchData, uids)
             .then((res) => {
                 console.log(res)
                 if (!res.success) {
@@ -29,7 +30,7 @@ export function useTable({ searchData, onSearchDataObtained, onError, onSuccess 
                 // (res.data.results && res.data.results.length > 0)
                 //     && setColumns(prepareColumns(res.data.columns, res.data.source.searchField))
                 setColumns(prepareColumns(res.data.columns, res.data.source.searchField))
-                onSearchDataObtained(res.data.dictionary, res.data.source)
+                onSearchDataObtained(res.data.uids, res.data.dictionary)
             })
             .catch(err => {
                 console.error(err)
@@ -39,7 +40,8 @@ export function useTable({ searchData, onSearchDataObtained, onError, onSuccess 
                 setIsLoading(false);
             })
     }, [ 
-        searchData.source.index
+        JSON.stringify(uids)
+        , searchData.source.index
         , searchData.searchPhrase
         , searchData.searchOperator
         , searchData.dateRange
