@@ -43,7 +43,7 @@ function SearchDashboard() {
                             title="file"
                             buttonStyles={{ minWidth: '60px', height: '40px', fontWeight: '300', backgroundColor: '#f7f7f7' }}
                             optionsFetcher={fetchSourceFiles}
-                            forcedIndices={[0]}
+                            // forcedIndices={[0]}
                             onSubmit={(options) => {
                                 const checkedUIDs = options.filter(it => it.checked).map(it=>it.value)
                                 submitSearch({source: {...searchData.source, uids: checkedUIDs}})
