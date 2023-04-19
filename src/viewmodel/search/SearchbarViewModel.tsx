@@ -52,9 +52,8 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
                     props.onError && props.onError(it.message)
                     return
                 }
-                const source = it.data
-                source.index && setFormData({
-                    source: { index: source.index, alias: source.alias, uids: source.uids }
+                it.data.index && setFormData({
+                    source: it.data
                     , pagination: { currentPage: 0, pageSize: formData.pagination.pageSize }
                 })
             })

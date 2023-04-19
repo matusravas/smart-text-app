@@ -50,7 +50,7 @@ export type TableProps = {
     searchData: SearchData
     submitSearch: (searchData: Partial<SearchData>) => void
     onSearchDataObtained: (dictionary: Dictionary | null) => void
-    lastTimestamp?: string
+    lastTimestamp?: Date
     handleTableObj?: (tableObj: any) => void
     handleError?: (errorMessage: string) => void
     handleSuccess?: (successMessage: string) => void

@@ -118,7 +118,6 @@ export default class SearchRepository implements ISearchRepository {
             const uids: string[] = files.map(it => {
                 return it.uid
             })
-            
             return { 
                 ...response
                 , data: {
