@@ -24,7 +24,8 @@ export type Source = {
     // uids?: string[]
     searchField?: string
     dateField?: string
-    timestamp?: Date 
+    timestamp?: Date
+    uids: string[] 
 }
 
 export type DateRange = {
@@ -39,7 +40,7 @@ export const SearchDataDefault = {
     
     ,searchOperator: 'OR' as Operator
     // search: { phrase: '', operator: 'OR' as Operator, field: 'Kr_text' }
-    , source: {index: '', alias: '', uids: []}
+    , source: {index: '', alias: '', uids: [] as string[]}
     , keywords: true
     , pagination: {currentPage: 0, pageSize: 10}
     , dateRange: { from: undefined, to: undefined }

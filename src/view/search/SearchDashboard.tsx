@@ -1,4 +1,4 @@
-import { useSearchViewModel } from "../../viewmodel/search/SearchViewModel";
+import { useSearchViewModel } from "../../viewmodel/search/SearchDashboardViewModel";
 import { Snackbar } from "../app/components/Snackbar";
 import { Table } from "../table/Table";
 import { MenuButtonCheckbox } from "./components/MenuCheckboxButton";
@@ -10,15 +10,9 @@ function SearchDashboard() {
     const {
         status
         ,searchData
-        ,uids
         ,dictionaryData
         ,onSearchDataObtained
-        ,fetchSources
         ,fetchSourceFiles
-        // ,handleSourcesFileObtained
-        ,onSourcesObtained
-        // ,handleSourceFileChecked
-        ,handleSubmitSourceFiles
         ,submitSearch
         ,handleError
         ,handleSuccess
@@ -29,15 +23,13 @@ function SearchDashboard() {
         <SearchDashboardWrapper>
             <Searchbar
                 searchData={searchData}
-                fetchSources={fetchSources}
-                onSourcesObtained={onSourcesObtained}
+                onError={handleError}
                 dictionaryData={dictionaryData}
                 submitSearch={submitSearch}
             />
             {searchData.source.index ?
                 <Table
                     searchData={searchData}
-                    uids={uids}
                     onSearchDataObtained={onSearchDataObtained}
                     submitSearch={submitSearch}
                     handleError={handleError}
@@ -49,13 +41,12 @@ function SearchDashboard() {
                             label="Select files"
                             title="file"
                             buttonStyles={{ minWidth: '60px', height: '40px', fontWeight: '300', backgroundColor: '#f7f7f7' }}
-                            value={'xyz'}
                             optionsFetcher={fetchSourceFiles}
-
-                            // onOptionsFetched={handleSourcesFileObtained}
-                            // onChecked={handleSourceFileChecked}
                             forcedIndices={[0]}
-                            onSubmit={handleSubmitSourceFiles}
+                            onSubmit={(options) => {
+                                const checkedUIDs = options.filter(it => it.checked).map(it=>it.value)
+                                submitSearch({source: {...searchData.source, uids: checkedUIDs}})
+                            }}
                         />
                     )}
                 />

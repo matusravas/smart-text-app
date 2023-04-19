@@ -24,7 +24,6 @@ type MenuButtonCheckboxStatic = {
 
 
 type MenuButtonCheckboxProps = {
-    value: string
     onError?: (errMsg: string) => void
     onChecked?: (value: MenuCheckboxOption) => void
     onSubmit?: (options: MenuCheckboxOption[]) => void
@@ -41,7 +40,7 @@ type MenuButtonCheckboxProps = {
 
 export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProps) => {
     const title = props.title ? props.title.toString().toLowerCase() : 'item'
-    const label = props.label !== undefined ? props.label : props.value
+    const label = props.label !== undefined ? props.label : 'Select'
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [loading, setLoading] = useState(false);
     const [options, setOptions] = useState<MenuCheckboxOption[]>(props.options || []);
@@ -59,7 +58,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                 })
                 .catch(err => {
                     setOptions([])
-                    onError && onError('Failed obtaining menu items')
+                    onError && onError('Failed obtaining checkbox menu items')
                 })
                 .finally(() => {
                     setLoading(false)
@@ -154,7 +153,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                     {`Select ${title}`}
                 </MenuItem>}
                 {renderCheckboxMenuItems()}
-                {props.onSubmit && <MenuButtonWrapper
+                {props.onSubmit && options.length && <MenuButtonWrapper
                     onClick={handleSubmit}
                     style={{ 
                         marginBottom: '-8px'

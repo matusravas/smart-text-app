@@ -16,16 +16,16 @@ export default class SearchRepository implements ISearchRepository {
     }
 
     // async search(searchData: SearchData): Promise<DashboardSuccess<SearchResponse> | DashboardFail> {
-    async search(searchData: SearchData, uids: string[]): Promise<Dashboard<SearchResponse>> {
+    async search(searchData: SearchData): Promise<Dashboard<SearchResponse>> {
         try {
-            const response = await this.api.search(searchData, uids)
+            const response = await this.api.search(searchData)
             if (!response.success) return response //{success: false, message: response.message}
 
             const paginationRaw = response.data.pagination
             const data: SearchResponse = {
                 ...response.data,
                 source: {
-                    // uids: searchData.source.uids,
+                    uids: searchData.source.uids,
                     index: response.data.source.index,
                     alias: response.data.source.alias,
                     searchField: response.data.source.search_field,
@@ -40,7 +40,10 @@ export default class SearchRepository implements ISearchRepository {
                 }
             }
             console.log({ ...response, data })
-            return { ...response, data }
+            return { 
+                ...response
+                , data 
+            }
         } catch (err) {
             console.log(err)
             return err as DashboardFail //{success: false, message: 'abc'}
@@ -63,17 +66,18 @@ export default class SearchRepository implements ISearchRepository {
             if (!response.success) return response
 
             const sourceOptions: SourceOption[] = response.data.map(it => {
-                // const uids = it.files.map(f => f.uid)
                 const source: SourceOption = {
                     index: it.index,
                     alias: it.alias,
                     timestamp: new Date(it.timestamp * 1000),
-                    uids: [it.uid]
-                    // uids: uids.length > 0 ? [uids[0]] : []
+                    uids: it.files.length > 0 ? [it.files[0].uid] : []
                 }
                 return source
             })
-            return { ...response, data: sourceOptions }
+            return { 
+                ...response
+                , data: sourceOptions
+             }
         } catch (err) {
             console.log(err)
             return err as DashboardFail
@@ -82,11 +86,10 @@ export default class SearchRepository implements ISearchRepository {
 
     async sourceFiles(index: string): Promise<Dashboard<SourceFile[]>> {
         try {
-            const response = await this.api.sourceFiles(index)
+            const response = await this.api.sourcesWithTimestamps(index)
             console.log(response)
             if (!response.success) return response
-
-            const sourceFiles: SourceFile[] = response.data.map(it => {
+            const sourceFiles: SourceFile[] = response.data[0].files.map(it => {
                 const sourceFile: SourceFile = {
                     ...it
                     ,ctime: new Date(it.ctime * 1000)
@@ -94,7 +97,36 @@ export default class SearchRepository implements ISearchRepository {
                 }
                 return sourceFile
             })
-            return { ...response, data: sourceFiles }
+            
+            return { 
+                ...response
+                , data: sourceFiles 
+            }
+        } catch (err) {
+            console.log(err)
+            return err as DashboardFail
+        }
+    }
+    
+    async source(index: string): Promise<Dashboard<SourceOption>> {
+        try {
+            const response = await this.api.sourcesWithTimestamps(index)
+            console.log(response)
+            if (!response.success) return response
+
+            const {files, ...source} = response.data[0]
+            const uids: string[] = files.map(it => {
+                return it.uid
+            })
+            
+            return { 
+                ...response
+                , data: {
+                        ...source
+                        , timestamp: new Date(source.timestamp * 1000)
+                        , uids: [uids[0]]
+                    } 
+            }
         } catch (err) {
             console.log(err)
             return err as DashboardFail

@@ -2,8 +2,10 @@ import { FormEvent, useCallback, useEffect, useState } from "react"
 import { Dictionary } from "../../model/dictionary/types"
 import { DateRange, Operator, SearchData, SearchDataDefault } from "../../model/search/types"
 import { MenuOption } from "../../view/search/components/MenuButton"
+import SearchRepository from "../../repository/search/SearchRepository"
+import { DashboardFail } from "../../model/types"
 
-export type FormChangeData = {
+export type FormDataOptions = {
     dateRange?: DateRange
     source?: { index: string, alias: string }
     operator?: Operator
@@ -13,15 +15,19 @@ export type FormChangeData = {
 export interface SearchbarViewModelProps {
     searchData: SearchData
     dictionaryData: Dictionary | null
-    // fetchSources: (event: React.MouseEvent<HTMLButtonElement>) => Promise<MenuOption[]>
     submitSearch: (searchData: SearchData, reset?: boolean) => void
+    onError?: (err: string) => void
 }
 
 function useFormData(searchData: SearchData) {
     const [data, setData] = useState(searchData)
 
     function setFormData(...it: Partial<SearchData>[]) {
-        setData({ ...data, pagination: {currentPage: 0, pageSize: data.pagination.pageSize}, ...Object.assign({}, ...it) })
+        setData({
+            ...data
+            , pagination: { currentPage: 0, pageSize: data.pagination.pageSize }
+            , ...Object.assign({}, ...it)
+        })
     }
 
     return { formData: data, setFormData }
@@ -30,12 +36,32 @@ function useFormData(searchData: SearchData) {
 function useSearchbarViewModel(props: SearchbarViewModelProps) {
     const [synonymsVisible, setSynonymsVisible] = useState(false)
     const { formData, setFormData } = useFormData(props.searchData)
+    const [sourceIndex, setSourceIndex] = useState(formData.source.index)
     const [operatorVisible, setOperatorVisible] = useState(false)
+    const searchRepository = SearchRepository.getInstance()
 
     const selectOperatorOptions = [
         { label: 'OR', value: 'OR' }
         , { label: 'AND', value: 'AND' }
     ]
+
+    useEffect(() => {
+        sourceIndex && searchRepository.source(sourceIndex)
+            .then(it => {
+                if (!it.success) {
+                    props.onError && props.onError(it.message)
+                    return
+                }
+                const source = it.data
+                source.index && setFormData({
+                    source: { index: source.index, alias: source.alias, uids: source.uids }
+                    , pagination: { currentPage: 0, pageSize: formData.pagination.pageSize }
+                })
+            })
+            .catch((err: DashboardFail) => {
+                props.onError && props.onError(err.message)
+            })
+    }, [sourceIndex])
 
     useEffect(() => {
         formData.source.index && props.submitSearch(formData)
@@ -55,6 +81,35 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
     }, [props.searchData, props.dictionaryData])
 
 
+    function fetchSources(_event: React.MouseEvent<HTMLButtonElement>) {
+        return new Promise<MenuOption[]>((resolve, reject) => {
+            searchRepository
+                .sourcesWithTimestamps()
+                .then((it) => {
+                    if (!it.success) {
+                        return reject('No available sources')
+                    }
+                    resolve(it.data.map(it => {
+                        return { label: it.alias, value: it.index, subValue: it.uids[0] }
+                    }))
+                })
+                .catch((err) => {
+                    return reject('No available sources')
+                });
+        })
+    }
+
+    function onSourcesObtained(options: MenuOption[]) {
+        const filtered = options.filter(it => it.value === formData.source.index)
+        if (filtered.length === 1) return // if currently selected source is in options
+        // Todo need state sources with uids HERE to return uids for fallback source
+        if (!options.length) {
+            setFormData(SearchDataDefault)
+            return
+        }
+        setSourceIndex(options[0].value)
+    }
+
     function handleKeywordsChange(isKeywords: boolean) {
         setFormData({ keywords: isKeywords })
         searchPhraseLongEnough(formData.searchPhrase) || (isKeywords && props.dictionaryData) ? setOperatorVisible(true) : setOperatorVisible(false)
@@ -73,16 +128,17 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
         return phrase.split(' ').filter(q => q.length > 2).length > 1
     }
 
-    const handleFormDataChange = useCallback((it: FormChangeData) => {
+    const handleFormDataChange = useCallback((it: FormDataOptions) => {
         it.dateRange && setFormData({ dateRange: it.dateRange })
         if (it.source) {
-            setFormData({ source: { index: it.source.index, alias: it.source.alias } })
+            setSourceIndex(it.source.index)
+            // setFormData({ source: { index: it.source.index, alias: it.source.alias, uids: [it.source.latestUID] } })
         }
         it.operator && setFormData({ searchOperator: it.operator })
 
         if (it.phrase !== undefined) {
             let keywords = formData.keywords
-            
+
             if (it.phrase !== props.searchData.searchPhrase) {
                 setSynonymsVisible(false)
                 keywords = true
@@ -106,7 +162,8 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
         operatorVisible,
         selectOperatorOptions,
         synonymsVisible,
-        // fetchSources: props.fetchSources,
+        onSourcesObtained,
+        fetchSources,
         handleKeywordsChange,
         handleFormDataChange,
         handleSubmit,

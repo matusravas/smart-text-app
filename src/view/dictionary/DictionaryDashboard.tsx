@@ -1,4 +1,4 @@
-import { useDictionaryViewModel } from "../../viewmodel/dictionary/DictionaryViewModel"
+import { useDictionaryViewModel } from "../../viewmodel/dictionary/DictionaryDashboardViewModel"
 import { Snackbar } from "../app/components/Snackbar"
 import { Card } from "./components/Card"
 import { Dialog } from "./components/Dialog"

@@ -3,9 +3,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Column, Data } from "../../model/search/types";
 import { TablePagination, TablePaginationDefault, UseTableProps } from "../../model/table/types";
 import SearchRepository from "../../repository/search/SearchRepository";
+import { Dictionary } from "../../model/dictionary/types";
 
+type T = Dictionary | null
 
-export function useTable({ searchData, uids, onSearchDataObtained, onError, onSuccess }: UseTableProps) {
+export function useTable({ searchData, onSearchDataObtained, onError, onSuccess }: UseTableProps) {
     const [rows, setRows] = useState<Data[]>(() => []);
     const [columns, setColumns] = useState<Column[]>(() => []);
     const [pagination, setPagination] = useState<TablePagination>(() => TablePaginationDefault);
@@ -13,10 +15,10 @@ export function useTable({ searchData, uids, onSearchDataObtained, onError, onSu
     const repository = SearchRepository.getInstance()
     useEffect(() => {
         setIsLoading(true)
-        console.log(uids)
+        // console.log(uids)
         console.log(searchData)
         repository
-            .search(searchData, uids)
+            .search(searchData)
             .then((res) => {
                 console.log(res)
                 if (!res.success) {
@@ -30,7 +32,7 @@ export function useTable({ searchData, uids, onSearchDataObtained, onError, onSu
                 // (res.data.results && res.data.results.length > 0)
                 //     && setColumns(prepareColumns(res.data.columns, res.data.source.searchField))
                 setColumns(prepareColumns(res.data.columns, res.data.source.searchField))
-                onSearchDataObtained(res.data.uids, res.data.dictionary)
+                onSearchDataObtained(res.data.dictionary)
             })
             .catch(err => {
                 console.error(err)
@@ -40,7 +42,7 @@ export function useTable({ searchData, uids, onSearchDataObtained, onError, onSu
                 setIsLoading(false);
             })
     }, [ 
-        JSON.stringify(uids)
+        JSON.stringify(searchData.source.uids)
         , searchData.source.index
         , searchData.searchPhrase
         , searchData.searchOperator

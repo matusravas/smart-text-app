@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import moment from "moment";
-import { SearchResponseRaw, SourceFileRaw, SourceOptionRaw } from "../../model/search/SearchResponse";
+import { SearchResponseRaw, SourceOptionRaw } from "../../model/search/SearchResponse";
 import { SearchData } from "../../model/search/types";
 import { ApiResponse } from "../../model/types";
 import ApiService from "../ApiService";
@@ -14,7 +14,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
         this.ucPrefix = 'search'
     }
 
-    async search({ source, searchPhrase, searchOperator, keywords, dateRange, pagination }: SearchData, uids: string[]) {
+    async search({ source, searchPhrase, searchOperator, keywords, dateRange, pagination }: SearchData) {
         const sourceQueryString = `source=${source.index}`
         const searchQueryString = `phrase=${searchPhrase}&operator=${searchOperator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
         const keywordQueryString = `use-keywords=${keywords}`
@@ -34,7 +34,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
                 'Content-Type': 'application/json',
             },
             data: {
-                uids: uids
+                uids: source.uids
             }
         }).then((res: AxiosResponse) => {
             resolve(this.onResponse<SearchResponseRaw>(res))
@@ -76,10 +76,11 @@ class SearchApiService extends ApiService implements ISearchApiService {
         })
         )
     }
-    sourcesWithTimestamps(): Promise<ApiResponse<SourceOptionRaw[]>> {
+    sourcesWithTimestamps(sourceIndex?: string): Promise<ApiResponse<SourceOptionRaw[]>> {
+        const index = !sourceIndex ? '' : `/${sourceIndex}`
         return new Promise<ApiResponse<SourceOptionRaw[]>>((resolve, reject) => axios({
             method: 'GET',
-            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/indices-timestamps`,
+            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/indices-timestamps${index}`,
             responseType: 'json',
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -88,23 +89,6 @@ class SearchApiService extends ApiService implements ISearchApiService {
             }
         }).then((res: AxiosResponse) => {
             resolve(this.onResponse<SourceOptionRaw[]>(res))
-        }).catch((err: AxiosError) => {
-            reject(this.onError(err))
-        })
-        )
-    }
-    sourceFiles(index: string): Promise<ApiResponse<SourceFileRaw[]>> {
-        return new Promise<ApiResponse<SourceFileRaw[]>>((resolve, reject) => axios({
-            method: 'GET',
-            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/source-files/${index}`,
-            responseType: 'json',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }).then((res: AxiosResponse) => {
-            resolve(this.onResponse<SourceFileRaw[]>(res))
         }).catch((err: AxiosError) => {
             reject(this.onError(err))
         })

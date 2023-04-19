@@ -21,8 +21,8 @@ export type SourceOptionRaw = {
     index: string,
     alias: string,
     timestamp: number
-    uid: string
-    // files: SourceFileRaw[]
+    // uid: string
+    files: SourceFileRaw[]
 }
 
 export type SourceRaw = {
