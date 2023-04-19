@@ -23,25 +23,31 @@ type MenuButtonCheckboxStatic = {
     options: MenuCheckboxOption[]
 }
 
+type MenuButtonCheckboxElementProps = {
+    options: MenuCheckboxOption[]
+    onClose: () => void
+    onReset: () => void
+}
 
 type MenuButtonCheckboxProps = {
+    id?: string
     onError?: (errMsg: string) => void
     onChecked?: (value: MenuCheckboxOption) => void
     onSubmit?: (options: MenuCheckboxOption[]) => void
     forcedIndices?: number[]
-    title?: string
+    titleElement?: (it: MenuButtonCheckboxElementProps) => React.ReactNode
+    footerElement?: (it: MenuButtonCheckboxElementProps) => React.ReactNode
     label?: string
     disabled?: boolean
     visible?: boolean
-    resetable?: boolean
-    titleItem?: boolean
+    // titleItem?: boolean
     buttonStyles?: CSSProperties
     menuStyles?: CSSProperties
 } & (MenuButtonCheckboxDynamic | MenuButtonCheckboxStatic)
 
 
 export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProps) => {
-    const title = props.title ? props.title.toString().toLowerCase() : 'item'
+    // const title = props.title ? props.title.toString().toLowerCase() : 'item'
     const label = props.label !== undefined ? props.label : 'Select'
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [loading, setLoading] = useState(false);
@@ -122,6 +128,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
         props.onSubmit!(options)
     }
 
+
     const renderCheckboxMenuItems = () => {
         return (
             options.map(option => {
@@ -145,7 +152,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
             <MenuButtonWrapper
                 disabled={loading || props.disabled}
                 style={{ ...props.buttonStyles, ...(props.visible === false && { display: 'none' }) }}
-                aria-controls={`${title}-menu`}
+                aria-controls={`${props.id ? props.id : 'checkbox'}-menu`}
                 aria-haspopup="true"
                 onClick={handleClick}
             >
@@ -155,7 +162,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                 }
             </MenuButtonWrapper>
             <Menu
-                id={`${title}-menu`}
+                id={`${props.id ? props.id : 'checkbox'}-menu`}
                 anchorEl={anchorEl}
                 style={{ ...props.menuStyles }}
                 // PaperProps={{
@@ -166,7 +173,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {props.titleItem || props.resetable ?
+                {/* {props.titleItem || props.resetable ?
                     <MenuTitleWrapper>
                         {props.titleItem
                             ? <MenuTitle>
@@ -177,16 +184,25 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                         {props.resetable
                             ? <IconButton style={{ position: 'absolute', right: 0 }} onClick={handleReset}>
                                 <Tooltip title="Reset" placement="top">
-                                    <Restore style={{ color: '#dcdcdc' }} />
+                                    <Restore style={{ color: '#cecece' }} />
                                 </Tooltip>
                             </IconButton> : null
                         }
                     </MenuTitleWrapper> : null
-                }
-
+                } */}
+                {props.titleElement && props.titleElement({
+                    options: [...options]
+                    ,onClose: handleClose
+                    ,onReset: handleReset
+                })}
                 {renderCheckboxMenuItems()}
 
-                {props.onSubmit && options.length && <MenuButtonWrapper
+                {props.footerElement && props.footerElement({
+                    options: [...options]
+                    ,onClose: handleClose
+                    ,onReset: handleReset
+                })}
+                {/* {props.onSubmit && options.length && <MenuButtonWrapper
                     onClick={handleSubmit}
                     style={{
                         marginBottom: '-8px'
@@ -197,7 +213,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                     }}
                 >
                     Submit
-                </MenuButtonWrapper>}
+                </MenuButtonWrapper>} */}
             </Menu>
         </>
     );

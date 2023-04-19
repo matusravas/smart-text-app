@@ -50,7 +50,8 @@ export const MenuTitleWrapper = styled.div`
 
 export const MenuTitle = styled.p`
   margin: 0px;
-  font-weight: 500;
+  color: #cecece;
+  /* font-weight: 500; */
   text-align: center;
 `
 

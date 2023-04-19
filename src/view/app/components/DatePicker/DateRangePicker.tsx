@@ -307,7 +307,7 @@ export function DateRangePicker(props: DateRangePickerProps) {
             <DateRangePickerContentWraper>
               <IconButton style={{ alignSelf: 'flex-end' }} onClick={handleReset}>
                 <Tooltip title="Reset" placement="left">
-                  <Restore style={{ color: '#dcdcdc' }} />
+                  <Restore style={{ color: '#cecece' }} />
                 </Tooltip>
               </IconButton>
               <DayPicker
