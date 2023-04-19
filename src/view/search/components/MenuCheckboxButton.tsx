@@ -1,6 +1,7 @@
-import { Checkbox, CircularProgress, Menu, MenuItem } from '@material-ui/core';
+import { Checkbox, CircularProgress, IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core';
 import { CSSProperties, useState } from "react";
-import { MenuButtonWrapper, MenuItemCheckboxWrapper, MenuLabel, MenuLabelWrapper, MenuSubLabel } from '../styles/searchbar.toolbar.styles';
+import { MenuButtonWrapper, MenuItemCheckboxWrapper, MenuLabel, MenuLabelWrapper, MenuSubLabel, MenuTitle, MenuTitleWrapper } from '../styles/searchbar.toolbar.styles';
+import { Restore } from '@material-ui/icons';
 
 
 export type MenuCheckboxOption = {
@@ -32,6 +33,7 @@ type MenuButtonCheckboxProps = {
     label?: string
     disabled?: boolean
     visible?: boolean
+    resetable?: boolean
     titleItem?: boolean
     buttonStyles?: CSSProperties
     menuStyles?: CSSProperties
@@ -100,6 +102,21 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
     }
 
 
+    const handleReset = () => {
+        let newOptions = options.map(it => {
+            return {...it, checked: false}
+        })
+
+        if (props.forcedIndices) {
+
+            props.forcedIndices.forEach(it => {
+                const exists = options.at(it)
+                exists && (newOptions[it].checked = true)
+            })
+        }
+        setOptions(newOptions)
+    }
+
     const handleSubmit = () => {
         setAnchorEl(null);
         props.onSubmit!(options)
@@ -141,28 +158,44 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                 id={`${title}-menu`}
                 anchorEl={anchorEl}
                 style={{ ...props.menuStyles }}
-                PaperProps={{
-                    style: {
-                        minWidth: 'fit-content'
-                    }
-                }}
+                // PaperProps={{
+                //     style: {
+                //         minWidth: 'fit-content'
+                //     }
+                // }}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {props.titleItem && <MenuItem disabled value={''}>
-                    {`Select ${title}`}
-                </MenuItem>}
+                {props.titleItem || props.resetable ?
+                    <MenuTitleWrapper>
+                        {props.titleItem
+                            ? <MenuTitle>
+                                {`Select ${title}`}
+                            </MenuTitle> : null
+                        }
+
+                        {props.resetable
+                            ? <IconButton style={{ position: 'absolute', right: 0 }} onClick={handleReset}>
+                                <Tooltip title="Reset" placement="top">
+                                    <Restore style={{ color: '#dcdcdc' }} />
+                                </Tooltip>
+                            </IconButton> : null
+                        }
+                    </MenuTitleWrapper> : null
+                }
+
                 {renderCheckboxMenuItems()}
+
                 {props.onSubmit && options.length && <MenuButtonWrapper
                     onClick={handleSubmit}
-                    style={{ 
+                    style={{
                         marginBottom: '-8px'
                         , width: '100%'
                         , borderRadius: 0
                         , backgroundColor: '#E5E5E5'
-                        ,fontWeight: 600
-                     }}
-                     >
+                        , fontWeight: 600
+                    }}
+                >
                     Submit
                 </MenuButtonWrapper>}
             </Menu>

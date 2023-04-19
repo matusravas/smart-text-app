@@ -38,6 +38,7 @@ function SearchDashboard() {
                         <MenuButtonCheckbox
                             dynamic
                             titleItem
+                            resetable
                             label="Select files"
                             title="file"
                             buttonStyles={{ minWidth: '60px', height: '40px', fontWeight: '300', backgroundColor: '#f7f7f7' }}
