@@ -1,7 +1,6 @@
-import { Checkbox, CircularProgress, IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core';
+import { Checkbox, CircularProgress, Menu, MenuItem, MenuProps } from '@material-ui/core';
 import { CSSProperties, useState } from "react";
-import { MenuButtonWrapper, MenuItemCheckboxWrapper, MenuLabel, MenuLabelWrapper, MenuSubLabel, MenuTitle, MenuTitleWrapper } from '../styles/searchbar.toolbar.styles';
-import { Restore } from '@material-ui/icons';
+import { MenuButtonWrapper, MenuItemCheckboxWrapper, MenuLabel, MenuLabelWrapper, MenuSubLabel } from '../styles/searchbar.toolbar.styles';
 
 
 export type MenuCheckboxOption = {
@@ -23,10 +22,26 @@ type MenuButtonCheckboxStatic = {
     options: MenuCheckboxOption[]
 }
 
-type MenuButtonCheckboxElementProps = {
+interface ComponentsProps {
     options: MenuCheckboxOption[]
     onClose: () => void
     onReset: () => void
+}
+
+interface Components {
+    Header?: React.ComponentType<ComponentsProps>
+    Footer?: React.ComponentType<ComponentsProps>
+}
+
+interface MenuCheckboxStyles {
+    Button?: CSSProperties
+    Checkbox?: CSSProperties
+    Item?: {
+        Container?: CSSProperties
+        Label?: CSSProperties
+        SubLabel?: CSSProperties
+    }
+    SubItem?: CSSProperties
 }
 
 type MenuButtonCheckboxProps = {
@@ -35,25 +50,22 @@ type MenuButtonCheckboxProps = {
     onChecked?: (value: MenuCheckboxOption) => void
     onSubmit?: (options: MenuCheckboxOption[]) => void
     forcedIndices?: number[]
-    titleElement?: (it: MenuButtonCheckboxElementProps) => React.ReactNode
-    footerElement?: (it: MenuButtonCheckboxElementProps) => React.ReactNode
+    components?: Components
     label?: string
     disabled?: boolean
-    visible?: boolean
-    // titleItem?: boolean
-    buttonStyles?: CSSProperties
-    menuStyles?: CSSProperties
+    styles: MenuCheckboxStyles
+    menuProps?: MenuProps
 } & (MenuButtonCheckboxDynamic | MenuButtonCheckboxStatic)
 
 
 export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProps) => {
-    // const title = props.title ? props.title.toString().toLowerCase() : 'item'
+    const { Header, Footer } = props.components || {}
     const label = props.label !== undefined ? props.label : 'Select'
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [loading, setLoading] = useState(false);
     const [options, setOptions] = useState<MenuCheckboxOption[]>(props.options || []);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
         const e = { ...event }
         if (props.dynamic && props.optionsFetcher) {
@@ -110,7 +122,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
 
     const handleReset = () => {
         let newOptions = options.map(it => {
-            return {...it, checked: false}
+            return { ...it, checked: false }
         })
 
         if (props.forcedIndices) {
@@ -133,13 +145,14 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
         return (
             options.map(option => {
                 return (
-                    <MenuItem key={option.value} value={option.value} onClick={() => { handleMenuItemClick(option) }}>
+                    <MenuItem style={{paddingRight: '6px'}} key={option.value} value={option.value} onClick={() => { handleMenuItemClick(option) }}>
                         <MenuItemCheckboxWrapper>
-                            <MenuLabelWrapper>
-                                <MenuLabel>{option.label}</MenuLabel>
-                                {option.subLabel && <MenuSubLabel>{option.subLabel}</MenuSubLabel>}
+                            <MenuLabelWrapper style={{ ...props.styles.Item?.Container }}>
+                                <MenuLabel style={{ ...props.styles.Item?.Label }}>{option.label}</MenuLabel>
+                                {option.subLabel &&
+                                    <MenuSubLabel style={{...props.styles.Item?.SubLabel}}>{option.subLabel}</MenuSubLabel>}
                             </MenuLabelWrapper>
-                            <Checkbox checked={option.checked} style={{ marginLeft: '10px' }} />
+                            <Checkbox checked={option.checked} style={{ marginLeft: '20px', ...props.styles.Checkbox }} />
                         </MenuItemCheckboxWrapper>
                     </MenuItem>
                 )
@@ -147,14 +160,19 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
         )
     }
 
+    const componentsProps = {
+        options: [...options]
+        , onReset: handleReset
+        , onClose: handleClose
+    }
+
     return (
         <>
             <MenuButtonWrapper
                 disabled={loading || props.disabled}
-                style={{ ...props.buttonStyles, ...(props.visible === false && { display: 'none' }) }}
+                style={{ ...props.styles.Button }}
                 aria-controls={`${props.id ? props.id : 'checkbox'}-menu`}
-                aria-haspopup="true"
-                onClick={handleClick}
+                onClick={handleOpen}
             >
                 {loading
                     ? <CircularProgress size={22} style={{ color: '#1AB5F1' }} />
@@ -162,58 +180,15 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                 }
             </MenuButtonWrapper>
             <Menu
+                {...props.menuProps}
                 id={`${props.id ? props.id : 'checkbox'}-menu`}
                 anchorEl={anchorEl}
-                style={{ ...props.menuStyles }}
-                // PaperProps={{
-                //     style: {
-                //         minWidth: 'fit-content'
-                //     }
-                // }}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {/* {props.titleItem || props.resetable ?
-                    <MenuTitleWrapper>
-                        {props.titleItem
-                            ? <MenuTitle>
-                                {`Select ${title}`}
-                            </MenuTitle> : null
-                        }
-
-                        {props.resetable
-                            ? <IconButton style={{ position: 'absolute', right: 0 }} onClick={handleReset}>
-                                <Tooltip title="Reset" placement="top">
-                                    <Restore style={{ color: '#cecece' }} />
-                                </Tooltip>
-                            </IconButton> : null
-                        }
-                    </MenuTitleWrapper> : null
-                } */}
-                {props.titleElement && props.titleElement({
-                    options: [...options]
-                    ,onClose: handleClose
-                    ,onReset: handleReset
-                })}
+                {Header ? <Header {...componentsProps} /> : null}
                 {renderCheckboxMenuItems()}
-
-                {props.footerElement && props.footerElement({
-                    options: [...options]
-                    ,onClose: handleClose
-                    ,onReset: handleReset
-                })}
-                {/* {props.onSubmit && options.length && <MenuButtonWrapper
-                    onClick={handleSubmit}
-                    style={{
-                        marginBottom: '-8px'
-                        , width: '100%'
-                        , borderRadius: 0
-                        , backgroundColor: '#E5E5E5'
-                        , fontWeight: 600
-                    }}
-                >
-                    Submit
-                </MenuButtonWrapper>} */}
+                {Footer ? <Footer {...componentsProps} /> : null}
             </Menu>
         </>
     );

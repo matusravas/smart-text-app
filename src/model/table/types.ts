@@ -3,9 +3,8 @@ import { Dictionary } from "../dictionary/types";
 import { SearchData } from "../search/types.domain";
 
 
-export type UseTableProps = {
+export interface UseTableProps {
     searchData: SearchData
-    // uids: string[]
     onSearchDataObtained: (dictionary: Dictionary | null) => void
     onError: ((errorMessage: string) => void) | undefined
     onSuccess: ((successMessage: string) => void) | undefined
@@ -45,17 +44,23 @@ export interface MaterialTableProps<RowData extends object> {
     totalCount?: number;
 }
 
+interface ComponentsProps {
+    handleExport: () => void
+}
+interface Components {
+    TopBar?: React.ComponentType<ComponentsProps>
+    Footer?: React.ComponentType<ComponentsProps>
+}
 
 export type TableProps = {
     searchData: SearchData
     submitSearch: (searchData: Partial<SearchData>) => void
     onSearchDataObtained: (dictionary: Dictionary | null) => void
-    lastTimestamp?: Date
     handleTableObj?: (tableObj: any) => void
     handleError?: (errorMessage: string) => void
     handleSuccess?: (successMessage: string) => void
     handleExport?: (type: 'excel' | 'csv') => void
-    topbar?: () => React.ReactNode
+    additionalComponents?: Components
 } & MaterialTableProps<any>
 
 

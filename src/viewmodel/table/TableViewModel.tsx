@@ -6,7 +6,6 @@ import SearchRepository from "../../repository/search/SearchRepository";
 import { Dictionary } from "../../model/dictionary/types";
 import { Column } from "../../model/table/types.domain";
 
-type T = Dictionary | null
 
 export function useTable({ searchData, onSearchDataObtained, onError, onSuccess }: UseTableProps) {
     const [rows, setRows] = useState<Data[]>(() => []);
@@ -16,7 +15,6 @@ export function useTable({ searchData, onSearchDataObtained, onError, onSuccess 
     const repository = SearchRepository.getInstance()
     useEffect(() => {
         setIsLoading(true)
-        // console.log(uids)
         console.log(searchData)
         repository
             .search(searchData)

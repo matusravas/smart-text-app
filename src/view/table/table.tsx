@@ -1,12 +1,10 @@
-import { IconButton, TablePagination, Tooltip } from "@material-ui/core";
-import { FileCopy } from "@material-ui/icons";
+import { TablePagination } from "@material-ui/core";
 import MaterialTable, { MTableBody, MTableBodyRow } from "material-table";
-import moment from "moment";
 import React from "react";
 import { TableProps } from "../../model/table/types";
 import { useTable } from "../../viewmodel/table/TableViewModel";
 import { tableIcons } from "./styles/icons";
-import { TableLastTimestamp, TableTopbar, TableWrapper } from "./styles/table.styles";
+import { TableWrapper } from "./styles/table.styles";
 
 export const Table = (props: TableProps) => {
     const {
@@ -23,14 +21,12 @@ export const Table = (props: TableProps) => {
         onError: props.handleError,
         onSuccess: props.handleSuccess
     })
-    const timestamp = props.lastTimestamp
-        ? props.lastTimestamp
-        : props.searchData.source.timestamp
-            ? moment(props.searchData.source.timestamp).format('MMM Do YYYY, HH:mm')
-            : null
 
     const materialTableRef = React.createRef<any>();
     let renderingGroupRows: boolean = false;
+    
+    const { Footer, TopBar } = props.additionalComponents|| {}
+    const componentProps = {handleExport}
 
     const onPageChange = (gotoPage: number) => {
         props.submitSearch({ pagination: { ...pagination, currentPage: gotoPage } })
@@ -46,28 +42,11 @@ export const Table = (props: TableProps) => {
         rowsPerPage >= pagination.totalHits && (currentPage = 0)
         props.submitSearch({ pagination: { ...pagination, currentPage, pageSize: rowsPerPage } })
     }
-    const renderTopbarContent = props.topbar ? props.topbar() : null
     const renderTable = () => {
         if (!columns.length) return (<React.Fragment />)
         return (
             <TableWrapper>
-                <div>
-                    <TableTopbar>
-                        {renderTopbarContent}
-                    </TableTopbar>
-                    <TableTopbar>
-                        {timestamp
-                            ? <TableLastTimestamp>Last update: {timestamp}</TableLastTimestamp>
-                            : null
-                        }
-                        <IconButton onClick={handleExport} style={{ alignSelf: 'flex-end' }}>
-                            <Tooltip title='Export' placement="top">
-                                <FileCopy style={{ color: '#DCDCDC' }} />
-                            </Tooltip>
-                        </IconButton>
-                    </TableTopbar>
-                </div>
-
+                {TopBar ? <TopBar {...componentProps}/> : null}
                 <MaterialTable
                     title='Table title'
                     icons={tableIcons}
@@ -109,6 +88,7 @@ export const Table = (props: TableProps) => {
                     }}
                     {...props}
                 />
+                {Footer ? <Footer {...componentProps}/> : null}
             </TableWrapper>
         )
     }

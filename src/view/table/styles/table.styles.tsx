@@ -1,5 +1,8 @@
 import styled from "styled-components";
 
+export const TableTopbarWrapper = styled.div`
+`
+
 export const TableTopbar = styled.div`
   display: flex;
   flex-direction: row;

@@ -40,17 +40,13 @@ export const MenuLabelWrapper = styled.div`
 `
 
 export const MenuTitleWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 4px;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
+  padding: 6px;
 `
 
 export const MenuTitle = styled.p`
   margin: 0px;
   color: #cecece;
+  font-size: 16px;
   /* font-weight: 500; */
   text-align: center;
 `

@@ -97,10 +97,9 @@ export default class SearchRepository implements ISearchRepository {
         }
     }
 
-    async sourceFiles(index: string): Promise<Dashboard<SourceFile[]>> {
+    async sourceFiles(sourceIndex: string): Promise<Dashboard<SourceFile[]>> {
         try {
-            const response = await this.api.sourcesWithTimestamps(index)
-            console.log(response)
+            const response = await this.api.sourcesWithTimestamps(sourceIndex)
             if (!response.success) return response
             const sourceFiles: SourceFile[] = response.data[0].files.map(it => {
                 const sourceFile: SourceFile = {

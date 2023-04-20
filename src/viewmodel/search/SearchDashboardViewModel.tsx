@@ -127,6 +127,10 @@ export const useSearchViewModel = () => {
         setStatus(StatusDefault)
     }
 
+    const lastTimestamp = searchData.source.timestamp 
+        ? moment(searchData.source.timestamp).format('MMM Do YYYY, HH:mm')
+        : null
+    
     return {
         status
         ,searchData
@@ -137,5 +141,6 @@ export const useSearchViewModel = () => {
         ,handleError
         ,handleSuccess
         ,resetStatus
+        ,lastTimestamp
     }
 }

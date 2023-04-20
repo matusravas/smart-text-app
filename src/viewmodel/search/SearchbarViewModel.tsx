@@ -157,6 +157,7 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
         }
     }, [formData, props.searchData.searchPhrase, props.searchData.searchOperator])
 
+    
     return {
         searchData: formData,
         operatorVisible,
