@@ -12,7 +12,7 @@ import {
   DayPickerRangeProps
 } from "react-day-picker"
 import "react-day-picker/dist/style.css"
-import { DateRange as DateRangeCustom } from "../../../../model/search/types"
+import { DateRange as DateRangeCustom } from "../../../../model/commons/types"
 import StringInput from "./StringInput"
 import {
   DateRangePickerConfirmButton, DateRangePickerContentWraper, DateRangePickerInputsWrapper, DateRangePickerWrapper

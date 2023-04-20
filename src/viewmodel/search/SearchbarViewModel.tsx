@@ -1,9 +1,10 @@
 import { FormEvent, useCallback, useEffect, useState } from "react"
 import { Dictionary } from "../../model/dictionary/types"
-import { DateRange, Operator, SearchData, SearchDataDefault } from "../../model/search/types"
+import { Operator, SearchData, SearchDataDefault } from "../../model/search/types.domain"
 import { MenuOption } from "../../view/search/components/MenuButton"
 import SearchRepository from "../../repository/search/SearchRepository"
 import { DashboardFail } from "../../model/types"
+import { DateRange } from "../../model/commons/types"
 
 export type FormDataOptions = {
     dateRange?: DateRange
@@ -89,7 +90,7 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
                         return reject('No available sources')
                     }
                     resolve(it.data.map(it => {
-                        return { label: it.alias, value: it.index, subValue: it.uids[0] }
+                        return { label: it.alias, value: it.index }
                     }))
                 })
                 .catch((err) => {

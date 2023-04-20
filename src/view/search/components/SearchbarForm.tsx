@@ -1,4 +1,4 @@
-import { Operator, SearchData } from "../../../model/search/types"
+import { Operator, SearchData } from "../../../model/search/types.domain"
 import { FormDataOptions } from "../../../viewmodel/search/SearchbarViewModel"
 import { DateRangePicker } from "../../app/components/DatePicker/DateRangePicker"
 import { SearchButton, SearchbarFormWrapper } from '../styles/searchbar.styles'

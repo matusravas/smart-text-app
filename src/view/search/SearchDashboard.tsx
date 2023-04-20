@@ -37,52 +37,54 @@ function SearchDashboard() {
                     submitSearch={submitSearch}
                     handleError={handleError}
                     handleSuccess={handleSuccess}
-                    topbar={() => (
-                        <MenuButtonCheckbox
-                            dynamic
-                            id="files"
-                            label="Select files"
-                            buttonStyles={{ minWidth: '60px', height: '40px', fontWeight: '300', backgroundColor: '#f7f7f7' }}
-                            optionsFetcher={fetchSourceFiles}
-                            // forcedIndices={[0]}
-                            titleElement={it => {
-                                return (
-                                    <MenuTitleWrapper>
-                                        <MenuTitle>Select files</MenuTitle>
-                                        <IconButton style={{ position: 'absolute', right: 0 }} onClick={it.onReset}>
-                                            <Tooltip title="Reset" placement="top">
-                                                <Restore style={{ color: '#cecece' }} />
-                                            </Tooltip>
-                                        </IconButton>
-                                    </MenuTitleWrapper>
-                                )
-                            }}
-                            footerElement={({options, onClose}) => {
-                                return (
-                                    <MenuButtonWrapper
-                                        onClick={() => {
-                                            const checkedUIDs = options.filter(it => it.checked).map(it => it.value)
-                                            submitSearch({ source: { ...searchData.source, uids: checkedUIDs } })
-                                            onClose()
-                                        }}
-                                        style={{
-                                            marginBottom: '-8px'
-                                            , width: '100%'
-                                            , borderRadius: 0
-                                            , backgroundColor: '#E5E5E5'
-                                            , fontWeight: 600
-                                        }}
-                                    > 
-                                        Submit
-                                    </MenuButtonWrapper>)
-                            }
-                            }
-                        // onSubmit={(options) => {
-                        //     const checkedUIDs = options.filter(it => it.checked).map(it => it.value)
-                        //     submitSearch({ source: { ...searchData.source, uids: checkedUIDs } })
-                        // }}
-                        />
-                    )}
+                    topbar={
+                        searchData.source.type === 'db' ? undefined :
+                        () => (
+                            <MenuButtonCheckbox
+                                dynamic
+                                id="files"
+                                label="Select files"
+                                buttonStyles={{ minWidth: '60px', height: '40px', fontWeight: '300', backgroundColor: '#f7f7f7' }}
+                                optionsFetcher={fetchSourceFiles}
+                                // forcedIndices={[0]}
+                                titleElement={it => {
+                                    return (
+                                        <MenuTitleWrapper>
+                                            <MenuTitle>Select files</MenuTitle>
+                                            <IconButton style={{ position: 'absolute', right: 0 }} onClick={it.onReset}>
+                                                <Tooltip title="Reset" placement="top">
+                                                    <Restore style={{ color: '#cecece' }} />
+                                                </Tooltip>
+                                            </IconButton>
+                                        </MenuTitleWrapper>
+                                    )
+                                }}
+                                footerElement={({ options, onClose }) => {
+                                    return (
+                                        <MenuButtonWrapper
+                                            onClick={() => {
+                                                const checkedUIDs = options.filter(it => it.checked).map(it => it.value)
+                                                submitSearch({ source: { ...searchData.source, type: 'file', uids: checkedUIDs } })
+                                                onClose()
+                                            }}
+                                            style={{
+                                                marginBottom: '-8px'
+                                                , width: '100%'
+                                                , borderRadius: 0
+                                                , backgroundColor: '#E5E5E5'
+                                                , fontWeight: 600
+                                            }}
+                                        >
+                                            Submit
+                                        </MenuButtonWrapper>)
+                                }
+                                }
+                            // onSubmit={(options) => {
+                            //     const checkedUIDs = options.filter(it => it.checked).map(it => it.value)
+                            //     submitSearch({ source: { ...searchData.source, uids: checkedUIDs } })
+                            // }}
+                            />
+                        )}
                 />
                 : null
             }

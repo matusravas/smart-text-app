@@ -1,7 +1,7 @@
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Dictionary } from '../../model/dictionary/types'
-import { SearchData, SearchDataDefault, Source } from '../../model/search/types'
+import { SearchData, SearchDataDefault, Source, SourceWithTimestamp } from '../../model/search/types.domain'
 import { DashboardFail, Status, StatusDefault } from '../../model/types'
 import SearchRepository from '../../repository/search/SearchRepository'
 import { MenuCheckboxOption } from '../../view/search/components/MenuCheckboxButton'
@@ -22,11 +22,35 @@ export const useSearchViewModel = () => {
                     setStatus({ type: 'error', message: it.message })
                     return
                 }
-                const source: Source = 
-                    it.data.length > 0 && it.data[0].index && it.data[0].uids
-                        ? { ...it.data[0] }
-                        : { index: '', alias: '', uids: [] }
+                let source: SourceWithTimestamp = {type: 'db', index: '', alias: ''}
                 
+                if (it.data.length) {
+                    const fetchedSource = it.data[0]
+                    console.log(it.data)
+                    switch(fetchedSource.type) {
+                        case "file": {
+                            source = {
+                                type: fetchedSource.type,
+                                index: fetchedSource.index,
+                                alias: fetchedSource.alias,
+                                timestamp: fetchedSource.timestamp,
+                                uids: fetchedSource.uids
+                            }
+                            break
+                            
+                        }
+                        case "db": {
+                            source = {
+                                type: fetchedSource.type,
+                                index: fetchedSource.index,
+                                alias: fetchedSource.alias,
+                                timestamp: fetchedSource.timestamp,
+                            }
+                            break
+                        }
+                    }
+                }
+                console.log(source)
                 setSearchData({
                     ...searchData
                     , source: source
@@ -52,6 +76,7 @@ export const useSearchViewModel = () => {
         } 
     }
 
+    // woould never be called if searchData.source.type === 'db
     function fetchSourceFiles(_event: React.MouseEvent<HTMLButtonElement>) {
         return new Promise<MenuCheckboxOption[]>((resolve, reject) => {
             repository
@@ -60,6 +85,10 @@ export const useSearchViewModel = () => {
                     if (!it.success) {
                         setStatus({ type: 'error', message: 'Unable to obtain source files' })
                         return reject('No available source files')
+                    }
+                    if (searchData.source.type === 'db') {
+                        resolve([])
+                        return
                     }
                     const {uids} = searchData.source
                     resolve(it.data.map((it, idx) => {

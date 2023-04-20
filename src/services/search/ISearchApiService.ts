@@ -1,5 +1,5 @@
-import { SearchResponseRaw, SourceOptionRaw } from "../../model/search/SearchResponse"
-import { SearchData } from "../../model/search/types"
+import { SearchResponseRaw, SourceOptionRaw } from "../../model/search/types.api"
+import { SearchData } from "../../model/search/types.domain"
 import { ApiResponse } from "../../model/types"
 
 export default interface ISearchApiService {

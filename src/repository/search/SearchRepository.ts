@@ -1,5 +1,4 @@
-import { SearchResponse } from "../../model/search/SearchResponse";
-import { SearchData, SourceFile, SourceOption } from "../../model/search/types";
+import { SearchData, SearchResponse, SourceFile, SourceOption } from "../../model/search/types.domain";
 import { Dashboard, DashboardFail } from "../../model/types";
 import SearchApiService from "../../services/search/SearchApiService";
 import ISearchRepository from "./ISearchRepository";
@@ -25,7 +24,7 @@ export default class SearchRepository implements ISearchRepository {
             const data: SearchResponse = {
                 ...response.data,
                 source: {
-                    uids: searchData.source.uids,
+                    // uids: searchData.source.uids,
                     index: response.data.source.index,
                     alias: response.data.source.alias,
                     searchField: response.data.source.search_field,
@@ -66,13 +65,27 @@ export default class SearchRepository implements ISearchRepository {
             if (!response.success) return response
 
             const sourceOptions: SourceOption[] = response.data.map(it => {
-                const source: SourceOption = {
-                    index: it.index,
-                    alias: it.alias,
-                    timestamp: new Date(it.timestamp * 1000),
-                    uids: it.files.length > 0 ? [it.files[0].uid] : []
+                switch(it.type) {
+                    case "file": {
+                        const source: SourceOption = {
+                            type: it.type,
+                            index: it.index,
+                            alias: it.alias,
+                            timestamp: new Date(it.timestamp * 1000),
+                            uids: it.files.length > 0 ? [it.files[0].uid] : []
+                        }
+                        return source
+                    }
+                    case "db": {
+                        const source: SourceOption = {
+                            type: it.type,
+                            index: it.index,
+                            alias: it.alias,
+                            timestamp: new Date(it.timestamp * 1000),
+                        }
+                        return source
+                    }
                 }
-                return source
             })
             return { 
                 ...response

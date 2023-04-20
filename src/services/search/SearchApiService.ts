@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import moment from "moment";
-import { SearchResponseRaw, SourceOptionRaw } from "../../model/search/SearchResponse";
-import { SearchData } from "../../model/search/types";
+import { SearchResponseRaw, SourceOptionRaw } from "../../model/search/types.api";
+import { SearchData } from "../../model/search/types.domain";
 import { ApiResponse } from "../../model/types";
 import ApiService from "../ApiService";
 import ISearchApiService from "./ISearchApiService";
@@ -34,7 +34,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
                 'Content-Type': 'application/json',
             },
             data: {
-                uids: source.uids
+               ...(source.type === 'file' && {uids: source.uids})
             }
         }).then((res: AxiosResponse) => {
             resolve(this.onResponse<SearchResponseRaw>(res))

@@ -1,5 +1,4 @@
-import { SearchResponse } from "../../model/search/SearchResponse"
-import { SearchData, SourceOption } from "../../model/search/types"
+import { SearchData, SearchResponse, SourceOption } from "../../model/search/types.domain"
 import { Dashboard } from "../../model/types"
 
 export default interface ISearchRepository {

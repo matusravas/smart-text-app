@@ -1,9 +1,10 @@
 import { Options } from "material-table";
 import { useEffect, useMemo, useState } from "react";
-import { Column, Data } from "../../model/search/types";
+import { Data } from "../../model/search/types.domain";
 import { TablePagination, TablePaginationDefault, UseTableProps } from "../../model/table/types";
 import SearchRepository from "../../repository/search/SearchRepository";
 import { Dictionary } from "../../model/dictionary/types";
+import { Column } from "../../model/table/types.domain";
 
 type T = Dictionary | null
 

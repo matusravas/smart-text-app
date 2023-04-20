@@ -1,6 +1,6 @@
 import { Dictionary } from "../dictionary/types"
-import { TablePagination } from "../table/types"
-import { Column, Data, Source, SourceBulkStats } from "./types"
+import { Column } from "../table/types.domain"
+import { Data, SourceBulkStats, SourceOptionType } from "./types.domain"
 
 export type PaginationRaw = {
     current_page: number,
@@ -21,7 +21,7 @@ export type SourceOptionRaw = {
     index: string,
     alias: string,
     timestamp: number
-    // uid: string
+    type: SourceOptionType
     files: SourceFileRaw[]
 }
 
@@ -31,6 +31,7 @@ export type SourceRaw = {
     search_field?: string
     date_field?: string
     timestamp?: number
+    type: 'file' | 'db'
 }
 
 export type SearchResponseRaw = {
@@ -39,14 +40,4 @@ export type SearchResponseRaw = {
     dictionary: Dictionary | null
     results: Data[]
     source: SourceRaw
-    uids: string[]
-}
-
-export type SearchResponse = {
-    columns: Column[]
-    pagination: TablePagination
-    dictionary: Dictionary | null
-    results: Data[]
-    source: Source
-    uids: string[]
 }

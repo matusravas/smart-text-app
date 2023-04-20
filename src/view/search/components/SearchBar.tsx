@@ -1,5 +1,5 @@
 import { Dictionary } from "../../../model/dictionary/types"
-import { SearchData } from "../../../model/search/types"
+import { SearchData } from "../../../model/search/types.domain"
 import useSearchbarViewModel from "../../../viewmodel/search/SearchbarViewModel"
 import { SearchImage, SearchbarWrapper } from '../styles/searchbar.styles'
 import SearchbarForm from "./SearchbarForm"

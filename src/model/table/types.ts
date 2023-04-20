@@ -1,6 +1,6 @@
 import { Action, Column, DetailPanel, Filter, Icons, Localization, Options, Query } from "material-table";
 import { Dictionary } from "../dictionary/types";
-import { SearchData } from "../search/types";
+import { SearchData } from "../search/types.domain";
 
 
 export type UseTableProps = {
