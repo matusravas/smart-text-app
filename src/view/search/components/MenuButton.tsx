@@ -1,6 +1,6 @@
-import { CircularProgress, Menu, MenuItem } from '@material-ui/core';
+import { CircularProgress, Menu, MenuItem, MenuProps } from '@material-ui/core';
 import { CSSProperties, useState } from "react";
-import { MenuSubmitButton, MenuLabel, MenuLabelWrapper, MenuSubLabel } from '../styles/searchbar.toolbar.styles';
+import { Button, MenuLabel, MenuLabelWrapper, MenuSubLabel } from '../styles/searchbar.toolbar.styles';
 
 export type MenuOption = {
     label: string,
@@ -20,29 +20,50 @@ type MenuButtonStatic = {
     options: MenuOption[]
 }
 
+interface ComponentsProps {
+    style: CSSProperties
+    options: MenuOption[]
+    // onClose: () => void
+}
+
+interface Components {
+    Button?: React.ComponentType<{ onOpen: (event: React.MouseEvent<any>) => void, isLoading: boolean }>
+    Header?: React.ComponentType<ComponentsProps>
+    Footer?: React.ComponentType<ComponentsProps>
+}
+
+interface MenuStyles {
+    Button?: CSSProperties
+    Item?: {
+        Container?: CSSProperties
+        Label?: CSSProperties
+        SubLabel?: CSSProperties
+    }
+    SubItem?: CSSProperties
+}
 
 type MenuButtonProps = {
     value: string
-    onError?: (errMsg: string) => void
-    title?: string
+    id?: string
     label?: string
-    onSelected: (value: MenuOption) => void
     disabled?: boolean
-    visible?: boolean
-    titleItem?: boolean
-    buttonStyles?: CSSProperties
-    menuStyles?: CSSProperties
+    menuProps?: MenuProps
+    hidden?: boolean
+    components?: Components
+    styles: MenuStyles
+    onSelected: (value: MenuOption) => void
+    onError?: (errMsg: string) => void
 } & (MenuButtonDynamic | MenuButtonStatic)
 
 
 export const MenuButton = ({ onError, ...props }: MenuButtonProps) => {
-    const title = props.title ? props.title.toString().toLowerCase() : 'item'
+    const { Header, Footer, Button: ButtonOverriden } = props.components || {}
     const label = props.label !== undefined ? props.label : props.value
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [loading, setLoading] = useState(false);
-    const [options, setOptions] = useState<MenuOption []>(props.options || []);
+    const [options, setOptions] = useState<MenuOption[]>(props.options || []);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
         const e = { ...event }
         if (props.dynamic && props.optionsFetcher) {
@@ -78,9 +99,14 @@ export const MenuButton = ({ onError, ...props }: MenuButtonProps) => {
             options.map(option => {
                 return (
                     <MenuItem key={option.value} value={option.value} onClick={() => handleMenuItemSelected(option)}>
-                        <MenuLabelWrapper>
-                            <MenuLabel>{option.label}</MenuLabel>
-                            {option.subLabel && <MenuSubLabel>{option.subLabel}</MenuSubLabel>}
+                        <MenuLabelWrapper style={{ ...props.styles.Item?.Container }}>
+                            <MenuLabel style={{ ...props.styles.Item?.Label }}>
+                                {option.label}
+                            </MenuLabel>
+                            {option.subLabel &&
+                                <MenuSubLabel style={{ ...props.styles.Item?.SubLabel }}>
+                                    {option.subLabel}
+                                </MenuSubLabel>}
                         </MenuLabelWrapper>
                     </MenuItem>
                 )
@@ -88,36 +114,40 @@ export const MenuButton = ({ onError, ...props }: MenuButtonProps) => {
         )
     }
 
+    const componentsProps = {
+        options: [...options]
+        // , onClose: handleClose
+    }
     return (
         <>
-            <MenuSubmitButton
-                disabled={loading || props.disabled}
-                style={{ ...props.buttonStyles, ...(props.visible === false && { display: 'none' }) }}
-                aria-controls={`${title}-menu`}
-                aria-haspopup="true"
-                onClick={handleClick}
-            >
-                {loading
-                    ? <CircularProgress size={22} style={{ color: '#1AB5F1' }} />
-                    : <span style={{ fontWeight: 'bolder' }}>{label}</span>
-                }
-            </MenuSubmitButton>
+            {
+                ButtonOverriden
+                    ?
+                    <ButtonOverriden onOpen={handleOpen} isLoading={loading} />
+                    :
+                    <Button
+                        disabled={loading || props.disabled}
+                        style={{ ...props.styles.Button, ...(props.hidden && { visibility: 'hidden' }) }}
+                        aria-controls={`${props.id ? props.id : 'select'}-menu`}
+                        aria-haspopup="true"
+                        onClick={handleOpen}
+                    >
+                        {loading
+                            ? <CircularProgress size={22} style={{ color: '#1AB5F1' }} />
+                            : <span style={{ fontWeight: 'bolder' }}>{label}</span>
+                        }
+                    </Button>
+            }
             <Menu
-                id={`${title}-menu`}
+                {...props.menuProps}
+                id={`${props.id ? props.id : 'select'}-menu`}
                 anchorEl={anchorEl}
-                style={{ ...props.menuStyles }}
-                PaperProps={{
-                    style: {
-                        minWidth: 'fit-content'
-                    }
-                }}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {props.titleItem && <MenuItem disabled value={''}>
-                    {`Select ${title}`}
-                </MenuItem>}
-                { renderMenuItems() }
+                {Header ? <Header style={{}} {...componentsProps} /> : null}
+                {renderMenuItems()}
+                {Footer ? <Footer style={{ marginBottom: '-8px' }} {...componentsProps} /> : null}
             </Menu>
         </>
     );

@@ -1,6 +1,6 @@
 import { Checkbox, CircularProgress, Menu, MenuItem, MenuProps } from '@material-ui/core';
 import { CSSProperties, useState } from "react";
-import { MenuSubmitButton as Button, MenuItemCheckboxWrapper, MenuLabel, MenuLabelWrapper, MenuSubLabel } from '../styles/searchbar.toolbar.styles';
+import { Button, MenuItemCheckboxWrapper, MenuLabel, MenuLabelWrapper, MenuSubLabel } from '../styles/searchbar.toolbar.styles';
 
 
 export type MenuCheckboxOption = {
@@ -30,6 +30,7 @@ interface ComponentsProps {
 }
 
 interface Components {
+    Button?: React.ComponentType<{onOpen: (event: React.MouseEvent<any>) => void, isLoading: boolean}>
     Header?: React.ComponentType<ComponentsProps>
     Footer?: React.ComponentType<ComponentsProps>
 }
@@ -42,26 +43,25 @@ interface MenuCheckboxStyles {
         Label?: CSSProperties
         SubLabel?: CSSProperties
     }
-    SubItem?: CSSProperties
 }
 
 type MenuButtonCheckboxProps = {
     id?: string
-    onError?: (errMsg: string) => void
-    onChecked?: (value: MenuCheckboxOption) => void
-    onSubmit?: (options: MenuCheckboxOption[]) => void
-    forcedIndices?: number[]
-    components?: Components
     label?: string
     disabled?: boolean
     hidden?: boolean
-    styles: MenuCheckboxStyles
+    forcedIndices?: number[]
     menuProps?: MenuProps
+    components?: Components
+    styles: MenuCheckboxStyles
+    onChecked?: (value: MenuCheckboxOption) => void
+    onError?: (errMsg: string) => void
+    onSubmit?: (options: MenuCheckboxOption[]) => void
 } & (MenuButtonCheckboxDynamic | MenuButtonCheckboxStatic)
 
 
 export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProps) => {
-    const { Header, Footer } = props.components || {}
+    const { Header, Footer, Button: ButtonOverriden } = props.components || {}
     const label = props.label !== undefined ? props.label : 'Select'
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [loading, setLoading] = useState(false);
@@ -137,22 +137,25 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
         setOptions(newOptions)
     }
 
-    const handleSubmit = () => {
-        setAnchorEl(null);
-        props.onSubmit!(options)
-    }
-
+    // const handleSubmit = () => {
+    //     setAnchorEl(null);
+    //     props.onSubmit!(options)
+    // }
 
     const renderCheckboxMenuItems = () => {
         return (
             options.map(option => {
                 return (
-                    <MenuItem style={{paddingRight: '6px'}} key={option.value} value={option.value} onClick={() => { handleMenuItemClick(option) }}>
-                        <MenuItemCheckboxWrapper>
-                            <MenuLabelWrapper style={{ ...props.styles.Item?.Container }}>
-                                <MenuLabel style={{ ...props.styles.Item?.Label }}>{option.label}</MenuLabel>
+                    <MenuItem style={{ paddingRight: '6px' }} key={option.value} value={option.value} onClick={() => { handleMenuItemClick(option) }}>
+                        <MenuItemCheckboxWrapper style={{ ...props.styles.Item?.Container }}>
+                            <MenuLabelWrapper>
+                                <MenuLabel style={{ ...props.styles.Item?.Label }}>
+                                    {option.label}
+                                </MenuLabel>
                                 {option.subLabel &&
-                                    <MenuSubLabel style={{...props.styles.Item?.SubLabel}}>{option.subLabel}</MenuSubLabel>}
+                                    <MenuSubLabel style={{ ...props.styles.Item?.SubLabel }}>
+                                        {option.subLabel}
+                                    </MenuSubLabel>}
                             </MenuLabelWrapper>
                             <Checkbox checked={option.checked} style={{ marginLeft: '20px', ...props.styles.Checkbox }} />
                         </MenuItemCheckboxWrapper>
@@ -170,17 +173,23 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
 
     return (
         <>
-            <Button
-                disabled={loading || props.disabled}
-                style={{ ...props.styles.Button, ...(props.hidden && {visibility: 'hidden'}) }}
-                aria-controls={`${props.id ? props.id : 'checkbox'}-menu`}
-                onClick={handleOpen}
-            >
-                {loading
-                    ? <CircularProgress size={22} style={{ color: '#1AB5F1' }} />
-                    : <span style={{ fontWeight: 'bolder' }}>{label}</span>
-                }
-            </Button>
+            {
+                ButtonOverriden
+                    ?
+                    <ButtonOverriden onOpen={handleOpen} isLoading={loading}/>
+                    :
+                    <Button
+                        disabled={loading || props.disabled}
+                        style={{ ...props.styles.Button, ...(props.hidden && { visibility: 'hidden' }) }}
+                        aria-controls={`${props.id ? props.id : 'checkbox'}-menu`}
+                        onClick={handleOpen}
+                    >
+                        {loading
+                            ? <CircularProgress size={22} style={{ color: '#1AB5F1' }} />
+                            : <span style={{ fontWeight: 'bolder' }}>{label}</span>
+                        }
+                    </Button>
+            }
             <Menu
                 {...props.menuProps}
                 id={`${props.id ? props.id : 'checkbox'}-menu`}
@@ -190,7 +199,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
             >
                 {Header ? <Header style={{}} {...componentsProps} /> : null}
                 {renderCheckboxMenuItems()}
-                {Footer ? <Footer style={{marginBottom: '-8px'}} {...componentsProps} /> : null}
+                {Footer ? <Footer style={{ marginBottom: '-8px' }} {...componentsProps} /> : null}
             </Menu>
         </>
     );

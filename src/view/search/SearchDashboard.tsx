@@ -1,5 +1,5 @@
 import { IconButton, Tooltip } from "@material-ui/core";
-import { FileCopy, Restore } from "@material-ui/icons";
+import { FileCopy, Restore, Undo } from "@material-ui/icons";
 import { useSearchViewModel } from "../../viewmodel/search/SearchDashboardViewModel";
 import { Snackbar } from "../app/components/Snackbar";
 import { Table } from "../table/Table";
@@ -7,7 +7,7 @@ import { MenuButtonCheckbox } from "./components/MenuCheckboxButton";
 import Searchbar from "./components/SearchBar";
 
 import { SearchDashboardWrapper } from "./styles/searchbar.styles";
-import { MenuSubmitButton, MenuTitle, MenuTitleWrapper } from "./styles/searchbar.toolbar.styles";
+import { Button, MenuTitle, MenuTitleWrapper } from "./styles/searchbar.toolbar.styles";
 import { TableLastTimestamp, TableTopbar, TableTopbarWrapper } from "../table/styles/table.styles";
 
 function SearchDashboard() {
@@ -55,7 +55,6 @@ function SearchDashboard() {
                                                     Label: { fontSize: '16px' }
                                                     , SubLabel: { fontSize: '14px' }
                                                 }
-                                                , SubItem: { fontSize: 10 }
                                             }}
                                             optionsFetcher={fetchSourceFiles}
                                             // forcedIndices={[0]}
@@ -66,7 +65,7 @@ function SearchDashboard() {
                                                             <MenuTitle>Select files</MenuTitle>
                                                             <IconButton style={{ position: 'absolute', right: 0, top: 0 }} onClick={props.onReset}>
                                                                 <Tooltip title="Reset" placement="top">
-                                                                    <Restore style={{ color: '#cecece' }} />
+                                                                    <Undo style={{ color: '#cecece' }} />
                                                                 </Tooltip>
                                                             </IconButton>
                                                         </MenuTitleWrapper>
@@ -74,7 +73,7 @@ function SearchDashboard() {
                                                 },
                                                 Footer: (props) => {
                                                     return (
-                                                        <MenuSubmitButton
+                                                        <Button
                                                             onClick={() => {
                                                                 const checkedUIDs = props.options.filter(it => it.checked).map(it => it.value)
                                                                 submitSearch({ source: { ...searchData.source, type: 'file', uids: checkedUIDs } })
@@ -90,7 +89,7 @@ function SearchDashboard() {
                                                             }}
                                                         >
                                                             Submit
-                                                        </MenuSubmitButton>
+                                                        </Button>
                                                     )
 
                                                 }

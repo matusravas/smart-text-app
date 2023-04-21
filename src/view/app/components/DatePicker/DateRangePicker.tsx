@@ -1,5 +1,5 @@
 import { IconButton, Tooltip } from "@material-ui/core"
-import { ArrowRightAlt, Restore } from "@material-ui/icons"
+import { ArrowRightAlt, CalendarToday, Restore } from "@material-ui/icons"
 import en from "date-fns/locale/en-US"
 import moment from "moment"
 import {
@@ -307,7 +307,7 @@ export function DateRangePicker(props: DateRangePickerProps) {
             <DateRangePickerContentWraper>
               <IconButton style={{ alignSelf: 'flex-end' }} onClick={handleReset}>
                 <Tooltip title="Reset" placement="left">
-                  <Restore style={{ color: '#cecece' }} />
+                  <CalendarToday style={{ color: '#cecece' }} />
                 </Tooltip>
               </IconButton>
               <DayPicker

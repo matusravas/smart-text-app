@@ -13,7 +13,7 @@ export const SearchToolbar = styled.div`
   padding: 10px 8px;
 `
 
-export const MenuSubmitButton = styled.button`
+export const Button = styled.button`
   padding: 10px;
   outline: none;
   border: 0px ;
@@ -40,6 +40,7 @@ export const MenuItemCheckboxWrapper = styled.div`
 `
 
 export const MenuLabelWrapper = styled.div`
+  width: 100%;
 `
 
 export const MenuTitleWrapper = styled.div`
