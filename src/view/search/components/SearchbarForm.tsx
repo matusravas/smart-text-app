@@ -67,6 +67,9 @@ function SearchbarForm(
                         dynamic
                         id='sources'
                         styles={{
+                            Container: {
+                                minWidth: '180px'
+                            },
                             Button: {
                                 width: '150px', height: '40px', backgroundColor: '#f7f7f7'
                             }, 

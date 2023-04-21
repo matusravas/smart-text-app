@@ -38,6 +38,7 @@ interface Components {
 interface MenuCheckboxStyles {
     Button?: CSSProperties
     Checkbox?: CSSProperties
+    Container?: CSSProperties
     Item?: {
         Container?: CSSProperties
         Label?: CSSProperties
@@ -208,6 +209,10 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                PaperProps={{
+                    style: {...props.styles.Container}
+                }}
+                // style={{...props.styles.Container}}
             >
                 <HeaderElement />
                 {renderCheckboxMenuItems()}

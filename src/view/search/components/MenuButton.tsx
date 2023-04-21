@@ -34,6 +34,7 @@ interface Components {
 
 interface MenuStyles {
     Button?: CSSProperties
+    Container?: CSSProperties
     Item?: {
         Container?: CSSProperties
         Label?: CSSProperties
@@ -157,6 +158,9 @@ export const MenuButton = ({ onError, ...props }: MenuButtonProps) => {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                PaperProps={{
+                    style: {...props.styles.Container}
+                }}
             >
                 <HeaderElement />
                 {renderMenuItems()}
