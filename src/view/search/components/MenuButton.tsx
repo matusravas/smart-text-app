@@ -1,5 +1,5 @@
 import { CircularProgress, Menu, MenuItem, MenuProps } from '@material-ui/core';
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useState, forwardRef } from "react";
 import { Button, MenuLabel, MenuLabelWrapper, MenuSubLabel } from '../styles/searchbar.toolbar.styles';
 
 export type MenuOption = {
@@ -118,6 +118,19 @@ export const MenuButton = ({ onError, ...props }: MenuButtonProps) => {
         options: [...options]
         // , onClose: handleClose
     }
+
+    const HeaderElement = forwardRef((props, ref) => {
+        return (
+            Header ? <Header style={{}} {...componentsProps} /> : null
+        )
+    })
+    
+    const FooterElement = forwardRef((props, ref) => {
+        return (
+            Footer ? <Footer style={{ marginBottom: '-8px' }} {...componentsProps} /> : null
+        )
+    })
+
     return (
         <>
             {
@@ -145,9 +158,9 @@ export const MenuButton = ({ onError, ...props }: MenuButtonProps) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {Header ? <Header style={{}} {...componentsProps} /> : null}
+                <HeaderElement />
                 {renderMenuItems()}
-                {Footer ? <Footer style={{ marginBottom: '-8px' }} {...componentsProps} /> : null}
+                <FooterElement />
             </Menu>
         </>
     );

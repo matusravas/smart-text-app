@@ -1,5 +1,5 @@
 import { Checkbox, CircularProgress, Menu, MenuItem, MenuProps } from '@material-ui/core';
-import { CSSProperties, useState } from "react";
+import { CSSProperties, forwardRef, useState } from "react";
 import { Button, MenuItemCheckboxWrapper, MenuLabel, MenuLabelWrapper, MenuSubLabel } from '../styles/searchbar.toolbar.styles';
 
 
@@ -171,6 +171,18 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
         , onClose: handleClose
     }
 
+    const HeaderElement = forwardRef((props, ref) => {
+        return (
+            Header ? <Header style={{}} {...componentsProps} /> : null
+        )
+    })
+    
+    const FooterElement = forwardRef((props, ref) => {
+        return (
+            Footer ? <Footer style={{ marginBottom: '-8px' }} {...componentsProps} /> : null
+        )
+    })
+
     return (
         <>
             {
@@ -197,9 +209,9 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {Header ? <Header style={{}} {...componentsProps} /> : null}
+                <HeaderElement />
                 {renderCheckboxMenuItems()}
-                {Footer ? <Footer style={{ marginBottom: '-8px' }} {...componentsProps} /> : null}
+                <FooterElement />
             </Menu>
         </>
     );
