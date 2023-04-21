@@ -19,7 +19,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
         const searchQueryString = `phrase=${searchPhrase}&operator=${searchOperator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
         const keywordQueryString = `use-keywords=${keywords}`
         const paginationQueryString = `page=${pagination.currentPage}&pageSize=${pagination.pageSize}`
-        const dateQueryString = dateRange.from && dateRange.to 
+        const dateQueryString = dateRange.from && dateRange.to
             ? `date-from=${dateRange.from?.getTime()}&date-to=${dateRange.to?.getTime()}${source.dateField ? `&date-field=${source.dateField}` : ''}`
             : undefined
         const queryParamsString = createQueryParamsString(sourceQueryString, searchQueryString, dateQueryString
@@ -34,7 +34,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
                 'Content-Type': 'application/json',
             },
             data: {
-               ...(source.type === 'file' && {uids: source.uids})
+                ...(source.type === 'file' && { uids: source.uids })
             }
         }).then((res: AxiosResponse) => {
             resolve(this.onResponse<SearchResponseRaw>(res))
@@ -47,19 +47,22 @@ class SearchApiService extends ApiService implements ISearchApiService {
         const sourceQueryString = `source=${source.index}`
         const searchQueryString = `phrase=${searchPhrase}&operator=${searchOperator}${source.searchField ? `&search-field=${source.searchField}` : ''}`
         const keywordQueryString = `use-keywords=${keywords}`
-        const dateQueryString = dateRange.from && dateRange.to 
+        const dateQueryString = dateRange.from && dateRange.to
             ? `date-from=${dateRange.from?.getTime()}&date-to=${dateRange.to?.getTime()}${source.dateField ? `&date-field=${source.dateField}` : ''}`
             : undefined
         const queryParamsString = createQueryParamsString(sourceQueryString
             , searchQueryString, dateQueryString, keywordQueryString)
         return new Promise<ApiResponse<boolean>>((resolve, reject) => axios({
-            method: 'GET',
+            method: 'POST',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/export?${queryParamsString}`,
             responseType: 'arraybuffer',
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
+            },
+            data: {
+                ...(source.type === 'file' && { uids: source.uids })
             }
         }).then((res: AxiosResponse) => {
             const filename = `${searchPhrase ? `${searchPhrase}_` : ''}${source.alias}_${moment().format('YYYY-MM-DDTHH-mm')}.xlsx`
