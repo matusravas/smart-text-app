@@ -34,6 +34,9 @@ export const MenuItemCheckboxWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  & .MuiCheckbox-colorSecondary.Mui-checked {
+    color: #1AB5F1
+  }
 `
 
 export const MenuLabelWrapper = styled.div`

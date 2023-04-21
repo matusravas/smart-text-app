@@ -47,14 +47,15 @@ function SearchDashboard() {
                                         <MenuButtonCheckbox
                                             dynamic
                                             id="files"
+                                            hidden={searchData.source.type !== 'file'}
                                             label="Select files"
                                             styles={{
                                                 Button: { minWidth: '60px', height: '40px', fontWeight: '300', backgroundColor: '#f7f7f7' }
-                                                ,Item: {
-                                                    Label: {fontSize: '16px'}
-                                                    , SubLabel: {fontSize: '14px'}
+                                                , Item: {
+                                                    Label: { fontSize: '16px' }
+                                                    , SubLabel: { fontSize: '14px' }
                                                 }
-                                                ,SubItem: {fontSize: 10}
+                                                , SubItem: { fontSize: 10 }
                                             }}
                                             optionsFetcher={fetchSourceFiles}
                                             // forcedIndices={[0]}
@@ -85,7 +86,7 @@ function SearchDashboard() {
                                                                 , borderRadius: 0
                                                                 , backgroundColor: '#E5E5E5'
                                                                 , fontWeight: 600
-                                                                ,...props.style
+                                                                , ...props.style
                                                             }}
                                                         >
                                                             Submit
@@ -96,6 +97,7 @@ function SearchDashboard() {
                                             }}
                                         />
                                     </TableTopbar>
+
                                     <TableTopbar>
                                         {lastTimestamp
                                             ? <TableLastTimestamp>Last update: {lastTimestamp}</TableLastTimestamp>

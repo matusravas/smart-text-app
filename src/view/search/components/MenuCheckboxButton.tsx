@@ -54,6 +54,7 @@ type MenuButtonCheckboxProps = {
     components?: Components
     label?: string
     disabled?: boolean
+    hidden?: boolean
     styles: MenuCheckboxStyles
     menuProps?: MenuProps
 } & (MenuButtonCheckboxDynamic | MenuButtonCheckboxStatic)
@@ -171,7 +172,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
         <>
             <Button
                 disabled={loading || props.disabled}
-                style={{ ...props.styles.Button }}
+                style={{ ...props.styles.Button, ...(props.hidden && {visibility: 'hidden'}) }}
                 aria-controls={`${props.id ? props.id : 'checkbox'}-menu`}
                 onClick={handleOpen}
             >
