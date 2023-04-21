@@ -13,7 +13,7 @@ export const SearchToolbar = styled.div`
   padding: 10px 8px;
 `
 
-export const MenuButtonWrapper = styled.button`
+export const MenuSubmitButton = styled.button`
   padding: 10px;
   outline: none;
   border: 0px ;

@@ -1,6 +1,6 @@
 import { CircularProgress, Menu, MenuItem } from '@material-ui/core';
 import { CSSProperties, useState } from "react";
-import { MenuButtonWrapper, MenuLabel, MenuLabelWrapper, MenuSubLabel } from '../styles/searchbar.toolbar.styles';
+import { MenuSubmitButton, MenuLabel, MenuLabelWrapper, MenuSubLabel } from '../styles/searchbar.toolbar.styles';
 
 export type MenuOption = {
     label: string,
@@ -90,7 +90,7 @@ export const MenuButton = ({ onError, ...props }: MenuButtonProps) => {
 
     return (
         <>
-            <MenuButtonWrapper
+            <MenuSubmitButton
                 disabled={loading || props.disabled}
                 style={{ ...props.buttonStyles, ...(props.visible === false && { display: 'none' }) }}
                 aria-controls={`${title}-menu`}
@@ -101,7 +101,7 @@ export const MenuButton = ({ onError, ...props }: MenuButtonProps) => {
                     ? <CircularProgress size={22} style={{ color: '#1AB5F1' }} />
                     : <span style={{ fontWeight: 'bolder' }}>{label}</span>
                 }
-            </MenuButtonWrapper>
+            </MenuSubmitButton>
             <Menu
                 id={`${title}-menu`}
                 anchorEl={anchorEl}

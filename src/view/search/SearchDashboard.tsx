@@ -7,7 +7,7 @@ import { MenuButtonCheckbox } from "./components/MenuCheckboxButton";
 import Searchbar from "./components/SearchBar";
 
 import { SearchDashboardWrapper } from "./styles/searchbar.styles";
-import { MenuButtonWrapper, MenuTitle, MenuTitleWrapper } from "./styles/searchbar.toolbar.styles";
+import { MenuSubmitButton, MenuTitle, MenuTitleWrapper } from "./styles/searchbar.toolbar.styles";
 import { TableLastTimestamp, TableTopbar, TableTopbarWrapper } from "../table/styles/table.styles";
 
 function SearchDashboard() {
@@ -73,22 +73,23 @@ function SearchDashboard() {
                                                 },
                                                 Footer: (props) => {
                                                     return (
-                                                        <MenuButtonWrapper
+                                                        <MenuSubmitButton
                                                             onClick={() => {
                                                                 const checkedUIDs = props.options.filter(it => it.checked).map(it => it.value)
                                                                 submitSearch({ source: { ...searchData.source, type: 'file', uids: checkedUIDs } })
                                                                 props.onClose()
                                                             }}
                                                             style={{
-                                                                marginBottom: '-8px'
+                                                                fontSize: '15px'
                                                                 , width: '100%'
                                                                 , borderRadius: 0
                                                                 , backgroundColor: '#E5E5E5'
                                                                 , fontWeight: 600
+                                                                ,...props.style
                                                             }}
                                                         >
                                                             Submit
-                                                        </MenuButtonWrapper>
+                                                        </MenuSubmitButton>
                                                     )
 
                                                 }

@@ -1,6 +1,6 @@
 import { Checkbox, CircularProgress, Menu, MenuItem, MenuProps } from '@material-ui/core';
 import { CSSProperties, useState } from "react";
-import { MenuButtonWrapper, MenuItemCheckboxWrapper, MenuLabel, MenuLabelWrapper, MenuSubLabel } from '../styles/searchbar.toolbar.styles';
+import { MenuSubmitButton as Button, MenuItemCheckboxWrapper, MenuLabel, MenuLabelWrapper, MenuSubLabel } from '../styles/searchbar.toolbar.styles';
 
 
 export type MenuCheckboxOption = {
@@ -23,6 +23,7 @@ type MenuButtonCheckboxStatic = {
 }
 
 interface ComponentsProps {
+    style: CSSProperties
     options: MenuCheckboxOption[]
     onClose: () => void
     onReset: () => void
@@ -168,7 +169,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
 
     return (
         <>
-            <MenuButtonWrapper
+            <Button
                 disabled={loading || props.disabled}
                 style={{ ...props.styles.Button }}
                 aria-controls={`${props.id ? props.id : 'checkbox'}-menu`}
@@ -178,7 +179,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                     ? <CircularProgress size={22} style={{ color: '#1AB5F1' }} />
                     : <span style={{ fontWeight: 'bolder' }}>{label}</span>
                 }
-            </MenuButtonWrapper>
+            </Button>
             <Menu
                 {...props.menuProps}
                 id={`${props.id ? props.id : 'checkbox'}-menu`}
@@ -186,9 +187,9 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {Header ? <Header {...componentsProps} /> : null}
+                {Header ? <Header style={{}} {...componentsProps} /> : null}
                 {renderCheckboxMenuItems()}
-                {Footer ? <Footer {...componentsProps} /> : null}
+                {Footer ? <Footer style={{marginBottom: '-8px'}} {...componentsProps} /> : null}
             </Menu>
         </>
     );
