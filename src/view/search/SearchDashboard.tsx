@@ -1,14 +1,14 @@
 import { IconButton, Tooltip } from "@material-ui/core";
-import { FileCopy, Restore, Undo } from "@material-ui/icons";
+import { ClearAll, FileCopy } from "@material-ui/icons";
 import { useSearchViewModel } from "../../viewmodel/search/SearchDashboardViewModel";
 import { Snackbar } from "../app/components/Snackbar";
 import { Table } from "../table/Table";
 import { MenuButtonCheckbox } from "./components/MenuCheckboxButton";
 import Searchbar from "./components/SearchBar";
 
+import { TableLastTimestamp, TableTopbar, TableTopbarWrapper } from "../table/styles/table.styles";
 import { SearchDashboardWrapper } from "./styles/searchbar.styles";
 import { Button, MenuTitle, MenuTitleWrapper } from "./styles/searchbar.toolbar.styles";
-import { TableLastTimestamp, TableTopbar, TableTopbarWrapper } from "../table/styles/table.styles";
 
 function SearchDashboard() {
     const {
@@ -18,6 +18,7 @@ function SearchDashboard() {
         , onSearchDataObtained
         , fetchSourceFiles
         , submitSearch
+        , handleDeleteSource
         , handleError
         , handleSuccess
         , resetStatus
@@ -44,6 +45,8 @@ function SearchDashboard() {
                             return (
                                 <TableTopbarWrapper>
                                     <TableTopbar>
+                                        <button 
+                                            onClick={()=>handleDeleteSource({index: searchData.source.index, alias: searchData.source.alias})}>DELETE</button>
                                         <MenuButtonCheckbox
                                             dynamic
                                             id="files"
@@ -64,8 +67,8 @@ function SearchDashboard() {
                                                         <MenuTitleWrapper>
                                                             <MenuTitle>Select files</MenuTitle>
                                                             <IconButton style={{ position: 'absolute', right: 0, top: 0 }} onClick={props.onReset}>
-                                                                <Tooltip title="Reset" placement="top">
-                                                                    <Undo style={{ color: '#cecece' }} />
+                                                                <Tooltip title="Clear all" placement="top">
+                                                                    <ClearAll style={{ color: '#cecece' }} />
                                                                 </Tooltip>
                                                             </IconButton>
                                                         </MenuTitleWrapper>

@@ -143,4 +143,14 @@ export default class SearchRepository implements ISearchRepository {
             return err as DashboardFail
         }
     }
+
+    async deleteSource(sourceIndex: string): Promise<Dashboard<boolean>> {
+        try {
+            const result = await this.api.deleteSource(sourceIndex)
+            if (!result.success) return result
+            return {data: result.data, success: true}
+        } catch (err) {
+            return err as DashboardFail
+        }
+    }
 }

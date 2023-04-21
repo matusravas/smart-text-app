@@ -97,6 +97,23 @@ class SearchApiService extends ApiService implements ISearchApiService {
         })
         )
     }
+    deleteSource(sourceIndex: string): Promise<ApiResponse<boolean>> {
+        return new Promise<ApiResponse<boolean>>((resolve, reject) => axios({
+            method: 'DELETE',
+            url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/${sourceIndex}`,
+            responseType: 'json',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then((res: AxiosResponse) => {
+            resolve(this.onResponse<boolean>(res))
+        }).catch((err: AxiosError) => {
+            reject(this.onError(err))
+        })
+        )
+    }
 }
 
 export default SearchApiService
