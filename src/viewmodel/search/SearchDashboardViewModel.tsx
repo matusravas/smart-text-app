@@ -1,7 +1,7 @@
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Dictionary } from '../../model/dictionary/types'
-import { SearchData, SearchDataDefault, Source, SourceWithTimestamp } from '../../model/search/types.domain'
+import { SearchData, SearchDataDefault, SourceUIDs } from '../../model/search/types.domain'
 import { DashboardFail, Status, StatusDefault } from '../../model/types'
 import SearchRepository from '../../repository/search/SearchRepository'
 import { MenuCheckboxOption } from '../../view/search/components/MenuCheckboxButton'
@@ -22,34 +22,9 @@ export const useSearchViewModel = () => {
                     setStatus({ type: 'error', message: it.message })
                     return
                 }
-                let source: SourceWithTimestamp = { type: 'db', index: '', alias: '' }
+                let source: SourceUIDs = SearchDataDefault.source
 
-                if (it.data.length) {
-                    const fetchedSource = it.data[0]
-                    console.log(it.data)
-                    switch (fetchedSource.type) {
-                        case "file": {
-                            source = {
-                                type: fetchedSource.type,
-                                index: fetchedSource.index,
-                                alias: fetchedSource.alias,
-                                timestamp: fetchedSource.timestamp,
-                                uids: fetchedSource.uids
-                            }
-                            break
-
-                        }
-                        case "db": {
-                            source = {
-                                type: fetchedSource.type,
-                                index: fetchedSource.index,
-                                alias: fetchedSource.alias,
-                                timestamp: fetchedSource.timestamp,
-                            }
-                            break
-                        }
-                    }
-                }
+                if (it.data.length) source = it.data[0]
                 console.log(source)
                 setSearchData({
                     ...searchData
@@ -111,7 +86,7 @@ export const useSearchViewModel = () => {
         })
     }
 
-    async function handleDeleteSource(source: Source) {
+    async function handleDeleteSource(source: SourceUIDs) {
         searchRepository
             .deleteSource(source.index)
             .then((it) => {
@@ -125,7 +100,8 @@ export const useSearchViewModel = () => {
                         submitSearch(SearchDataDefault)
                         return
                     }
-                    submitSearch({ source: it.data[0] })
+                    let fallbackSource: SourceUIDs = it.data[0]
+                    submitSearch({ ...SearchDataDefault, source: fallbackSource })
                     setStatus({ type: 'success', message: `Source ${source.alias} successfully deleted` })
                 } 
                 else setStatus({ type: 'error', message: `Unable to delete source ${source.alias}` })

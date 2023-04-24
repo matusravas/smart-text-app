@@ -70,7 +70,8 @@ export const MenuButton = ({ onError, ...props }: MenuButtonProps) => {
         if (props.dynamic && props.optionsFetcher) {
             setLoading(true)
             props.optionsFetcher(e)
-                .then(res => {
+            .then(res => {
+                    console.log(res)
                     setOptions(res)
                     props.onOptionsFetched && props.onOptionsFetched(res)
                 })

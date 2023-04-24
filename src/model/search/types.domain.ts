@@ -4,29 +4,28 @@ import { TablePagination } from "../table/types"
 import { Column, Pagination } from "../table/types.domain"
 
 export type Operator = 'OR' | 'AND'
-export type SourceOptionType = 'file' | 'db'
 
 
 export type SearchData = {
     searchPhrase: string
     searchOperator: Operator
     dateRange: DateRange
-    source: SourceWithTimestamp
+    source: SourceUIDs
     keywords: boolean
     pagination: Pagination
 }
 
-export type FileSource = {
+type FileSource = {
     type: 'file'
     uids: string[] 
 }
 
-export type DBSource = {
+type DBSource = {
     type: 'db'
     uids?: never 
 }
 
-export type SourceWithTimestamp = {
+export type SourceUIDs = {
     index: string
     alias: string
     searchField?: string
@@ -34,13 +33,14 @@ export type SourceWithTimestamp = {
     timestamp?: Date
 } & (FileSource | DBSource)
 
-export type Source = {
-    index: string
-    alias: string
-    searchField?: string
-    dateField?: string
-    timestamp?: Date
-}
+// export type Source = {
+//     index: string
+//     alias: string
+//     searchField?: string
+//     dateField?: string
+//     timestamp?: Date
+//     type: 'db' | 'file'
+// }
 
 export type SourceBulkStats = {
     nitems: number
@@ -57,28 +57,19 @@ export type SourceFile = {
     stats: SourceBulkStats
 }
 
-export type FileSourceOption = {
-    type: 'file'
-    uids: string[]
-}
-
-export type DBSourceOption = {
-    type: 'db'
-}
-
-export type SourceOption = {
-    index: string
-    alias: string
-    timestamp: Date
-} & (FileSourceOption | DBSourceOption)
-
-
 export type SearchResponse = {
     columns: Column[]
     pagination: TablePagination
     dictionary: Dictionary | null
     results: Data[]
-    source: Source
+    source: {
+        index: string
+        alias: string
+        searchField?: string
+        dateField?: string
+        timestamp?: Date
+        type: 'db' | 'file'
+    }
 }
 
 export const SearchDataDefault = {

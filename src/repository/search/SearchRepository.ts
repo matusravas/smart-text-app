@@ -1,4 +1,4 @@
-import { SearchData, SearchResponse, SourceFile, SourceOption } from "../../model/search/types.domain";
+import { SearchData, SearchDataDefault, SearchResponse, SourceFile, SourceUIDs } from "../../model/search/types.domain";
 import { Dashboard, DashboardFail } from "../../model/types";
 import SearchApiService from "../../services/search/SearchApiService";
 import ISearchRepository from "./ISearchRepository";
@@ -24,7 +24,7 @@ export default class SearchRepository implements ISearchRepository {
             const data: SearchResponse = {
                 ...response.data,
                 source: {
-                    // uids: searchData.source.uids,
+                    type: response.data.source.type,
                     index: response.data.source.index,
                     alias: response.data.source.alias,
                     searchField: response.data.source.search_field,
@@ -59,15 +59,15 @@ export default class SearchRepository implements ISearchRepository {
         }
     }
 
-    async sourcesWithTimestamps(): Promise<Dashboard<SourceOption[]>> {
+    async sourcesWithTimestamps(): Promise<Dashboard<SourceUIDs[]>> {
         try {
             const response = await this.api.sourcesWithTimestamps()
             if (!response.success) return response
 
-            const sourceOptions: SourceOption[] = response.data.map(it => {
+            const sources: SourceUIDs[] = response.data.map(it => {
                 switch(it.type) {
                     case "file": {
-                        const source: SourceOption = {
+                        const source: SourceUIDs = {
                             type: it.type,
                             index: it.index,
                             alias: it.alias,
@@ -77,7 +77,7 @@ export default class SearchRepository implements ISearchRepository {
                         return source
                     }
                     case "db": {
-                        const source: SourceOption = {
+                        const source: SourceUIDs = {
                             type: it.type,
                             index: it.index,
                             alias: it.alias,
@@ -89,7 +89,7 @@ export default class SearchRepository implements ISearchRepository {
             })
             return { 
                 ...response
-                , data: sourceOptions
+                , data: sources
              }
         } catch (err) {
             console.log(err)
@@ -120,7 +120,7 @@ export default class SearchRepository implements ISearchRepository {
         }
     }
     
-    async source(index: string): Promise<Dashboard<SourceOption>> {
+    async source(index: string): Promise<Dashboard<SourceUIDs>> {
         try {
             const response = await this.api.sourcesWithTimestamps(index)
             console.log(response)
@@ -130,13 +130,31 @@ export default class SearchRepository implements ISearchRepository {
             const uids: string[] = files.map(it => {
                 return it.uid
             })
+            let sourceData: SourceUIDs = SearchDataDefault.source
+            switch(source.type) {
+                case "file": {
+                    sourceData = {
+                        type: source.type,
+                        index: source.index,
+                        alias: source.alias,
+                        timestamp: new Date(source.timestamp * 1000),
+                        uids: uids.length > 0 ? [uids[0]] : []
+                    }
+                    break
+                }
+                case "db": {
+                    sourceData = {
+                        type: source.type,
+                        index: source.index,
+                        alias: source.alias,
+                        timestamp: new Date(source.timestamp * 1000),
+                    }
+                    break
+                }
+            }
             return { 
                 ...response
-                , data: {
-                        ...source
-                        , timestamp: new Date(source.timestamp * 1000)
-                        , uids: [uids[0]]
-                    } 
+                , data: sourceData 
             }
         } catch (err) {
             console.log(err)

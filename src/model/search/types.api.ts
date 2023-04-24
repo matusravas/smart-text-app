@@ -1,6 +1,6 @@
 import { Dictionary } from "../dictionary/types"
 import { Column } from "../table/types.domain"
-import { Data, SourceBulkStats, SourceOptionType } from "./types.domain"
+import { Data, SourceBulkStats } from "./types.domain"
 
 export type PaginationRaw = {
     current_page: number,
@@ -17,11 +17,11 @@ export type SourceFileRaw = {
     stats: SourceBulkStats
 }
 
-export type SourceOptionRaw = {
+export type SourceUIDsRaw = {
     index: string,
     alias: string,
     timestamp: number
-    type: SourceOptionType
+    type: 'file' | 'db'
     files: SourceFileRaw[]
 }
 

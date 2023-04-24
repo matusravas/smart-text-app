@@ -46,14 +46,14 @@ function SearchDashboard() {
                                 <TableTopbarWrapper>
                                     <TableTopbar>
                                         <button 
-                                            onClick={()=>handleDeleteSource({index: searchData.source.index, alias: searchData.source.alias})}>DELETE</button>
+                                            onClick={()=>handleDeleteSource(searchData.source)}>DELETE</button>
                                         <MenuButtonCheckbox
                                             dynamic
                                             id="files"
                                             hidden={searchData.source.type !== 'file'}
                                             label="Select files"
                                             styles={{
-                                                Button: { minWidth: '60px', height: '40px', fontWeight: '300', backgroundColor: '#f7f7f7' }
+                                                Button: { minWidth: '105px', height: '40px', fontWeight: '300', backgroundColor: '#f7f7f7' }
                                                 , Item: {
                                                     Label: { fontSize: '16px' }
                                                     , SubLabel: { fontSize: '14px' }

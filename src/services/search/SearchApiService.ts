@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import moment from "moment";
-import { SearchResponseRaw, SourceOptionRaw } from "../../model/search/types.api";
+import { SearchResponseRaw, SourceUIDsRaw } from "../../model/search/types.api";
 import { SearchData } from "../../model/search/types.domain";
 import { ApiResponse } from "../../model/types";
 import ApiService from "../ApiService";
@@ -79,9 +79,9 @@ class SearchApiService extends ApiService implements ISearchApiService {
         })
         )
     }
-    sourcesWithTimestamps(sourceIndex?: string): Promise<ApiResponse<SourceOptionRaw[]>> {
+    sourcesWithTimestamps(sourceIndex?: string): Promise<ApiResponse<SourceUIDsRaw[]>> {
         const index = !sourceIndex ? '' : `/${sourceIndex}`
-        return new Promise<ApiResponse<SourceOptionRaw[]>>((resolve, reject) => axios({
+        return new Promise<ApiResponse<SourceUIDsRaw[]>>((resolve, reject) => axios({
             method: 'GET',
             url: `${this.baseUrl}/${this.apiPrefix}/${this.ucPrefix}/indices-timestamps${index}`,
             responseType: 'json',
@@ -91,7 +91,7 @@ class SearchApiService extends ApiService implements ISearchApiService {
                 'Content-Type': 'application/json',
             }
         }).then((res: AxiosResponse) => {
-            resolve(this.onResponse<SourceOptionRaw[]>(res))
+            resolve(this.onResponse<SourceUIDsRaw[]>(res))
         }).catch((err: AxiosError) => {
             reject(this.onError(err))
         })
