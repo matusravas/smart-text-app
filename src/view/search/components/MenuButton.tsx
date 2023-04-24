@@ -162,6 +162,13 @@ export const MenuButton = ({ onError, ...props }: MenuButtonProps) => {
                 PaperProps={{
                     style: {...props.styles.Container}
                 }}
+                MenuListProps={
+                    {
+                        style: {
+                            width: '100%'
+                        }
+                    }
+                }
             >
                 <HeaderElement />
                 {renderMenuItems()}

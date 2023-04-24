@@ -8,7 +8,7 @@ import Searchbar from "./components/SearchBar";
 
 import { TableLastTimestamp, TableTopbar, TableTopbarWrapper } from "../table/styles/table.styles";
 import { SearchDashboardWrapper } from "./styles/searchbar.styles";
-import { Button, MenuTitle, MenuTitleWrapper } from "./styles/searchbar.toolbar.styles";
+import { Button, MenuTitle, MenuHeaderWrapper } from "./styles/searchbar.toolbar.styles";
 import { ConfirmDialog } from "../app/components/ConfirmDialog";
 
 function SearchDashboard() {
@@ -67,21 +67,21 @@ function SearchDashboard() {
                                             components={{
                                                 Header: (props) => {
                                                     return (
-                                                        <MenuTitleWrapper>
-                                                            <IconButton style={{ position: 'absolute', left: 0, top: 0 }} onClick={props.onReset}>
+                                                        <MenuHeaderWrapper>
+                                                            <IconButton style={{padding: '0px 6px'}} onClick={props.onReset}>
                                                                 <Tooltip title="Delete source" placement="top">
                                                                     <Delete
                                                                         onClick={() => handleSafeSourceDelete(searchData.source)}
-                                                                        style={{ color: '#efefef', padding: 6 }} />
+                                                                        style={{ color: '#efefef' }} />
                                                                 </Tooltip>
                                                             </IconButton>
                                                             <MenuTitle>Select files</MenuTitle>
-                                                            <IconButton style={{ position: 'absolute', right: 0, top: 0 }} onClick={props.onReset}>
+                                                            <IconButton style={{padding: '0px 6px'}} onClick={props.onReset}>
                                                                 <Tooltip title="Clear all" placement="top">
-                                                                    <ClearAll style={{ color: '#cecece' , padding: 6}} />
+                                                                    <ClearAll style={{ color: '#cecece'}} />
                                                                 </Tooltip>
                                                             </IconButton>
-                                                        </MenuTitleWrapper>
+                                                        </MenuHeaderWrapper>
                                                     )
                                                 },
                                                 Footer: (props) => {
@@ -95,6 +95,7 @@ function SearchDashboard() {
                                                             style={{
                                                                 fontSize: '15px'
                                                                 , width: '100%'
+                                                                , marginTop: '6px'
                                                                 , borderRadius: 0
                                                                 , backgroundColor: '#E5E5E5'
                                                                 , fontWeight: 600

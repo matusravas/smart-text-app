@@ -43,7 +43,10 @@ export const MenuLabelWrapper = styled.div`
   width: 100%;
 `
 
-export const MenuTitleWrapper = styled.div`
+export const MenuHeaderWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 6px;
 `
 

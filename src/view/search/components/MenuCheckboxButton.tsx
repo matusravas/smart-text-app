@@ -30,7 +30,7 @@ interface ComponentsProps {
 }
 
 interface Components {
-    Button?: React.ComponentType<{onOpen: (event: React.MouseEvent<any>) => void, isLoading: boolean}>
+    Button?: React.ComponentType<{ onOpen: (event: React.MouseEvent<any>) => void, isLoading: boolean }>
     Header?: React.ComponentType<ComponentsProps>
     Footer?: React.ComponentType<ComponentsProps>
 }
@@ -176,7 +176,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
             Header ? <Header style={{}} {...componentsProps} /> : null
         )
     })
-    
+
     const FooterElement = forwardRef((props, ref) => {
         return (
             Footer ? <Footer style={{ marginBottom: '-8px' }} {...componentsProps} /> : null
@@ -188,7 +188,7 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
             {
                 ButtonOverriden
                     ?
-                    <ButtonOverriden onOpen={handleOpen} isLoading={loading}/>
+                    <ButtonOverriden onOpen={handleOpen} isLoading={loading} />
                     :
                     <Button
                         disabled={loading || props.disabled}
@@ -209,9 +209,16 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
                 PaperProps={{
-                    style: {...props.styles.Container}
+                    style: { ...props.styles.Container }
                 }}
-                // style={{...props.styles.Container}}
+                MenuListProps={
+                    {
+                        style: {
+                            width: '100%'
+                        }
+                    }
+                }
+            // style={{...props.styles.Container}}
             >
                 <HeaderElement />
                 {renderCheckboxMenuItems()}

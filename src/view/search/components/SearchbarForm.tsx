@@ -2,7 +2,7 @@ import { Operator, SearchData } from "../../../model/search/types.domain"
 import { FormDataOptions } from "../../../viewmodel/search/SearchbarViewModel"
 import { DateRangePicker } from "../../app/components/DatePicker/DateRangePicker"
 import { SearchButton, SearchbarFormWrapper } from '../styles/searchbar.styles'
-import { MenuTitle, MenuTitleWrapper, SearchToolbar } from "../styles/searchbar.toolbar.styles"
+import { MenuTitle, MenuHeaderWrapper, SearchToolbar } from "../styles/searchbar.toolbar.styles"
 import { MenuButton, MenuOption } from "./MenuButton"
 import { SearchInput } from "./SearchInput"
 
@@ -53,9 +53,9 @@ function SearchbarForm(
                         components={{
                             Header: (props) => {
                                 return (
-                                    <MenuTitleWrapper>
+                                    <MenuHeaderWrapper>
                                         <MenuTitle style={{fontSize: '18px'}}>Select operator</MenuTitle>
-                                    </MenuTitleWrapper>
+                                    </MenuHeaderWrapper>
                                 )
                             },
                         }}
@@ -83,9 +83,9 @@ function SearchbarForm(
                         components={{
                             Header: (props) => {
                                 return (
-                                    <MenuTitleWrapper>
+                                    <MenuHeaderWrapper>
                                         <MenuTitle style={{fontSize: '18px'}}>Select source</MenuTitle>
-                                    </MenuTitleWrapper>
+                                    </MenuHeaderWrapper>
                                 )
                             },
                         }}

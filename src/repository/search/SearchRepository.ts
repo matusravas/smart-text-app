@@ -100,6 +100,7 @@ export default class SearchRepository implements ISearchRepository {
         try {
             const response = await this.api.sourcesWithTimestamps(sourceIndex)
             if (!response.success) return response
+            if (!response.data.length) return {success: false, message: 'No available source files'}
             const sourceFiles: SourceFile[] = response.data[0].files.map(it => {
                 const sourceFile: SourceFile = {
                     ...it
@@ -123,6 +124,7 @@ export default class SearchRepository implements ISearchRepository {
         try {
             const response = await this.api.sourcesWithTimestamps(index)
             if (!response.success) return response
+            if (!response.data.length) return {success: false, message: 'No available source data'}
 
             const {files, ...source} = response.data[0]
             const uids: string[] = files.map(it => {
