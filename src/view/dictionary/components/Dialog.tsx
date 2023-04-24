@@ -16,10 +16,12 @@ interface DialogProps {
     onUpsertOrDelete: (requestType: RequestType, dictionary: Dictionary) => void
 }
 
-type ConfirmPrompt = {
+export type ConfirmPrompt = {
+    visible?: boolean
     type?: 'cancel' | 'delete'
     headerText?: string
     text?: string
+    onConfirm?: () => void
 }
 
 export function Dialog(props: DialogProps) {
@@ -94,9 +96,13 @@ export function Dialog(props: DialogProps) {
 
     function handleDelete() {
         setConfirmation({
+            visible: true,
             type: 'delete',
             headerText: 'Delete confirmation',
-            text: 'Are you sure you want to delete this item?'
+            text: 'Are you sure you want to delete this item?',
+            onConfirm: () => {
+                props.onUpsertOrDelete('delete', dictionary)
+            }
         })
     }
 
@@ -105,19 +111,7 @@ export function Dialog(props: DialogProps) {
             props.toggleOpen()
             return
         }
-        setConfirmation({ type: 'cancel' })
-    }
-
-    function handleConfirmationDialog() {
-        switch (confirmation.type) {
-            case 'cancel': {
-                props.toggleOpen(); break
-            }
-            case 'delete': {
-                props.onUpsertOrDelete('delete', dictionary)
-                break
-            }
-        }
+        setConfirmation({ visible: true, type: 'cancel', onConfirm: () => props.toggleOpen() })
     }
 
     return (
@@ -191,12 +185,9 @@ export function Dialog(props: DialogProps) {
                 </DialogBottomBar>
             </DialogContentWrapper>
 
-            {confirmation.type &&
                 <ConfirmDialog
-                    headerText={confirmation.headerText}
-                    text={confirmation.text}
-                    onConfirm={handleConfirmationDialog}
-                    onCancel={() => setConfirmation({})} />}
+                    {...confirmation}
+                    onCancel={() => setConfirmation({})} />
         </DialogWrapper>
     )
 }

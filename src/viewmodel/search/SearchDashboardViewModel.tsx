@@ -5,6 +5,7 @@ import { SearchData, SearchDataDefault, SourceUIDs } from '../../model/search/ty
 import { DashboardFail, Status, StatusDefault } from '../../model/types'
 import SearchRepository from '../../repository/search/SearchRepository'
 import { MenuCheckboxOption } from '../../view/search/components/MenuCheckboxButton'
+import { ConfirmPrompt } from '../../view/dictionary/components/Dialog'
 
 
 export const useSearchViewModel = () => {
@@ -12,8 +13,8 @@ export const useSearchViewModel = () => {
     const [shouldFetchSources, setShouldFetchSources] = useState(true)
     const [status, setStatus] = useState<Status>(StatusDefault)
     const [searchData, setSearchData] = useState<SearchData>(SearchDataDefault)
+    const [confirmation, setConfirmation] = useState<ConfirmPrompt>({})
     const searchRepository = SearchRepository.getInstance()
-
     useEffect(() => {
         shouldFetchSources && !searchData.source.index && searchRepository
             .sourcesWithTimestamps()
@@ -111,6 +112,19 @@ export const useSearchViewModel = () => {
             });
     }
 
+    function handleSafeSourceDelete(source: SourceUIDs) {
+        setConfirmation({
+            visible: true,
+            type: 'delete',
+            headerText: 'Source database delete confirmation',
+            text: `Are you sure you want to permanently delete ${searchData.source.alias} source?`,
+            onConfirm: () => {
+                // setConfirmation({})
+                handleDeleteSource(source)
+            }
+        })
+    }
+    
     function onSearchDataObtained(dictionary: Dictionary | null) {
         setDictionaryData(dictionary)
         setSearchData({ ...searchData })
@@ -140,7 +154,10 @@ export const useSearchViewModel = () => {
         , fetchSourceFiles
         , handleError
         , handleSuccess
-        , handleDeleteSource
+        , handleSafeSourceDelete
+        , confirmation
+        , closeConfirmation: setConfirmation
+        // , handleDeleteSource
         , resetStatus
         , lastTimestamp
     }

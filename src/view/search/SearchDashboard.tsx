@@ -1,5 +1,5 @@
 import { IconButton, Tooltip } from "@material-ui/core";
-import { ClearAll, FileCopy } from "@material-ui/icons";
+import { ClearAll, Delete, FileCopy } from "@material-ui/icons";
 import { useSearchViewModel } from "../../viewmodel/search/SearchDashboardViewModel";
 import { Snackbar } from "../app/components/Snackbar";
 import { Table } from "../table/Table";
@@ -9,6 +9,7 @@ import Searchbar from "./components/SearchBar";
 import { TableLastTimestamp, TableTopbar, TableTopbarWrapper } from "../table/styles/table.styles";
 import { SearchDashboardWrapper } from "./styles/searchbar.styles";
 import { Button, MenuTitle, MenuTitleWrapper } from "./styles/searchbar.toolbar.styles";
+import { ConfirmDialog } from "../app/components/ConfirmDialog";
 
 function SearchDashboard() {
     const {
@@ -18,7 +19,9 @@ function SearchDashboard() {
         , onSearchDataObtained
         , fetchSourceFiles
         , submitSearch
-        , handleDeleteSource
+        , handleSafeSourceDelete
+        , confirmation
+        , closeConfirmation
         , handleError
         , handleSuccess
         , resetStatus
@@ -45,8 +48,8 @@ function SearchDashboard() {
                             return (
                                 <TableTopbarWrapper>
                                     <TableTopbar>
-                                        <button 
-                                            onClick={()=>handleDeleteSource(searchData.source)}>DELETE</button>
+                                        {/* <button 
+                                            onClick={()=>handleDeleteSource(searchData.source)}>DELETE</button> */}
                                         <MenuButtonCheckbox
                                             dynamic
                                             id="files"
@@ -65,10 +68,17 @@ function SearchDashboard() {
                                                 Header: (props) => {
                                                     return (
                                                         <MenuTitleWrapper>
+                                                            <IconButton style={{ position: 'absolute', left: 0, top: 0 }} onClick={props.onReset}>
+                                                                <Tooltip title="Delete source" placement="top">
+                                                                    <Delete
+                                                                        onClick={() => handleSafeSourceDelete(searchData.source)}
+                                                                        style={{ color: '#efefef', padding: 6 }} />
+                                                                </Tooltip>
+                                                            </IconButton>
                                                             <MenuTitle>Select files</MenuTitle>
                                                             <IconButton style={{ position: 'absolute', right: 0, top: 0 }} onClick={props.onReset}>
                                                                 <Tooltip title="Clear all" placement="top">
-                                                                    <ClearAll style={{ color: '#cecece' }} />
+                                                                    <ClearAll style={{ color: '#cecece' , padding: 6}} />
                                                                 </Tooltip>
                                                             </IconButton>
                                                         </MenuTitleWrapper>
@@ -125,6 +135,9 @@ function SearchDashboard() {
                 text={status.message}
                 onClose={resetStatus}
             />
+            <ConfirmDialog
+                {...confirmation}
+                onCancel={() => closeConfirmation({})} />
         </SearchDashboardWrapper>
     )
 }
