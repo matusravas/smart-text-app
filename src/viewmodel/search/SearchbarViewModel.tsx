@@ -50,7 +50,6 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
     }, [formData.source.index])
 
     useEffect(() => {
-        console.log(props.searchData)
         setFormData({
             ...props.searchData
             // , searchOperator: props.searchData.keywords !== formData.keywords ? 'OR' : formData.searchOperator
@@ -72,7 +71,6 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
                     if (!it.success) {
                         return reject('No available sources')
                     }
-                    console.log(it)
                     resolve(it.data.map(it => {
                         return { label: it.alias, value: it.index }
                     }))
@@ -131,7 +129,6 @@ function useSearchbarViewModel(props: SearchbarViewModelProps) {
     const handleFormDataChange = useCallback((form: FormDataOptions) => {
         form.dateRange && setFormData({ dateRange: form.dateRange })
         if (form.source) {
-            console.log(form.source)
             fetchAndSetSource(form.source.index)
             // setFormData({ source: { index: it.source.index, alias: it.source.alias, uids: [it.source.latestUID] } })
         }

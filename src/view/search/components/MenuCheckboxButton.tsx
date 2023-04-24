@@ -75,7 +75,6 @@ export const MenuButtonCheckbox = ({ onError, ...props }: MenuButtonCheckboxProp
             setLoading(true)
             props.optionsFetcher(e)
                 .then(res => {
-                    console.log(res)
                     setOptions(res)
                     props.onOptionsFetched && props.onOptionsFetched(res)
                 })

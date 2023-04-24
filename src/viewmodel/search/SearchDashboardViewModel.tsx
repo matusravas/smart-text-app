@@ -26,7 +26,6 @@ export const useSearchViewModel = () => {
                 let source: SourceUIDs = SearchDataDefault.source
 
                 if (it.data.length) source = it.data[0]
-                console.log(source)
                 setSearchData({
                     ...searchData
                     , source: source
@@ -96,7 +95,6 @@ export const useSearchViewModel = () => {
             })
             .then(it => {
                 if (it && it.success) {
-                    console.log(it.data)
                     if (!it.data.length) {
                         submitSearch(SearchDataDefault)
                         return

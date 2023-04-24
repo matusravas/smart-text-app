@@ -38,7 +38,6 @@ export default class SearchRepository implements ISearchRepository {
                     totalPages: paginationRaw.total_pages
                 }
             }
-            console.log({ ...response, data })
             return { 
                 ...response
                 , data 
@@ -123,7 +122,6 @@ export default class SearchRepository implements ISearchRepository {
     async source(index: string): Promise<Dashboard<SourceUIDs>> {
         try {
             const response = await this.api.sourcesWithTimestamps(index)
-            console.log(response)
             if (!response.success) return response
 
             const {files, ...source} = response.data[0]
