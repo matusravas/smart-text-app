@@ -45,7 +45,7 @@ export const MenuLabelWrapper = styled.div`
 
 export const MenuHeaderWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 6px;
 `

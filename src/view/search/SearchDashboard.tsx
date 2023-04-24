@@ -67,7 +67,7 @@ function SearchDashboard() {
                                             components={{
                                                 Header: (props) => {
                                                     return (
-                                                        <MenuHeaderWrapper>
+                                                        <MenuHeaderWrapper style={{justifyContent: 'space-between'}}>
                                                             <IconButton style={{padding: '0px 6px'}} onClick={props.onReset}>
                                                                 <Tooltip title="Delete source" placement="top">
                                                                     <Delete
