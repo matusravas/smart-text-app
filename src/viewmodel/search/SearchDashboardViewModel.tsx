@@ -73,7 +73,7 @@ export const useSearchViewModel = () => {
                         return {
                             label: it.name
                             , value: it.uid
-                            , subLabel: `${ctime} (${it.stats.nitems} rows)`
+                            , subLabel: `${ctime} (${it.stats.inserts}/${it.stats.nitems} rows)`
                             // , checked: !uids.length && !idx ? true : checkedIdx !== -1 ? true : false
                             , checked: checkedIdx !== -1 ? true : false
                         }
